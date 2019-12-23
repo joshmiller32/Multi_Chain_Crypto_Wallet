@@ -1,0 +1,22 @@
+{
+  "name": "multi_chain_gui_wallet",
+  "version": "1.0.0",
+  "description": "Multi chain crypto wallet",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eccadena/Multi_Chain_GUI_Wallet.git"
+  },
+  "author": "Christian Cathro, Eric Cadena, Oscar Serna, William Miller",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eccadena/Multi_Chain_GUI_Wallet/issues"
+  },
+  "homepage": "https://github.com/eccadena/Multi_Chain_GUI_Wallet#readme",
+  "dependencies": {
+    "electron": "^7.1.7"
+  }
+}

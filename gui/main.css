@@ -1,0 +1,42 @@
+h1 {
+    color: #FFFFFF;
+}
+
+h2 {
+    
+    color: #999999;
+}
+
+body {
+    background-color: #333333;      
+    size: 100%;
+}
+
+table#t01 {
+    width: 100%;
+    color: #FFFFFF;
+    border: 1px solid black;
+}
+
+th, td {
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+    text-align: center;
+}
+
+th {
+    background-color: #000000;
+}
+
+tr:nth-child(even) {
+    background-color: #666666;
+}
+
+tr:hover {
+    background-color: #999999;
+}
+
+
+btn {
+    color: #FFFFFF;
+}
