@@ -1,4 +1,6 @@
-function new_user() {
+const {require} = electron;
+
+function newUser() {
     var python = require("python-shell")
     var path = require("path")
     
