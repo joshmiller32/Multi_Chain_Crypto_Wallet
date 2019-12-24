@@ -16,5 +16,4 @@ function newUser() {
     seed.on('message', function(message) {
         swal(message);
     })
-    
 };
