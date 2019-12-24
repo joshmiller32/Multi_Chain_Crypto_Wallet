@@ -7,6 +7,11 @@ h2 {
     color: #999999;
 }
 
+h3 {
+    
+    color: #FF0000;
+}
+
 body {
     background-color: #333333;      
     size: 100%;
@@ -37,6 +42,28 @@ tr:hover {
 }
 
 
-btn {
-    color: #FFFFFF;
+button#seed {
+    color: #000000;
+    border-radius: 50px;
+    position: relative;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    text-transform: uppercase;
 }
+
+.column {
+    float: left;
+    width: 33.33%;
+    text-align: center;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
