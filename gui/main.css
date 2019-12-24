@@ -52,6 +52,7 @@ button#seed {
     align-items: center;
     cursor: pointer;
     text-transform: uppercase;
+    text-decoration:none;
 }
 
 .column {
@@ -67,3 +68,7 @@ button#seed {
     clear: both;
 }
 
+a {
+    color: #000000;
+    text-decoration:none;
+}

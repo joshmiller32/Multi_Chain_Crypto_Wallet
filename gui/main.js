@@ -1,16 +1,18 @@
-const electron = require('electron');
-const url = require('url');
-const path = require('path');
+const electron = require('electron')
+const path = require('path')
+const url = require('url')
 
 const {app, BrowserWindow, Menu} = electron;
 
 let mainWindow;
 let seedWindow;
 
+
+
 // Listen for app to be ready
 app.on('ready', function(){
-    //create new window
-    mainWindow = new BrowserWindow({});
+    //create the main app window
+    mainWindow = new BrowserWindow({width: 800, height: 600});
     // load html into the window
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'loginWindow.html'),
@@ -28,38 +30,11 @@ app.on('ready', function(){
     Menu.setApplicationMenu(mainMenu);
 });
 
-// Create new window for seed words to display
-function createSeedWindow() {
-    //create new window
-    seedWindow = new BrowserWindow({
-        width: 420,
-        height: 500,
-        title:'Seed Words',
-        preload:'./login.js'
-    });
-    // load html into the window
-    seedWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'seedWindow.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
-    // remove garbage
-    seedWindow.on('close', function(){
-        seedWindow = null;
-    });
-};
-
 
 const mainMenuTemplate = [
     {
         label:'File',
         submenu:[
-            {
-                label:'Test',
-                click(){
-                    createSeedWindow();
-                }            
-            },
             {
                 label:'Remove Coins'
             },
