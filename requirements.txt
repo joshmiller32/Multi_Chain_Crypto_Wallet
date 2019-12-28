@@ -1,2 +1,3 @@
 pip install py_hd_wallet
+pip install eel
 

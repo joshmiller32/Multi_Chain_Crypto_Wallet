@@ -1,0 +1,129 @@
+h1 {
+    color: #FFFFFF;
+}
+
+h2 {
+    
+    color: #999999;
+}
+
+h3 {
+    
+    color: #FFFF00;
+}
+
+body {
+    background-color: #333333;      
+    size: 100%;
+}
+
+table.t01 {
+    width: 100%;
+    color: #FFFFFF;
+    border: 1px solid black;
+}
+
+.t01 tr:nth-child(even) {
+    background-color: #666666;
+}
+
+.t01 tr:hover {
+    background-color: #999999;
+}
+
+
+table.seed {
+    width: 75%;
+    height: 60%;
+    position: center;
+    color: #FFFFFF;
+    border: 1px solid black;
+    table-layout: fixed;
+}
+
+
+.seed tr:nth-child(even) {
+    background-color: #666666;
+}
+
+.seed td:hover {
+    background-color: #999999;
+}
+
+
+
+th, td {
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+    text-align: center;
+}
+
+th {
+    background-color: #000000;
+}
+
+
+button#seed {
+    color: #000000;
+    border-radius: 50px;
+    position: relative;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-decoration:none;
+}
+
+.column {
+    float: left;
+    width: 33.33%;
+    text-align: center;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+a {
+    color: #000000;
+    text-decoration:none;
+}
+
+p {
+    color: #FFFFFF;
+}
+
+button#wordsButton {
+    color: #000000;
+    border-radius: 50px;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-decoration:none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px; 
+}
+
+button#backButton {
+    color: #000000;
+    border-radius: 50px;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-decoration:none;
+    position: fixed;
+    bottom: 20px;
+    left: 20px; 
+}
