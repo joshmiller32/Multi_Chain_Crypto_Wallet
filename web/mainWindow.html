@@ -7,6 +7,13 @@
         
         <script type="text/javascript" src="/eel.js"></script>
         <script type="text/javascript" src="scripts/main.js"></script>
+        <script type="text/javascript">
+            window.onload=function(){
+            getPrices();
+            getBalanceValue();
+            getWallets();
+            } 
+        </script>
         
     </head>
 
@@ -14,35 +21,113 @@
         <h1> 
             <center>Multi-Asset Crypto Wallet </center>
         </h1>
-           <table class="t01">
-          <tr>
+        <table class="main">
+        <tr>
             <th>Name</th>
             <th>Ticker</th>
-            <th>Value USD</th>
-            <th>Price Chg 24h</th>
             <th>Balance</th>
-          </tr>
-          <tr>
+            <th>Wallet Value (USD)<th>
+            <th>Price (USD)</th>
+        </tr>
+        <tr>
             <td>Bitcoin</td>
             <td>BTC</td>
-            <td>$6,500</td>
-            <td>-10%</td>
-            <td>0.01240059</td>
-          </tr>
-          <tr>
-            <td>Etherum</td>
-            <td>ETH</td>
-            <td>$150</td>
-            <td>-10%</td>
-            <td>0.95</td>
-          </tr>
-          <tr>
+            <td><div id='btc_balance'>0.01240059</div></td>
+            <td><div id='btc_usd_value'></div></td>
+            <td><div id='btc_usd'></div></td>
+        </tr>
+        <tr>
+            <td colspan="2">Wallet Address</td>
+            <td colspan="3"><div id='btc_address'></div></td>
+        </tr>
+        <tr>
+            <td>Bitcoin Gold</td>
+            <td>BTG</td>
+            <td><div id='btg_balance'>0.95</div></td>
+            <td><div id='btg_usd_value'></div></td>  
+            <td><div id='btg_usd'></div></td>
+        </tr>
+        <tr>
+            <td colspan="2">Wallet Address</td>
+            <td colspan="3"><div id='btg_address'></div></td>
+        </tr>
+        <tr>
+            <td>Bitcoin Cash</td>
+            <td>BCH</td>
+            <td><div id='bch_balance'>3.9</div></td>
+            <td><div id='bch_usd_value'></div></td>  
+            <td><div id='bch_usd'></div></td>
+        </tr>
+        <tr>
+            <td colspan="2">Wallet Address</td>
+            <td colspan="3"><div id='bch_address'></div></td>
+        </tr>
+        <tr>
             <td>Litecoin</td>
             <td>LTC</td>
-            <td>$50</td>
-            <td>-10%</td>
-            <td>3.9</td>
-          </tr>
+            <td><div id='ltc_balance'>19.55</div></td>
+            <td><div id='ltc_usd_value'></div></td>  
+            <td><div id='ltc_usd'></div></td>
+        </tr>
+        <tr>
+            <td colspan="2">Wallet Address</td>
+            <td colspan="3"><div id='ltc_address'></div></td>
+        </tr>
+        <tr>
+            <td>Dash</td>
+            <td>DASH</td>
+            <td><div id='dash_balance'>13.35</div></td>
+            <td><div id='dash_usd_value'></div></td>
+            <td><div id='dash_usd'></div></td>
+        </tr>
+        <tr>
+            <td colspan="2">Wallet Address</td>
+            <td colspan="3"><div id='dash_address'></div></td>
+        </tr>
+        <tr>
+            <td>Dogecoin</td>
+            <td>DOGE</td>
+            <td><div id='doge_balance'>954350.00</div></td>
+            <td><div id='doge_usd_value'></div></td>  
+            <td><div id='doge_usd'></div></td>
+        </tr>
+        <tr>
+            <td colspan="2">Wallet Address</td>
+            <td colspan="3"><div id='doge_address'></div></td>
+        </tr>
+        <tr>
+            <td>Ripple</td>
+            <td>XRP</td>
+            <td><div id='xrp_balance'>3957.00</div></td>
+            <td><div id='xrp_usd_value'></div></td>  
+            <td><div id='xrp_usd'></div></td>
+        </tr>
+        <tr>
+            <td colspan="2">Wallet Address</td>
+            <td colspan="3"><div id='xrp_address'></div></td>
+        </tr>
+        <tr>
+            <td>ZCash</td>
+            <td>ZEC</td>
+            <td><div id='zec_balance'>8.94</div></td>
+            <td><div id='zec_usd_value'></div></td>
+            <td><div id='zec_usd'></div></td>
+        </tr>
+        <tr>
+            <td colspan="2">Wallet Address</td>
+            <td colspan="3"><div id='zec_address'></div></td>
+        </tr>
+        <tr>
+            <td>Stellar Lumens</td>
+            <td>XLM</td>
+            <td><div id='xlm_balance'>397</div></td>
+            <td><div id='xlm_usd_value'></div></td>
+            <td><div id='xlm_usd'></div></td>
+        </tr>
+        <tr>
+            <td colspan="2">Wallet Address</td>
+            <td colspan="3"><div id='xlm_address'></div></td>
+        </tr>
         </table>
     </body>
 </html>
