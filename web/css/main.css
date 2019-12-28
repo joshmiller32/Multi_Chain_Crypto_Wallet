@@ -17,20 +17,25 @@ body {
     size: 100%;
 }
 
-table.t01 {
+table.main {
     width: 100%;
     color: #FFFFFF;
     border: 1px solid black;
+    table-layout: fixed;
+    padding: 5px;
 }
 
-.t01 tr:nth-child(even) {
+.main tr:nth-child(even) {
     background-color: #666666;
 }
 
-.t01 tr:hover {
+.main tr:hover {
     background-color: #999999;
 }
 
+.main column {
+    width: 200px;
+}
 
 table.seed {
     width: 75%;
