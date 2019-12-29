@@ -118,3 +118,20 @@ async function getBalanceValue() {
     xlm_usd_value.innerHTML = (Math.round((xlm_balance.innerHTML * price_dict.XLM.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
 }
 
+function checkPassword() {
+    let input = document.getElementById('loginpassword'),
+    pass = input.value;
+    let loginCheck = eel.check_password(pass)();
+    if(loginCheck == 'True') {
+        return window.location.replace('mainWindow.html');
+    } else {
+        return input.innerHTML = "Incorrect Password";
+    }
+}
+
+async function setPassword() {
+    var input = document.getElementById('newpassword'),
+    pass = input.value;
+    let loginCheck = await eel.set_password(pass)();
+    return window.location.replace('mainWindow.html');
+}
