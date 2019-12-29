@@ -3,7 +3,8 @@
     <head>
         <title>Multi Asset Wallet</title>
         
-        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <link rel="stylesheet" type="text/css" href="css/main.css">  
+
         
         <script type="text/javascript" src="/eel.js"></script>
         <script type="text/javascript" src="scripts/main.js"></script>
@@ -18,18 +19,23 @@
     </head>
 
     <body>
-        <h1> 
-            <center>Multi-Asset Crypto Wallet </center>
-        </h1>
+        <div class="colmask threecol">
+            <div class="colmid">
+                <div class="colleft">
+                    <div class="col1">
+                        <!-- Column 1 start -->
+        <br>
         <table class="main">
         <tr>
+            <th>Icon</th>
             <th>Name</th>
             <th>Ticker</th>
             <th>Balance</th>
-            <th>Wallet Value (USD)<th>
+            <th>Wallet Value (USD)</th>
             <th>Price (USD)</th>
         </tr>
         <tr>
+            <td><img src="https://cryptoicons.org/api/icon/btc/25"></td>
             <td>Bitcoin</td>
             <td>BTC</td>
             <td><div id='btc_balance'>0.01240059</div></td>
@@ -37,10 +43,12 @@
             <td><div id='btc_usd'></div></td>
         </tr>
         <tr>
-            <td colspan="2">Wallet Address</td>
-            <td colspan="3"><div id='btc_address'></div></td>
+            <td colspan="1">Address</td>
+            <td colspan="4"><div id='btc_address'></div></td>
+            <td colspan="1"></td>
         </tr>
         <tr>
+            <td><img src="https://cryptoicons.org/api/icon/btg/25"></td>
             <td>Bitcoin Gold</td>
             <td>BTG</td>
             <td><div id='btg_balance'>0.95</div></td>
@@ -48,10 +56,12 @@
             <td><div id='btg_usd'></div></td>
         </tr>
         <tr>
-            <td colspan="2">Wallet Address</td>
-            <td colspan="3"><div id='btg_address'></div></td>
+            <td colspan="1">Address</td>
+            <td colspan="4"><div id='btg_address'></div></td>
+            <td colspan="1"></td>
         </tr>
         <tr>
+            <td><img src="https://cryptoicons.org/api/icon/bch/25"></td>
             <td>Bitcoin Cash</td>
             <td>BCH</td>
             <td><div id='bch_balance'>3.9</div></td>
@@ -59,10 +69,12 @@
             <td><div id='bch_usd'></div></td>
         </tr>
         <tr>
-            <td colspan="2">Wallet Address</td>
-            <td colspan="3"><div id='bch_address'></div></td>
+            <td colspan="1">Address</td>
+            <td colspan="4"><div id='bch_address'></div></td>
+            <td colspan="1"></td>
         </tr>
         <tr>
+            <td><img src="https://cryptoicons.org/api/icon/ltc/25"></td>
             <td>Litecoin</td>
             <td>LTC</td>
             <td><div id='ltc_balance'>19.55</div></td>
@@ -70,10 +82,12 @@
             <td><div id='ltc_usd'></div></td>
         </tr>
         <tr>
-            <td colspan="2">Wallet Address</td>
-            <td colspan="3"><div id='ltc_address'></div></td>
+            <td colspan="1">Address</td>
+            <td colspan="4"><div id='ltc_address'></div></td>
+            <td colspan="1"></td>
         </tr>
         <tr>
+            <td><img src="https://cryptoicons.org/api/icon/dash/25"></td>
             <td>Dash</td>
             <td>DASH</td>
             <td><div id='dash_balance'>13.35</div></td>
@@ -81,10 +95,12 @@
             <td><div id='dash_usd'></div></td>
         </tr>
         <tr>
-            <td colspan="2">Wallet Address</td>
-            <td colspan="3"><div id='dash_address'></div></td>
+            <td colspan="1">Address</td>
+            <td colspan="4"><div id='dash_address'></div></td>
+            <td colspan="1"></td>
         </tr>
         <tr>
+            <td><img src="https://cryptoicons.org/api/icon/doge/25"></td>
             <td>Dogecoin</td>
             <td>DOGE</td>
             <td><div id='doge_balance'>954350.00</div></td>
@@ -92,10 +108,12 @@
             <td><div id='doge_usd'></div></td>
         </tr>
         <tr>
-            <td colspan="2">Wallet Address</td>
-            <td colspan="3"><div id='doge_address'></div></td>
+            <td colspan="1">Address</td>
+            <td colspan="4"><div id='doge_address'></div></td>
+            <td colspan="1"></td>
         </tr>
         <tr>
+            <td><img src="https://cryptoicons.org/api/icon/xrp/25"></td>
             <td>Ripple</td>
             <td>XRP</td>
             <td><div id='xrp_balance'>3957.00</div></td>
@@ -103,10 +121,12 @@
             <td><div id='xrp_usd'></div></td>
         </tr>
         <tr>
-            <td colspan="2">Wallet Address</td>
-            <td colspan="3"><div id='xrp_address'></div></td>
+            <td colspan="1">Address</td>
+            <td colspan="4"><div id='xrp_address'></div></td>
+            <td colspan="1"></td>
         </tr>
         <tr>
+            <td><img src="https://cryptoicons.org/api/icon/zec/25"></td>
             <td>ZCash</td>
             <td>ZEC</td>
             <td><div id='zec_balance'>8.94</div></td>
@@ -114,10 +134,12 @@
             <td><div id='zec_usd'></div></td>
         </tr>
         <tr>
-            <td colspan="2">Wallet Address</td>
-            <td colspan="3"><div id='zec_address'></div></td>
+            <td colspan="1">Address</td>
+            <td colspan="4"><div id='zec_address'></div></td>
+            <td colspan="1"></td>
         </tr>
         <tr>
+            <td><img src="https://cryptoicons.org/api/icon/xlm/25"></td>
             <td>Stellar Lumens</td>
             <td>XLM</td>
             <td><div id='xlm_balance'>397</div></td>
@@ -125,9 +147,32 @@
             <td><div id='xlm_usd'></div></td>
         </tr>
         <tr>
-            <td colspan="2">Wallet Address</td>
-            <td colspan="3"><div id='xlm_address'></div></td>
+            <td colspan="1">Address</td>
+            <td colspan="4"><div id='xlm_address'></div></td>
+            <td colspan="1"></td>
         </tr>
         </table>
+        </div>
+			<div class="col2">
+				<!-- Column 2 start -->
+				<h2>Multi Asset Crypto Wallet</h2><br>
+                <ul>
+                    <li><span>Wallet</span></li><br>
+                    <li><span>Exchange</span></li><br>
+                    <li><span>Buy Crypto</span></li><br>
+                    <li><span>Staking</span></li>
+                </ul>
+                <!-- Column 2 end -->
+			</div>
+			<div class="col3">
+				<!-- Column 3 start -->
+				<div id="ads">
+                </div>
+				<h2>Coin Specifics here</h2>
+                </div>
+                <!-- Column 3 end -->
+            </div>
+            </div>
+        </div>
     </body>
 </html>

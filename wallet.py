@@ -3,9 +3,13 @@ import eel
 import re
 from urllib.request import Request, urlopen
 import json
+import hashlib
 
 
 eel.init('web')
+
+
+#Wallet Functions
 
 @eel.expose
 def create_seed():
@@ -29,6 +33,9 @@ def get_wallets(seed):
         })
     return coin_purse
 
+
+#Dashboard Functions
+
 def read_json(url):
     request = Request(url)
     response = urlopen(request)
@@ -46,4 +53,26 @@ def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC',
     price_data = read_json(url)
     return price_data
 
-eel.start('loginWindow.html', size=(1000, 725))
+
+# Password Functions
+
+def hash_pass(pass_w):
+    return hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest()
+
+@eel.expose
+def set_password(pass_w):
+    file = open("wallet.dat", "w")
+    file.write(hash_pass(pass_w))
+    file.close()
+    return True
+
+@eel.expose
+def check_password(pass_w):
+    file = open("wallet.dat", "r")
+    if file.read() == hash_pass(pass_w):
+        return 'True'
+    else:
+        return 'False' 
+
+
+eel.start('loginWindow.html', size=(1350, 750))

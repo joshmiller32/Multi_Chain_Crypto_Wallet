@@ -1,24 +1,55 @@
+body {
+    margin:0;
+	padding:0;
+	border:0;
+    background-color: #333333;      
+    size: 100%;
+    width:100%;
+    font-size:90%;
+}
+
 h1 {
     color: #FFFFFF;
+    margin:.8em 0 .2em 0;
+	padding:0;
 }
 
 h2 {
     
-    color: #999999;
+    color: #FFFFFF;
+    margin:.8em 0 .2em 0;
+	padding:0;
 }
 
 h3 {
     
     color: #FFFF00;
+    margin:.8em 0 .2em 0;
+	padding:0;
 }
 
-body {
-    background-color: #333333;      
-    size: 100%;
+ul, li {
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    color: #FFFFFF;
+    font-weight: 400;
+}
+
+a {
+    color: #000000;
+    text-decoration:none;
+}
+
+p {
+    color: #FFFFFF;
+    margin:.4em 0 .8em 0;
+	padding:0;
 }
 
 table.main {
     width: 100%;
+    height: 95%;
     color: #FFFFFF;
     border: 1px solid black;
     table-layout: fixed;
@@ -26,11 +57,11 @@ table.main {
 }
 
 .main tr:nth-child(even) {
-    background-color: #666666;
+    background-color: #677589;
 }
 
 .main tr:hover {
-    background-color: #999999;
+    background-color: #8E98A5;
 }
 
 .main column {
@@ -64,7 +95,7 @@ th, td {
 }
 
 th {
-    background-color: #000000;
+    background-color: #1F324B;
 }
 
 
@@ -94,14 +125,6 @@ button#seed {
     clear: both;
 }
 
-a {
-    color: #000000;
-    text-decoration:none;
-}
-
-p {
-    color: #FFFFFF;
-}
 
 button#wordsButton {
     color: #000000;
@@ -131,4 +154,85 @@ button#backButton {
     position: fixed;
     bottom: 20px;
     left: 20px; 
+}
+
+/* Free CSS Below from  http://matthewjamestaylor.com/ */
+
+
+
+}
+img {
+	margin:10px 10 15px;
+
+}
+#ads img {
+	display:block;
+	padding-top:10px;
+}
+
+
+/* column container */
+.colmask {
+	position:relative;	/* This fixes the IE7 overflow hidden bug */
+	clear:both;
+	float:left;
+	width:100%;			/* width of whole page */
+	overflow:hidden;
+    height: 100vh;/* This chops off any overhanging divs */
+}
+/* common column settings */
+.colright,
+.colmid,
+.colleft {
+	float:left;
+	width:100%;			/* width of page */
+	position:relative;
+    height: 100vh;
+}
+.col1,
+.col2,
+.col3 {
+	float:left;
+	position:relative;
+    height: 100vh;
+	/* no left and right padding on columns, we just make them narrower instead 
+					only padding top and bottom is included here, make it whatever value you need */
+	overflow:hidden;
+}
+/* 3 Column settings */
+.threecol {
+	background:#4A5B72;		/* right column background colour */
+}
+.threecol .colmid {
+	right:25%;			/* width of the right column */
+	background:#4A5B72;		/* center column background colour */
+}
+.threecol .colleft {
+	right:60%;			/* width of the middle column */
+	background:#34445B;	/* left column background colour */
+}
+.threecol .col1 {
+	width:56%;			/* width of center column content (column width minus padding on either side) */
+	left:102%;/* 100% plus left padding of center column */
+}
+.threecol .col2 {
+	width:11%;			/* Width of left column content (column width minus padding on either side) */
+	left:31%;			/* width of (right column) plus (center column left and right padding) plus (left column left padding) */
+}
+.threecol .col3 {
+	width:21%;			/* Width of right column content (column width minus padding on either side) */
+	left:95%;
+    /* Please make note of the brackets here:
+					(100% - left column width) plus (center column left and right padding) plus (left column left and right padding) plus (right column left padding) */
+}
+/* Footer styles */
+#footer {
+	clear:both;
+	float:left;
+	width:100%;
+	border-top:1px solid #000;
+}
+#footer p {
+	padding:10px;
+	margin:0;
 }
