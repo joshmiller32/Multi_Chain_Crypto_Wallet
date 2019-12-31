@@ -1,4 +1,3 @@
-
 async function getWords() {
 // Create the JAVA containers (variable) and link them to the HTML container.      
 // There needs to be a container with the id= to the getElementById() argument.  (HTML Example for the argument used below <div id="word1_box"></div>)
@@ -118,20 +117,27 @@ async function getBalanceValue() {
     xlm_usd_value.innerHTML = (Math.round((xlm_balance.innerHTML * price_dict.XLM.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
 }
 
-function checkPassword() {
-    let input = document.getElementById('loginpassword'),
-    pass = input.value;
-    let loginCheck = eel.check_password(pass)();
-    if(loginCheck == 'True') {
+async function checkPassword() {
+    console.log("Checking Password")
+    let input = document.getElementById('loginpassword');
+    var pass = input.value;
+    let loginCheck = await eel.check_password(pass)();
+    console.log(loginCheck);
+    if(loginCheck == "True") {
+        console.log("Password Match!")
         return window.location.replace('mainWindow.html');
     } else {
+        console.log("Password Do Not Match!")
         return input.innerHTML = "Incorrect Password";
     }
 }
 
 async function setPassword() {
-    var input = document.getElementById('newpassword'),
-    pass = input.value;
+    console.log("Setting Password")
+    var input = document.getElementById('newpassword');
+    var pass = input.value;
+    console.log(pass);
     let loginCheck = await eel.set_password(pass)();
+    console.log('x')
     return window.location.replace('mainWindow.html');
 }
