@@ -124,20 +124,15 @@ async function checkPassword() {
     let loginCheck = await eel.check_password(pass)();
     console.log(loginCheck);
     if(loginCheck == "True") {
-        console.log("Password Match!")
         return window.location.replace('mainWindow.html');
     } else {
-        console.log("Password Do Not Match!")
         return input.innerHTML = "Incorrect Password";
     }
 }
 
 async function setPassword() {
-    console.log("Setting Password")
     var input = document.getElementById('newpassword');
     var pass = input.value;
-    console.log(pass);
     let loginCheck = await eel.set_password(pass)();
-    console.log('x')
     return window.location.replace('mainWindow.html');
 }

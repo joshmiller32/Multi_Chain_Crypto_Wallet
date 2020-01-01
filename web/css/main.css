@@ -47,6 +47,8 @@ p {
 	padding:0;
 }
 
+/* Start main table */
+
 table.main {
     width: 100%;
     height: 95%;
@@ -68,25 +70,30 @@ table.main {
     width: 200px;
 }
 
+/* Start Seed Table */
+
 table.seed {
-    width: 75%;
-    height: 60%;
+    width: 100%;
+    height: 100%;
     position: center;
     color: #FFFFFF;
-    border: 1px solid black;
+    border: none;
     table-layout: fixed;
+    
+}
+
+.seed td {
+    font-size: 24px;
+    text-align: center;
 }
 
 
 .seed tr:nth-child(even) {
-    background-color: #666666;
-}
-
-.seed td:hover {
-    background-color: #999999;
+    background-color: #677589;
 }
 
 
+/* Start Global Table */
 
 th, td {
     border-bottom: 1px solid #ddd;
@@ -99,18 +106,6 @@ th {
 }
 
 
-button#seed {
-    color: #000000;
-    border-radius: 50px;
-    position: relative;
-    outline: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    text-transform: uppercase;
-    text-decoration:none;
-}
 
 .column {
     float: left;
@@ -125,6 +120,20 @@ button#seed {
     clear: both;
 }
 
+/* Start Buttons */
+
+button#seed {
+    color: #000000;
+    border-radius: 50px;
+    position: relative;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-decoration:none;
+}
 
 button#wordsButton {
     color: #000000;
@@ -136,7 +145,6 @@ button#wordsButton {
     cursor: pointer;
     text-transform: uppercase;
     text-decoration:none;
-    position: fixed;
     bottom: 20px;
     right: 20px; 
 }
@@ -151,27 +159,21 @@ button#backButton {
     cursor: pointer;
     text-transform: uppercase;
     text-decoration:none;
-    position: fixed;
     bottom: 20px;
     left: 20px; 
 }
 
-/* Free CSS Below from  http://matthewjamestaylor.com/ */
+/* Start Images */
 
-
-
-}
 img {
 	margin:10px 10 15px;
 
 }
-#ads img {
-	display:block;
-	padding-top:10px;
-}
 
 
+/* 3 Column CSS Below from  http://matthewjamestaylor.com/ */
 /* column container */
+
 .colmask {
 	position:relative;	/* This fixes the IE7 overflow hidden bug */
 	clear:both;
@@ -180,6 +182,7 @@ img {
 	overflow:hidden;
     height: 100vh;/* This chops off any overhanging divs */
 }
+
 /* common column settings */
 .colright,
 .colmid,
@@ -189,6 +192,7 @@ img {
 	position:relative;
     height: 100vh;
 }
+
 .col1,
 .col2,
 .col3 {
@@ -225,7 +229,9 @@ img {
     /* Please make note of the brackets here:
 					(100% - left column width) plus (center column left and right padding) plus (left column left and right padding) plus (right column left padding) */
 }
-/* Footer styles */
+
+
+/* Start Footer Below */
 #footer {
 	clear:both;
 	float:left;

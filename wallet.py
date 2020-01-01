@@ -61,14 +61,14 @@ def hash_pass(pass_w):
 
 @eel.expose
 def set_password(pass_w):
-    file = open("wallet.dat", "w")
+    file = open(".pwd", "w")
     file.write(hash_pass(pass_w))
     file.close()
     return True
 
 @eel.expose
 def check_password(pass_w):
-    file = open("wallet.dat", "r")
+    file = open(".pwd", "r")
     if file.read() == hash_pass(pass_w):
         return 'True'
     else:
