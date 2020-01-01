@@ -10,14 +10,20 @@
     </head>
 
     <body onload="getWords()">
-        <h1> 
-            <center>Mnemonic Phrase</center>
-        </h1>
+        <div class="colmask threecol">
+            <div class="colmid">
+                <div class="colleft">
+                    <div class="col1">
+                        <!-- Column 1 start -->
+                    <h1><center>Mnemonic Phrase</center></h1>
         <p><center><h3>
             Write these down,they will never be shown again!
             </h3>
             <br>
+        <br>
         <table class="seed">
+        <tr>
+     
             <tr>
                 <td><div id='word1_box'></div></td>
                 <td><div id='word2_box'></div></td>
@@ -60,11 +66,31 @@
             </b>
             <br>
             <br>
-            <input id="newpassword" type="text" placeholder="Enter A Password" autofocus /> <br>
-            <button id="seed" type="submit" onclick="setPassword();">I Have Saved My Seed Words</button><br>
+             <br>
             </center></p><br>
-        <br>
-        <a href="loginWindow.html"><button id="backButton">Back</button></a>
-        <button id="wordsButton" onclick="getWords()">New Words</button>
+                                </div>
+			<div class="col2">
+				<!-- Column 2 start -->
+				<h2>Multi Asset Crypto Wallet</h2><br>
+                <ul>
+                    <li><span>        <br>
+        <a href="loginWindow.html"><button id="backButton">Back</button></a></span></li><br>
+                    <li><span><button id="wordsButton" onclick="getWords()">New Words</button></span></li><br>
+                    <li><span><input id="newpassword" type="text" placeholder="Enter A Password" autofocus /></span></li><br>
+                    <li><span>            <button id="seed" type="submit" onclick="setPassword();">Open Wallet</button><br></span></li>
+                </ul>
+                <!-- Column 2 end -->
+			</div>
+			<div class="col3">
+				<!-- Column 3 start -->
+				<div id="ads">
+                </div>
+				<h2>List of Generated Address or Private Keys here</h2>
+                </div>
+                <!-- Column 3 end -->
+            </div>
+            </div>
+        </div>
+
     </body>
 </html>
