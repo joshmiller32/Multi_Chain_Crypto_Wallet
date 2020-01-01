@@ -1,3 +1,4 @@
+
 async function getWords() {
 // Create the JAVA containers (variable) and link them to the HTML container.      
 // There needs to be a container with the id= to the getElementById() argument.  (HTML Example for the argument used below <div id="word1_box"></div>)
@@ -73,15 +74,15 @@ async function getPrices() {
     let xlm_usd_container = document.getElementById('xlm_usd');
     
     let price_dict = await eel.get_prices()();
-    btc_usd_container.innerHTML = price_dict.BTC.USD;
-    btg_usd_container.innerHTML = price_dict.BTG.USD;
-    bch_usd_container.innerHTML = price_dict.BCH.USD;
-    ltc_usd_container.innerHTML = price_dict.LTC.USD;
-    dash_usd_container.innerHTML = price_dict.DASH.USD;
-    doge_usd_container.innerHTML = price_dict.DOGE.USD;
-    xrp_usd_container.innerHTML = price_dict.XRP.USD;
-    zec_usd_container.innerHTML = price_dict.ZEC.USD;
-    xlm_usd_container.innerHTML = price_dict.XLM.USD;
+    btc_usd_container.innerHTML = '$' + price_dict.BTC.USD;
+    btg_usd_container.innerHTML = '$' + price_dict.BTG.USD;
+    bch_usd_container.innerHTML = '$' + price_dict.BCH.USD;
+    ltc_usd_container.innerHTML = '$' + price_dict.LTC.USD;
+    dash_usd_container.innerHTML = '$' + price_dict.DASH.USD;
+    doge_usd_container.innerHTML = '$' + price_dict.DOGE.USD;
+    xrp_usd_container.innerHTML = '$' + price_dict.XRP.USD;
+    zec_usd_container.innerHTML = '$' + price_dict.ZEC.USD;
+    xlm_usd_container.innerHTML = '$' + price_dict.XLM.USD;
 }
 
 async function getBalanceValue() {
@@ -106,15 +107,15 @@ async function getBalanceValue() {
     let xlm_balance = document.getElementById('xlm_balance');
     
     let price_dict = await eel.get_prices()();
-    btc_usd_value.innerHTML = (Math.round((btc_balance.innerHTML * price_dict.BTC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
-    btg_usd_value.innerHTML = (Math.round((btg_balance.innerHTML * price_dict.BTG.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
-    bch_usd_value.innerHTML = (Math.round((bch_balance.innerHTML * price_dict.BCH.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
-    ltc_usd_value.innerHTML = (Math.round((ltc_balance.innerHTML * price_dict.LTC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
-    dash_usd_value.innerHTML = (Math.round((dash_balance.innerHTML * price_dict.DASH.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
-    doge_usd_value.innerHTML = (Math.round((doge_balance.innerHTML * price_dict.DOGE.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
-    xrp_usd_value.innerHTML = (Math.round((xrp_balance.innerHTML * price_dict.XRP.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
-    zec_usd_value.innerHTML = (Math.round((zec_balance.innerHTML * price_dict.ZEC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
-    xlm_usd_value.innerHTML = (Math.round((xlm_balance.innerHTML * price_dict.XLM.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    btc_usd_value.innerHTML = '$' + (Math.round((btc_balance.innerHTML * price_dict.BTC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    btg_usd_value.innerHTML = '$' + (Math.round((btg_balance.innerHTML * price_dict.BTG.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    bch_usd_value.innerHTML = '$' + (Math.round((bch_balance.innerHTML * price_dict.BCH.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    ltc_usd_value.innerHTML = '$' + (Math.round((ltc_balance.innerHTML * price_dict.LTC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    dash_usd_value.innerHTML = '$' + (Math.round((dash_balance.innerHTML * price_dict.DASH.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    doge_usd_value.innerHTML = '$' + (Math.round((doge_balance.innerHTML * price_dict.DOGE.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    xrp_usd_value.innerHTML = '$' + (Math.round((xrp_balance.innerHTML * price_dict.XRP.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    zec_usd_value.innerHTML = '$' + (Math.round((zec_balance.innerHTML * price_dict.ZEC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    xlm_usd_value.innerHTML = '$' + (Math.round((xlm_balance.innerHTML * price_dict.XLM.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
 }
 
 async function checkPassword() {
@@ -136,3 +137,4 @@ async function setPassword() {
     let loginCheck = await eel.set_password(pass)();
     return window.location.replace('mainWindow.html');
 }
+

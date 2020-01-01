@@ -15,7 +15,7 @@
             getWallets();
             } 
         </script>
-        
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     </head>
 
     <body>
@@ -24,7 +24,6 @@
                 <div class="colleft">
                     <div class="col1">
                         <!-- Column 1 start -->
-        <br>
         <table class="main">
         <tr>
             <th>Icon</th>
@@ -43,22 +42,12 @@
             <td><div id='btc_usd'></div></td>
         </tr>
         <tr>
-            <td colspan="1">Address</td>
-            <td colspan="4"><div id='btc_address'></div></td>
-            <td colspan="1"></td>
-        </tr>
-        <tr>
             <td><img src="https://cryptoicons.org/api/icon/btg/25"></td>
             <td>Bitcoin Gold</td>
             <td>BTG</td>
             <td><div id='btg_balance'>0.95</div></td>
             <td><div id='btg_usd_value'></div></td>  
             <td><div id='btg_usd'></div></td>
-        </tr>
-        <tr>
-            <td colspan="1">Address</td>
-            <td colspan="4"><div id='btg_address'></div></td>
-            <td colspan="1"></td>
         </tr>
         <tr>
             <td><img src="https://cryptoicons.org/api/icon/bch/25"></td>
@@ -69,22 +58,12 @@
             <td><div id='bch_usd'></div></td>
         </tr>
         <tr>
-            <td colspan="1">Address</td>
-            <td colspan="4"><div id='bch_address'></div></td>
-            <td colspan="1"></td>
-        </tr>
-        <tr>
             <td><img src="https://cryptoicons.org/api/icon/ltc/25"></td>
             <td>Litecoin</td>
             <td>LTC</td>
             <td><div id='ltc_balance'>19.55</div></td>
             <td><div id='ltc_usd_value'></div></td>  
             <td><div id='ltc_usd'></div></td>
-        </tr>
-        <tr>
-            <td colspan="1">Address</td>
-            <td colspan="4"><div id='ltc_address'></div></td>
-            <td colspan="1"></td>
         </tr>
         <tr>
             <td><img src="https://cryptoicons.org/api/icon/dash/25"></td>
@@ -95,22 +74,12 @@
             <td><div id='dash_usd'></div></td>
         </tr>
         <tr>
-            <td colspan="1">Address</td>
-            <td colspan="4"><div id='dash_address'></div></td>
-            <td colspan="1"></td>
-        </tr>
-        <tr>
             <td><img src="https://cryptoicons.org/api/icon/doge/25"></td>
             <td>Dogecoin</td>
             <td>DOGE</td>
             <td><div id='doge_balance'>954350.00</div></td>
             <td><div id='doge_usd_value'></div></td>  
             <td><div id='doge_usd'></div></td>
-        </tr>
-        <tr>
-            <td colspan="1">Address</td>
-            <td colspan="4"><div id='doge_address'></div></td>
-            <td colspan="1"></td>
         </tr>
         <tr>
             <td><img src="https://cryptoicons.org/api/icon/xrp/25"></td>
@@ -121,22 +90,12 @@
             <td><div id='xrp_usd'></div></td>
         </tr>
         <tr>
-            <td colspan="1">Address</td>
-            <td colspan="4"><div id='xrp_address'></div></td>
-            <td colspan="1"></td>
-        </tr>
-        <tr>
             <td><img src="https://cryptoicons.org/api/icon/zec/25"></td>
             <td>ZCash</td>
             <td>ZEC</td>
             <td><div id='zec_balance'>8.94</div></td>
             <td><div id='zec_usd_value'></div></td>
             <td><div id='zec_usd'></div></td>
-        </tr>
-        <tr>
-            <td colspan="1">Address</td>
-            <td colspan="4"><div id='zec_address'></div></td>
-            <td colspan="1"></td>
         </tr>
         <tr>
             <td><img src="https://cryptoicons.org/api/icon/xlm/25"></td>
@@ -146,16 +105,11 @@
             <td><div id='xlm_usd_value'></div></td>
             <td><div id='xlm_usd'></div></td>
         </tr>
-        <tr>
-            <td colspan="1">Address</td>
-            <td colspan="4"><div id='xlm_address'></div></td>
-            <td colspan="1"></td>
-        </tr>
         </table>
         </div>
 			<div class="col2">
 				<!-- Column 2 start -->
-				<h2>Multi Asset Crypto Wallet</h2><br>
+                <h2>Multi Asset Crypto Wallet<hr></h2><br>
                 <ul>
                     <li><span>Wallet</span></li><br>
                     <li><span>Exchange</span></li><br>
@@ -164,15 +118,33 @@
                 </ul>
                 <!-- Column 2 end -->
 			</div>
-			<div class="col3">
+			<div class="col3"><br>
 				<!-- Column 3 start -->
-				<div id="ads">
-                </div>
-				<h2>Coin Specifics here</h2>
+                <h2><center>Bitcoin (BTC)</center></h2>
+                <p>Breif descripton about bitcoin here.  Mention its origins, uses and anything else relavant to new users.<p><br>
+                <br>
+                <center><img src="/images/btc_qr.png" alt="Bitcoin Wallet Address" height="150" width="150"><br>
+                    <br>
+                        <ul>
+                            <span><u>Wallet Address</u></span><br>
+                            <li><span><div id='btc_address'></div></span></li><br><br>
+                            <li><span>Current Balance : </span><span style="color: gold; font-size: 18px;">0.01240059</span></li>
+                            <li><span>USD Value : </span><span style="color: green; font-size: 18px;">$85.96</span></li><br>
+                            <br>
+                            <center><u>Last 30-Day Graph</u>
+                            <div id='btcPlot'></div></center>
+                            
                 </div>
                 <!-- Column 3 end -->
             </div>
             </div>
         </div>
     </body>
+            <script>
+	plot = document.getElementById('btcPlot');
+	Plotly.plot( TESTER, [{
+	x: [1, 2, 3, 4],
+	y: [1, 2, 4, 8] }], {
+	margin: { t: 0 } } );
+</script>
 </html>
