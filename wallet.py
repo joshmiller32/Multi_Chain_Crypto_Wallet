@@ -58,9 +58,9 @@ def get_wallets(seed):
 @eel.expose
 def priv_key_to_account(coin, priv_key):
     
-    if coin == "eth":        return Account.privateKeyToAccount(priv_key)       
+    if coin == "ETH":        return Account.privateKeyToAccount(priv_key)       
     elif coin == "btc-test": return PrivateKeyTestnet(priv_key)  
-    elif coin == "btc":      return PrivateKey(priv_key) 
+    elif coin == "BTC":      return PrivateKey(priv_key) 
     else:                    return "Not a supported coin"
 
     
@@ -74,7 +74,7 @@ to: address to transfer funds.
 amount: amount of the currency. Take into account that Ether must 
 be expressed in weis.
 """
-    if coin == "eth":
+    if coin == "ETH":
         gas_estimate = w3.eth.estimateGas(
             {
                 "from": account.address,
@@ -95,7 +95,7 @@ be expressed in weis.
     elif coin == "btc-test":
         return PrivateKeyTestnet.prepare_transaction(account.address, [(to, amount, BTC)])
     
-    elif coin == "btc":
+    elif coin == "BTC":
         return PrivateKey.prepare_transaction(account.address, [(to, amount, BTC)])
     
     else:
@@ -115,7 +115,7 @@ be expressed in weis.
     tx = create_tx(coin, account.address, to, amount)
     signed_tx = account.sign_transaction(tx) #how to do this tho
     
-    if coin == "eth": 
+    if coin == "ETH": 
         result = w3.eth.sendRawTransaction(signed_tx.rawTransaction)
         return result.hex()
     
@@ -123,7 +123,7 @@ be expressed in weis.
         result = NetworkAPI.broadcast_tx_testnet(signed_tx)
         return result
     
-    elif coin == "btc":
+    elif coin == "BTC":
         result = NetworkAPI.broadcast_tx(signed_tx)
         return result
     
@@ -134,7 +134,7 @@ be expressed in weis.
 @eel.expose
 def get_balance(coin, account):
     
-    if coin == "eth": 
+    if coin == "ETH": 
         return w3.eth.getBalance(account.address)
          
     
