@@ -59,7 +59,8 @@ def get_wallets(seed):
 def priv_key_to_account(coin, priv_key):
     
     if coin == "eth":        return Account.privateKeyToAccount(priv_key)       
-    elif coin == "btc-test": return PrivateKeyTestnet(priv_key)    
+    elif coin == "btc-test": return PrivateKeyTestnet(priv_key)  
+    elif coin == "btc":      return PrivateKey(priv_key) 
     else:                    return "Not a supported coin"
 
     
@@ -93,6 +94,10 @@ be expressed in weis.
 
     elif coin == "btc-test":
         return PrivateKeyTestnet.prepare_transaction(account.address, [(to, amount, BTC)])
+    
+    elif coin == "btc":
+        return PrivateKey.prepare_transaction(account.address, [(to, amount, BTC)])
+    
     else:
         return "Not a supported coin"
 
@@ -117,6 +122,11 @@ be expressed in weis.
     elif coin == "btc-test":
         result = NetworkAPI.broadcast_tx_testnet(signed_tx)
         return result
+    
+    elif coin == "btc":
+        result = NetworkAPI.broadcast_tx(signed_tx)
+        return result
+    
     else:
         return "Not a supported coin"
     
@@ -128,8 +138,9 @@ def get_balance(coin, account):
         return w3.eth.getBalance(account.address)
          
     
-    elif coin == "btc-test":
+    elif coin == "btc-test" or coin == "btc":
         return account.get_balance("btc")
+    
     else:
         return "Not a supported coin"
 
