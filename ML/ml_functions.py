@@ -32,7 +32,7 @@ def get_historical_data(ticker, days_previous):
     return coin_df
 
 def get_arima_forecast(ticker):
-    days_previous_dict = {'BTC': 730, 'ETH': 365}
+    days_previous_dict = {'BTC': 730, 'ETH': 365, 'LTC': 365}
     days_previous = days_previous_dict[ticker]
     coin_df = get_historical_data(ticker, days_previous)
     transformed_data, lmda = boxcox(coin_df)
@@ -41,9 +41,12 @@ def get_arima_forecast(ticker):
     transformed_df['close'] = transformed_data
     if ticker == 'BTC':
         model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1,0,0,0,0,1),1,(1,0,1,1,1)))
-    else:
+    elif ticker == 'ETH':
         model = SARIMAX(transformed_df, order = ((1,0,0,1),2,1))
-    model_fit = model.fit(disp = True)
+    else:
+        model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1),1,(0,0,0,0,0,0,0,0,0,1)))
+
+    model_fit = model.fit(disp = False)
     conf_int = model_fit.get_forecast(5)
     confidence_intervals = conf_int.conf_int()
     confidence_intervals = inv_boxcox(confidence_intervals, lmda)
