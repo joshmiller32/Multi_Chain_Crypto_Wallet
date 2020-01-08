@@ -31,27 +31,33 @@ def get_historical_data(ticker, days_previous):
     coin_df = coin_df.set_index('Date')
     return coin_df
 
-def get_bitcoin_arima_forecast():
-    
-    bitcoin_df = get_historical_data('BTC', 730)
-    transformed_data, lmda = boxcox(bitcoin_df)
+def get_arima_forecast(ticker):
+    days_previous_dict = {'BTC': 730, 'ETH': 365}
+    days_previous = days_previous_dict[ticker]
+    coin_df = get_historical_data(ticker, days_previous)
+    transformed_data, lmda = boxcox(coin_df)
     transformed_data = transformed_data.flatten().tolist()
-    transformed_df = bitcoin_df.copy()
+    transformed_df = coin_df.copy()
     transformed_df['close'] = transformed_data
-    model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1,0,0,0,0,1),1,(1,0,1,1,1)))
+    if ticker == 'BTC':
+        model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1,0,0,0,0,1),1,(1,0,1,1,1)))
+    else:
+        model = SARIMAX(transformed_df, order = ((1,0,0,1),2,1))
     model_fit = model.fit(disp = True)
     conf_int = model_fit.get_forecast(5)
     confidence_intervals = conf_int.conf_int()
     confidence_intervals = inv_boxcox(confidence_intervals, lmda)
-    predictions = model_fit.predict(start= 731, end = 735)
+    start = days_previous + 1
+    end = days_previous + 6
+    predictions = model_fit.predict(start= start, end = end)
     predicted_close = inv_boxcox(predictions, lmda)
     final_df = confidence_intervals.copy()
     final_df['predicted_close'] = predicted_close
     final_df = final_df.round(2)
     return final_df
 
-def get_arima_forecast_plot():
-    forecast_df = get_bitcoin_arima_forecast()
+def get_arima_forecast_plot(ticker):
+    forecast_df = get_arima_forecast(ticker)
     plt.style.use('dark_background')
     fig = plt.figure(figsize = (15,8))
     plt.plot(forecast_df['predicted_close'], marker = 'o', color = 'y')
