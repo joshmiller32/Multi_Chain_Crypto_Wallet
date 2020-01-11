@@ -5,6 +5,8 @@ from urllib.request import Request, urlopen
 import json
 import hashlib
 
+import scrypt
+
 from constants import *
 from web3 import Web3
 import os 
@@ -40,19 +42,40 @@ def create_seed():
         seed_dict.update( {word_count : word} )
     return seed_dict
 
+def derive_wallets(mnemonic, coin, nkeys):
+
+    command = f'./hd-wallet-derive/hd-wallet-derive.php --mnemonic="{mnemonic}" --coin={coin} --numderive={nkeys}  --format=json -g'
+    new_process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
+
+    (output, err) = new_process.communicate()
+
+    p_status = new_process.wait()
+
+    if err:
+        print("\nError:###\n\n")
+        return err
+
+    return json.loads(output)
+
 @eel.expose
 def get_wallets(seed):
+    """
     coins = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZCASH','XLM']
     coin_purse = {}
     for coin in coins:
         w = wallet.create_wallet(network=coin, seed=seed, children=1)
         coin_purse.update({
             coin : {"address": w['address'],
-                   "privatek": w["xprivate_key"]
-                   "publick" : w["xpublic_key"]
+                   "privatek": w["xprivate_key"],
+                   "publick" : w["xpublic_key"],
                    "children": w["children"]
                    }
-        })
+        })"""
+    coin_purse = {  #We'll have to add more coins, specially ERC20 tokens
+    "eth"     : derive_wallets(seed, "ETH", 10), 
+    "btc-test": derive_wallets(seed, "BTC-test", 10),
+    "btc"     : derive_wallets(seed, "BTC", 10)
+}
     return coin_purse
 
 @eel.expose
@@ -65,15 +88,15 @@ def priv_key_to_account(coin, priv_key):
 
     
 def create_tx(coin, account, to, amount):
-"""
-coin options: eth, btc-test.
-account: account containing all the info like private and public 
-key as well as address of a certain account. This must be obtained
-trough the method priv_key_to_account().
-to: address to transfer funds.
-amount: amount of the currency. Take into account that Ether must 
-be expressed in weis.
-"""
+    """
+    coin options: eth, btc-test.
+    account: account containing all the info like private and public 
+    key as well as address of a certain account. This must be obtained
+    trough the method priv_key_to_account().
+    to: address to transfer funds.
+    amount: amount of the currency. Take into account that Ether must 
+    be expressed in weis.
+    """
     if coin == "ETH":
         gas_estimate = w3.eth.estimateGas(
             {
@@ -103,15 +126,15 @@ be expressed in weis.
 
 @eel.expose
 def send_tx(coin, account, to, amount):
-"""
-coin options: eth, btc-test.
-account: account containing all the info like private and public 
-key as well as address of a certain account. This must be obtained
-trough the method priv_key_to_account().
-to: address to transfer funds.
-amount: amount of the currency. Take into account that Ether must 
-be expressed in weis.
-"""  
+    """
+    coin options: eth, btc-test.
+    account: account containing all the info like private and public 
+    key as well as address of a certain account. This must be obtained
+    trough the method priv_key_to_account().
+    to: address to transfer funds.
+    amount: amount of the currency. Take into account that Ether must 
+    be expressed in weis.
+    """  
     tx = create_tx(coin, account.address, to, amount)
     signed_tx = account.sign_transaction(tx) #how to do this tho
     
@@ -170,7 +193,8 @@ def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC',
 # Password Functions
 
 def hash_pass(pass_w):
-    return hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest()
+    #return hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest() #Original
+    return scrypt.encrypt(pass_w , 'Josh Eric Christian Oscar', maxtime=0.2)
 
 @eel.expose
 def set_password(pass_w):
@@ -182,10 +206,15 @@ def set_password(pass_w):
 @eel.expose
 def check_password(pass_w):
     file = open(".pwd", "r")
-    if file.read() == hash_pass(pass_w):
+    """
+    ######Original ######
+    if file.read() == hash_pass(pass_w): 
+    
         return 'True'
     else:
         return 'False' 
+        """
+    return scrypt.decrypt(file.read(),'Josh Eric Christian Oscar',maxtime=0.4) == pass_w
 
 
 eel.start('loginWindow.html', size=(1350, 750))
