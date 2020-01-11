@@ -45,6 +45,7 @@ def create_seed():
 def derive_wallets(mnemonic, coin, nkeys):
 
     command = f'./hd-wallet-derive/hd-wallet-derive.php --mnemonic="{mnemonic}" --coin={coin} --numderive={nkeys}  --format=json -g'
+    available_coins = "./hd-wallet-derive.php --help-coins" # --> currently not in use
     new_process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
 
     (output, err) = new_process.communicate()
@@ -72,15 +73,24 @@ def get_wallets(seed):
                    }
         })"""
     coin_purse = {  #We'll have to add more coins, specially ERC20 tokens
-    "eth"     : derive_wallets(seed, "ETH", 10), 
-    "btc-test": derive_wallets(seed, "BTC-test", 10),
-    "btc"     : derive_wallets(seed, "BTC", 10)
+    "ETH"     : derive_wallets(seed, "ETH", 10), 
+    "BTC-test": derive_wallets(seed, "BTC-test", 10),
+    "BTC"     : derive_wallets(seed, "BTC", 10),
+    "BTG"     : derive_wallets(seed, "BTG", 10),
+    "BCH"     : derive_wallets(seed, "BCH", 10),
+    "LTC"     : derive_wallets(seed, "LTC", 10),
+    "DASH"    : derive_wallets(seed, "DASH", 10),
+    "DODGE"   : derive_wallets(seed, "DODGE", 10),
+    "XRP"     : derive_wallets(seed, "XRP", 10),
+    "ZCASH"   : derive_wallets(seed, "ZCASH", 10),
+    "XML"     : derive_wallets(seed, "XML", 10),
 }
     return coin_purse
 
 @eel.expose
 def priv_key_to_account(coin, priv_key):
     
+    """Use it like this: my_btctest_account = priv_key_to_account("btc-test",coin_purse["btc-test"][0]["privkey"])"""
     if coin == "ETH":        return Account.privateKeyToAccount(priv_key)       
     elif coin == "btc-test": return PrivateKeyTestnet(priv_key)  
     elif coin == "BTC":      return PrivateKey(priv_key) 
@@ -89,7 +99,7 @@ def priv_key_to_account(coin, priv_key):
     
 def create_tx(coin, account, to, amount):
     """
-    coin options: eth, btc-test.
+    coin options: eth, btc-test, btc.
     account: account containing all the info like private and public 
     key as well as address of a certain account. This must be obtained
     trough the method priv_key_to_account().
@@ -134,6 +144,7 @@ def send_tx(coin, account, to, amount):
     to: address to transfer funds.
     amount: amount of the currency. Take into account that Ether must 
     be expressed in weis.
+    Example: send_tx(coin = "btc-test",account = my_btctest_account, to = coin_purse["btc-test"][1]["address"],amount= 0.01)
     """  
     tx = create_tx(coin, account.address, to, amount)
     signed_tx = account.sign_transaction(tx) #how to do this tho
