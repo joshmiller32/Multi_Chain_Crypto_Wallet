@@ -80,10 +80,10 @@ def get_wallets(seed):
     "BCH"     : derive_wallets(seed, "BCH", 10),
     "LTC"     : derive_wallets(seed, "LTC", 10),
     "DASH"    : derive_wallets(seed, "DASH", 10),
-    "DODGE"   : derive_wallets(seed, "DODGE", 10),
-    "XRP"     : derive_wallets(seed, "XRP", 10),
-    "ZCASH"   : derive_wallets(seed, "ZCASH", 10),
-    "XML"     : derive_wallets(seed, "XML", 10),
+    #"DODGE"   : derive_wallets(seed, "DODGE", 10),
+    #"XRP"     : derive_wallets(seed, "XRP", 10),
+    #"ZCASH"   : derive_wallets(seed, "ZCASH", 10),
+    #"XML"     : derive_wallets(seed, "XML", 10),
 }
     return coin_purse
 
