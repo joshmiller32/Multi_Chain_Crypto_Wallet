@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang='en'>
     <head>
-        <title>Multi Asset Wallet</title>
+        <title>FCCwallet - The Crypto Wallet for The Federation of the United States of America</title>
         
         <link rel="stylesheet" type="text/css" href="css/main.css">  
 
@@ -109,7 +109,7 @@
         </div>
 			<div class="col2">
 				<!-- Column 2 start -->
-                <h2>Multi Asset Crypto Wallet<hr></h2><br>
+                <h2>FCCwallet</h2><br><span style="color: gold; font-size: 13px; font-style: italic;">The Crypto Wallet for <br>The Federation of the United States of America</span><hr>
                 <ul>
                     <li><span>Wallet</span></li><br>
                     <li><span>Exchange</span></li><br>
@@ -133,18 +133,17 @@
                             <br>
                             <center><u>Last 30-Day Graph</u>
                             <div id='btcPlot'></div></center>
-                            
+                <!-- Column 3 end -->      
+                    </div>
                 </div>
-                <!-- Column 3 end -->
-            </div>
             </div>
         </div>
     </body>
-            <script>
+    <script>
 	plot = document.getElementById('btcPlot');
 	Plotly.plot( TESTER, [{
 	x: [1, 2, 3, 4],
 	y: [1, 2, 4, 8] }], {
 	margin: { t: 0 } } );
-</script>
+    </script>
 </html>
