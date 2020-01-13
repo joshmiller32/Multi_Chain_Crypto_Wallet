@@ -12,6 +12,8 @@ h1 {
     color: #FFFFFF;
     margin:.8em 0 .2em 0;
 	padding:0;
+    font-size: 32px;
+    
 }
 
 h2 {
@@ -19,6 +21,8 @@ h2 {
     color: #FFFFFF;
     margin:.8em 0 .2em 0;
 	padding:0;
+    font-style: italic;
+    
 }
 
 h3 {
@@ -37,7 +41,7 @@ ul, li {
 }
 
 a {
-    color: #000000;
+    color: #FFFFFF;
     text-decoration:none;
 }
 
@@ -47,14 +51,22 @@ p {
 	padding:0;
 }
 
-input[type=text] {
+input[type=password] {
     background: transparent;
     border-bottom: 1px solid #FFFFFF;
     border-top: 0px;
     border-left: 0px;
     border-right: 0px;
     padding: 2px 5px;
+    color: #FFFFFF;
     
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
 }
 
 .loginpassword:focus{
@@ -188,7 +200,6 @@ img {
 	margin:10px 10 10px;
 
 }
-
 
 /* 3 Column CSS Below from  http://matthewjamestaylor.com/ */
 /* column container */

@@ -138,3 +138,8 @@ async function setPassword() {
     return window.location.replace('mainWindow.html');
 }
 
+function windowClose() {
+window.open('','_parent','');
+window.close();
+}
+
