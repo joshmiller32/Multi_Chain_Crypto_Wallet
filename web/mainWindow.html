@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang='en'>
     <head>
-        <title>FCCwallet - The Crypto Wallet for The Federation of the United States of America</title>
-        
-        <link rel="stylesheet" type="text/css" href="css/main.css">  
+        <title>Multi-Asset Crypto Wallet v0.1.0</title>
 
+        <link rel="stylesheet" type="text/css" href="css/main.css">  
         
+        <!-- Start of Scripts -->
         <script type="text/javascript" src="/eel.js"></script>
         <script type="text/javascript" src="scripts/main.js"></script>
         <script type="text/javascript">
@@ -15,9 +15,12 @@
             getWallets();
             } 
         </script>
-        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    </head>
 
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <!-- End of Scripts -->
+        
+    </head>
+    
     <body>
         <div class="colmask threecol">
             <div class="colmid">
@@ -40,7 +43,7 @@
             <td><div id='btc_balance'>0.01240059</div></td>
             <td><div id='btc_usd_value'></div></td>
             <td><div id='btc_usd'></div></td>
-        </tr>
+        </tr>           
         <tr>
             <td><img src="https://cryptoicons.org/api/icon/btg/25"></td>
             <td>Bitcoin Gold</td>
@@ -118,7 +121,7 @@
                     <li><span><img src="images/buy.png" height="25px" width="30px">&nbsp;<a href="buyWindow.html" style="vertical-align: top;" />Buy Crypto</span></li><br>
                     <li><span><img src="images/staking.png" height="25px" width="30px">&nbsp;<a href="stakingWindow.html" style="vertical-align: top;" />Staking</span></li>
                 </ul>
-                <img src="images/exit.png" height="25px" width="25px">&nbsp;&nbsp;<a href="" onclick="windowClose()" style="vertical-align: top;">Close Wallet</a>
+                <img src="images/exit.png" height="25px" width="30px">&nbsp;&nbsp;<a href="" onclick="windowClose()" style="vertical-align: top;">Close Wallet</a>
                 <!-- Column 2 end -->
 			</div>
 			<div class="col3"><br>
@@ -130,23 +133,16 @@
                     <br>
                         <ul>
                             <span><u>Wallet Address</u></span><br>
+
                             <li><span><div id='btc_address'></div></span></li><br><br>
                             <li><span>Current Balance : </span><span style="color: gold; font-size: 18px;">0.01240059</span></li>
                             <li><span>USD Value : </span><span style="color: green; font-size: 18px;">$85.96</span></li><br>
                             <br>
-                            <center><u>Last 30-Day Graph</u>
-                            <div id='btcPlot'></div></center>
+                            <center><u>Last 30-Day Graph</u></center>
                 <!-- Column 3 end -->      
                     </div>
                 </div>
             </div>
         </div>
     </body>
-    <script>
-	plot = document.getElementById('btcPlot');
-	Plotly.plot( TESTER, [{
-	x: [1, 2, 3, 4],
-	y: [1, 2, 4, 8] }], {
-	margin: { t: 0 } } );
-    </script>
 </html>

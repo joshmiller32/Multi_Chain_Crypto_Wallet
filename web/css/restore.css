@@ -51,6 +51,17 @@ p {
 	padding:0;
 }
 
+input[type=text] {
+    background: transparent;
+    border-bottom: 1px solid #FFFFFF;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    padding: 2px 5px;
+    color: #FFFFFF;
+    
+}
+
 input[type=password] {
     background: transparent;
     border-bottom: 1px solid #FFFFFF;
@@ -62,6 +73,11 @@ input[type=password] {
     
 }
 
+::placeholder { 
+    color:#FFFFFF;
+    padding: 15px;
+}
+
 input:focus,
 select:focus,
 textarea:focus,
@@ -69,12 +85,7 @@ button:focus {
     outline: none;
 }
 
-::placeholder { 
-    color:#FFFFFF;
-    padding: 15px;
-}
-
-.loginpassword:focus{
+.seed:focus{
     background: transparent;
     border: none;
 }
