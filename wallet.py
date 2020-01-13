@@ -4,12 +4,14 @@ import re
 from urllib.request import Request, urlopen
 import json
 import hashlib
+import os
 
 
 eel.init('web')
 
 
 #Wallet Functions
+
 
 @eel.expose
 def create_seed():
@@ -20,12 +22,15 @@ def create_seed():
         count += 1
         word_count = "word" + str(count)
         seed_dict.update( {word_count : word} )
+        os.environ[word_count] = word
     return seed_dict
+
+coin_purse = {}
 
 @eel.expose
 def get_wallets(seed):
     coins = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZCASH','XLM']
-    coin_purse = {}
+    global coin_purse 
     for coin in coins:
         w = wallet.create_wallet(network=coin, seed=seed, children=1)
         coin_purse.update({
@@ -33,6 +38,14 @@ def get_wallets(seed):
         })
     return coin_purse
 
+@eel.expose
+def get_seed():
+    seed_phrase = ""
+    for i in range(12):
+        word = "word" + str(i + 1)
+        seed_phrase += os.environ[word] + " "
+    return seed_phrase
+    
 
 #Dashboard Functions
 
