@@ -12,6 +12,8 @@ h1 {
     color: #FFFFFF;
     margin:.8em 0 .2em 0;
 	padding:0;
+    font-size: 32px;
+    
 }
 
 h2 {
@@ -19,6 +21,8 @@ h2 {
     color: #FFFFFF;
     margin:.8em 0 .2em 0;
 	padding:0;
+    font-style: italic;
+    
 }
 
 h3 {
@@ -37,7 +41,7 @@ ul, li {
 }
 
 a {
-    color: #000000;
+    color: #FFFFFF;
     text-decoration:none;
 }
 
@@ -45,6 +49,34 @@ p {
     color: #FFFFFF;
     margin:.4em 0 .8em 0;
 	padding:0;
+}
+
+input[type=password] {
+    background: transparent;
+    border-bottom: 1px solid #FFFFFF;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    padding: 2px 5px;
+    color: #FFFFFF;
+    
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+::placeholder { 
+    color:#FFFFFF;
+    padding: 15px;
+}
+
+.loginpassword:focus{
+    background: transparent;
+    border: none;
 }
 
 /* Start main table */
@@ -111,7 +143,6 @@ th {
 }
 
 
-
 .column {
     float: left;
     width: 33.33%;
@@ -175,7 +206,6 @@ img {
 
 }
 
-
 /* 3 Column CSS Below from  http://matthewjamestaylor.com/ */
 /* column container */
 
@@ -196,6 +226,7 @@ img {
 	width:100%;			/* width of page */
 	position:relative;
     height: 100vh;
+    
 }
 
 .col1,
@@ -214,23 +245,24 @@ img {
 }
 .threecol .colmid {
 	right:25%;			/* width of the right column */
-	background:#4A5B72;		/* center column background colour */
+	background:#4A5B72; /* center column background colour */
 }
 .threecol .colleft {
-	right:60%;			/* width of the middle column */
-	background:#34445B;	/* left column background colour */
+	right:50%;			/* width of the middle column */
+	background:#4A5B72;	/* left column background colour */
 }
 .threecol .col1 {
-	width:56%;			/* width of center column content (column width minus padding on either side) */
-	left:102%;/* 100% plus left padding of center column */
+	width:50%;			/* width of center column content (column width minus padding on either side) */
+	left:100%;/* 100% plus left padding of center column */
+    padding-top:50px;
 }
 .threecol .col2 {
-	width:11%;			/* Width of left column content (column width minus padding on either side) */
-	left:31%;			/* width of (right column) plus (center column left and right padding) plus (left column left padding) */
+	width:25%;			/* Width of left column content (column width minus padding on either side) */
+	left:25%;			/* width of (right column) plus (center column left and right padding) plus (left column left padding) */
 }
 .threecol .col3 {
-	width:21%;			/* Width of right column content (column width minus padding on either side) */
-	left:95%;
+	width:25%;			/* Width of right column content (column width minus padding on either side) */
+	left:75%;
     /* Please make note of the brackets here:
 					(100% - left column width) plus (center column left and right padding) plus (left column left and right padding) plus (right column left padding) */
 }
