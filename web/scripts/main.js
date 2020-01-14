@@ -1,4 +1,4 @@
-
+var word_dict = {}; //We'll have to ask Cam about how to avoid this security vulnerability
 async function getWords() {
 // Create the JAVA containers (variable) and link them to the HTML container.      
 // There needs to be a container with the id= to the getElementById() argument.  (HTML Example for the argument used below <div id="word1_box"></div>)
@@ -21,7 +21,7 @@ async function getWords() {
 
 // In this case the function returns an object (Python Dict) which we can then access the "key/value" pairs
     
-    let word_dict = await eel.create_seed()();
+    word_dict = await eel.create_seed()();
     word1_container.innerHTML = word_dict.word1;
     word2_container.innerHTML = word_dict.word2;
     word3_container.innerHTML = word_dict.word3;
@@ -48,7 +48,8 @@ async function getWallets() {
     let XRP_address = document.getElementById('xrp_address');
     let ZEC_address = document.getElementById('zec_address');
     let XLM_address = document.getElementById('xlm_address');
-    let seed = await eel.get_seed()();
+    //let seed = await eel.get_seed()();
+    let seed = extractSeed();
 
     let coin_purse = await eel.get_wallets(seed)();
     BTC_address.innerHTML = coin_purse.BTC;
@@ -132,15 +133,22 @@ async function checkPassword() {
     }
 }
 
+function extractSeed() {
+    var seed = "";
+    for(var key in word_dict) {
+      seed += word_dict[key] +  " ";
+    }
+    return seed;
+    }
+    
+    
 async function setPassword() {
     let input = document.getElementById('newpassword');
     let pass = input.value;
-    let seed = "";
-    let words = document.getElementsByClassName("seed"); 
-            for (var i = 0; i < words.length; i++) { 
-                seed = seed + " " + words[i].innerText; 
-            } 
+    let seed = extractSeed();
     let loginCheck = await eel.set_password(pass, seed)();
+    seed = await eel.decrypt_seed(pass)();
+    console.log(seed);
     return window.location.replace('mainWindow.html');
 }
 

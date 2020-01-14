@@ -195,7 +195,6 @@ def get_balance(coin, account):
 
 
 @eel.expose
-
 def get_seed():
     seed_phrase = ""
     for i in range(12):
@@ -204,7 +203,13 @@ def get_seed():
 
     return seed_phrase
     
-
+@eel.expose
+def decrypt_seed(password):
+    seed_path = Path(f".pwd.csv")
+    seed_df = pd.read_csv(seed_path)
+    ecnrypted_seed =bytes.fromhex(seed_df.loc[0]["seed"])   
+    decrypted = scrypt.decrypt(ecnrypted_seed, password, maxtime=0.4)
+    return decrypted
   
     
 #Dashboard Functions
@@ -262,7 +267,7 @@ def check_password(pass_w):
         """
     pass_path = Path(f".pwd.csv")
     password = pd.read_csv(pass_path)
-    ecnrypted_pass =bytes.fromhex(password["password"][0])   
+    ecnrypted_pass =bytes.fromhex(password.loc[0]["password"])   
     decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
     
     return decrypted == pass_w
