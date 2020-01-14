@@ -34,6 +34,7 @@ async function getWords() {
     word10_container.innerHTML = word_dict.word10;
     word11_container.innerHTML = word_dict.word11;
     word12_container.innerHTML = word_dict.word12;
+
 }
 
 
@@ -47,8 +48,8 @@ async function getWallets() {
     let XRP_address = document.getElementById('xrp_address');
     let ZEC_address = document.getElementById('zec_address');
     let XLM_address = document.getElementById('xlm_address');
-    let seed = 'shoe knife genius music loud smoke thunder oxygen judge royal thing horror'
-    
+    let seed = await eel.get_seed()();
+
     let coin_purse = await eel.get_wallets(seed)();
     BTC_address.innerHTML = coin_purse.BTC;
     BTG_address.innerHTML = coin_purse.BTG;
@@ -143,8 +144,14 @@ async function setPassword() {
     return window.location.replace('mainWindow.html');
 }
 
+<<<<<<< HEAD
 async function populateWallet(currency) {
     
     let allWallets = await eel.get_wallets(seed)();
     return allWallets
+=======
+function windowClose() {
+    window.open('','_parent','');
+    window.close();
+>>>>>>> c7df6069d9c4c09cd58f6ca8399501ed4d309131
 }
