@@ -26,6 +26,9 @@ from bit.network.meta import Unspent
 #from bit.transaction import calc_txid, create_p2pkh_transaction, sanitize_tx_data
 from web3.middleware import geth_poa_middleware
 
+import pandas as pd
+from path import Path
+
 
 eel.init('web')
 
@@ -91,7 +94,7 @@ def get_wallets(seed):
     "BCH"     : derive_wallets(seed, "BCH", 10),
     "LTC"     : derive_wallets(seed, "LTC", 10),
     "DASH"    : derive_wallets(seed, "DASH", 10),
-    "DOGE"   : derive_wallets(seed, "DODGE", 10),
+    "DOGE"   : derive_wallets(seed, "DOGE", 10),
     #"XRP"     : derive_wallets(seed, "XRP", 10), #https://bitcoin.stackexchange.com/questions/75385/does-ripple-has-support-for-hd-wallets
     "ZCASH"   : derive_wallets(seed, "ZEC", 10),
     #"XML"     : derive_wallets(seed, "XML", 10),
@@ -190,17 +193,19 @@ def get_balance(coin, account):
     else:
         return "Not a supported coin"
 
+
+@eel.expose
+
 def get_seed():
     seed_phrase = ""
     for i in range(12):
         word = "word" + str(i + 1)
         seed_phrase += os.environ[word] + " "
+
     return seed_phrase
     
 
-
-    
-    
+  
     
 #Dashboard Functions
 
@@ -224,29 +229,43 @@ def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC',
 
 # Password Functions
 
-def hash_pass(pass_w):
+def hash_pass(pass_w,salt):
     #return hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest() #Original
-    return scrypt.encrypt(pass_w , 'Josh Eric Christian Oscar', maxtime=0.2)
+    return scrypt.encrypt(pass_w , salt, maxtime=0.2)
 
 @eel.expose
-def set_password(pass_w):
-    file = open(".pwd", "w")
-    file.write(hash_pass(pass_w))
+def set_password(pass_w, seed):
+    """
+    file = open(".pwd.csv", "w")
+    file.write(hash_pass(pass_w)) 
     file.close()
+    """
+    
+    password = {"seed": [hash_pass(seed ,pass_w).hex()], #we encrypt the mnemonic seed with the password
+               "password": [hash_pass(pass_w,"super wallet").hex()]} #ecnryption of the password with a salt
+    psw_df = pd.DataFrame(password)
+    pass_path = Path(f".pwd.csv")
+    psw_df.to_csv(pass_path)
     return True
 
 @eel.expose
 def check_password(pass_w):
-    file = open(".pwd", "r")
+    
     """
     ######Original ######
+    file = open(".pwd", "r")
     if file.read() == hash_pass(pass_w): 
     
         return 'True'
     else:
         return 'False' 
         """
-    return scrypt.decrypt(file.read(),'Josh Eric Christian Oscar',maxtime=0.4) == pass_w
+    pass_path = Path(f".pwd.csv")
+    password = pd.read_csv(pass_path)
+    ecnrypted_pass =bytes.fromhex(password["password"][0])   
+    decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
+    
+    return decrypted == pass_w
 
 def rm(var):
     g = globals()

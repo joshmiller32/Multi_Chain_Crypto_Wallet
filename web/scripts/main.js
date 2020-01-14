@@ -133,13 +133,26 @@ async function checkPassword() {
 }
 
 async function setPassword() {
-    var input = document.getElementById('newpassword');
-    var pass = input.value;
-    let loginCheck = await eel.set_password(pass)();
+    let input = document.getElementById('newpassword');
+    let pass = input.value;
+    let seed = "";
+    let words = document.getElementsByClassName("seed"); 
+            for (var i = 0; i < words.length; i++) { 
+                seed = seed + " " + words[i].innerText; 
+            } 
+    let loginCheck = await eel.set_password(pass, seed)();
     return window.location.replace('mainWindow.html');
+}
+
+
+async function populateWallet(currency) {
+    
+    let allWallets = await eel.get_wallets(seed)();
+    return allWallets
 }
 
 function windowClose() {
     window.open('','_parent','');
     window.close();
+
 }

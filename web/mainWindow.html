@@ -138,9 +138,30 @@
                             <li><span>Current Balance : </span><span style="color: gold; font-size: 18px;">0.01240059</span></li>
                             <li><span>USD Value : </span><span style="color: green; font-size: 18px;">$85.96</span></li><br>
                             <br>
+
+                            <center><u>Last 30-Day Graph</u>
+                            <div id='btcPlot'></div></center>
+                            
+                            <h1><center>
+                            Send to Address: 
+                            </center></h1>
+                            <br>
+                            <input id="sendToAddr" type="text" placeholder="Send to address..." autofocus /> <br>
+                            <br>
+                            <h1><center>
+                            Amount: 
+                            </center></h1>
+                            
+                            <input id="amountTx" type="text" placeholder="Amount" autofocus /> 
+                            <br>
+                            <button id="Send" type="submit" onclick="SendTx()">SEND</button>
+                            <br>
+                            
+
                             <center><u>Last 30-Day Graph</u></center>
                 <!-- Column 3 end -->      
                     </div>
+
                 </div>
             </div>
         </div>
