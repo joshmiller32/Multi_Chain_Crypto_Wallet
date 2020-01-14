@@ -144,14 +144,15 @@ async function setPassword() {
     return window.location.replace('mainWindow.html');
 }
 
-<<<<<<< HEAD
+
 async function populateWallet(currency) {
     
     let allWallets = await eel.get_wallets(seed)();
     return allWallets
-=======
+}
+
 function windowClose() {
     window.open('','_parent','');
     window.close();
->>>>>>> c7df6069d9c4c09cd58f6ca8399501ed4d309131
+
 }
