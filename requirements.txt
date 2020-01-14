@@ -1,3 +1,15 @@
 pip install py_hd_wallet
 pip install eel
 
+## Installation hd_wallet_derive ##
+
+ git clone https://github.com/dan-da/hd-wallet-derive
+ cd hd-wallet-derive
+ php -r "readfile('https://getcomposer.org/installer');" | php
+ php composer.phar install
+
+###################################
+
+conda install -c conda-forge scrypt
+
+pip install clove
