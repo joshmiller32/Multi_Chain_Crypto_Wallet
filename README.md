@@ -5,3 +5,7 @@ To start the wallet during development enter
 `python wallet.py`
 
 Check the requirements.txt for dependencies 
+
+##Smart Contract Functions
+
+Savings Account (Deposit, Withdraw, Send, View Balance)

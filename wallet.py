@@ -4,6 +4,7 @@ import re
 from urllib.request import Request, urlopen
 import json
 import hashlib
+import os
 
 import scrypt
 
@@ -31,6 +32,7 @@ eel.init('web')
 
 #Wallet Functions
 
+
 @eel.expose
 def create_seed():
     seed = re.sub("[^\w]", " ",  wallet.generate_mnemonic()).split()
@@ -40,7 +42,9 @@ def create_seed():
         count += 1
         word_count = "word" + str(count)
         seed_dict.update( {word_count : word} )
+        os.environ[word_count] = word
     return seed_dict
+
 
 def derive_wallets(mnemonic, coin, nkeys):
 
@@ -58,11 +62,14 @@ def derive_wallets(mnemonic, coin, nkeys):
 
     return json.loads(output)
 
+coin_purse = {}
+
+
 @eel.expose
 def get_wallets(seed):
     """
     coins = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZCASH','XLM']
-    coin_purse = {}
+    global coin_purse 
     for coin in coins:
         w = wallet.create_wallet(network=coin, seed=seed, children=1)
         coin_purse.update({
@@ -92,6 +99,7 @@ def get_wallets(seed):
     return coin_purse
 
 @eel.expose
+
 def priv_key_to_account(coin, priv_key):
     
     """Use it like this: my_btctest_account = priv_key_to_account("btc-test",coin_purse["btc-test"][0]["privkey"])"""
@@ -182,6 +190,15 @@ def get_balance(coin, account):
     else:
         return "Not a supported coin"
 
+def get_seed():
+    seed_phrase = ""
+    for i in range(12):
+        word = "word" + str(i + 1)
+        seed_phrase += os.environ[word] + " "
+    return seed_phrase
+    
+
+
     
     
     
@@ -231,5 +248,8 @@ def check_password(pass_w):
         """
     return scrypt.decrypt(file.read(),'Josh Eric Christian Oscar',maxtime=0.4) == pass_w
 
-
+def rm(var):
+    g = globals()
+    if var in g: del g[var]
+    
 eel.start('loginWindow.html', size=(1350, 750))
