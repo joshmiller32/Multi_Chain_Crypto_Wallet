@@ -71,6 +71,10 @@ def get_wallets(seed):
                    "publick" : w["xpublic_key"],
                    "children": w["children"]
                    }
+                   # a disadvantage of hd_derive_wallet is that it doesn't generate 
+                   # a specific child. For instance, like the child with index 19384.
+                   # So you are forced to create the whole chain of child addresses
+                   # from 0 to 19384.
         })"""
     coin_purse = {  #We'll have to add more coins, specially ERC20 tokens
     "ETH"     : derive_wallets(seed, "ETH", 10), 
@@ -80,9 +84,9 @@ def get_wallets(seed):
     "BCH"     : derive_wallets(seed, "BCH", 10),
     "LTC"     : derive_wallets(seed, "LTC", 10),
     "DASH"    : derive_wallets(seed, "DASH", 10),
-    #"DODGE"   : derive_wallets(seed, "DODGE", 10),
-    #"XRP"     : derive_wallets(seed, "XRP", 10),
-    #"ZCASH"   : derive_wallets(seed, "ZCASH", 10),
+    "DOGE"   : derive_wallets(seed, "DODGE", 10),
+    #"XRP"     : derive_wallets(seed, "XRP", 10), #https://bitcoin.stackexchange.com/questions/75385/does-ripple-has-support-for-hd-wallets
+    "ZCASH"   : derive_wallets(seed, "ZEC", 10),
     #"XML"     : derive_wallets(seed, "XML", 10),
 }
     return coin_purse
