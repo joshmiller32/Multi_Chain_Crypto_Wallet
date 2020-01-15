@@ -26,6 +26,8 @@ from bit.network.meta import Unspent
 #from bit.transaction import calc_txid, create_p2pkh_transaction, sanitize_tx_data
 from web3.middleware import geth_poa_middleware
 
+from passlib.apps import custom_app_context as pwd_context
+
 
 eel.init('web')
 
@@ -189,17 +191,14 @@ def get_balance(coin, account):
     
     else:
         return "Not a supported coin"
-
+    
+@eel.expose
 def get_seed():
     seed_phrase = ""
     for i in range(12):
         word = "word" + str(i + 1)
         seed_phrase += os.environ[word] + " "
     return seed_phrase
-    
-
-
-    
     
     
 #Dashboard Functions
@@ -226,27 +225,19 @@ def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC',
 
 def hash_pass(pass_w):
     #return hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest() #Original
-    return scrypt.encrypt(pass_w , 'Josh Eric Christian Oscar', maxtime=0.2)
+    return scrypt.encrypt(pass_w , "Test", maxtime=0.2)
 
 @eel.expose
 def set_password(pass_w):
     file = open(".pwd", "w")
-    file.write(hash_pass(pass_w))
+    file.write(pwd_context.hash(pass_w))
     file.close()
     return True
 
 @eel.expose
 def check_password(pass_w):
     file = open(".pwd", "r")
-    """
-    ######Original ######
-    if file.read() == hash_pass(pass_w): 
-    
-        return 'True'
-    else:
-        return 'False' 
-        """
-    return scrypt.decrypt(file.read(),'Josh Eric Christian Oscar',maxtime=0.4) == pass_w
+    return pwd_context.verify(pass_w, file.read()) 
 
 def rm(var):
     g = globals()

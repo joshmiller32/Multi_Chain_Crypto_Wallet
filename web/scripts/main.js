@@ -125,7 +125,7 @@ async function checkPassword() {
     var pass = input.value;
     let loginCheck = await eel.check_password(pass)();
     console.log(loginCheck);
-    if(loginCheck == "True") {
+    if(loginCheck == true) {
         return window.location.replace('mainWindow.html');
     } else {
         return input.innerHTML = "Incorrect Password";
