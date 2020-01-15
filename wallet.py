@@ -7,6 +7,7 @@ import hashlib
 import os
 
 import scrypt
+import qrcode
 
 from constants import *
 from web3 import Web3
@@ -48,7 +49,7 @@ def create_seed():
         os.environ[word_count] = word
     return seed_dict
 
-
+@eel.expose
 def derive_wallets(mnemonic, coin, nkeys):
 
     command = f'./hd-wallet-derive/hd-wallet-derive.php --mnemonic="{mnemonic}" --coin={coin} --numderive={nkeys}  --format=json -g'
@@ -70,6 +71,7 @@ coin_purse = {}
 
 @eel.expose
 def get_wallets(seed):
+    #print(f"get_wallet. seed: \n{seed}")
     """
     coins = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZCASH','XLM']
     global coin_purse 
@@ -192,6 +194,15 @@ def get_balance(coin, account):
     
     else:
         return "Not a supported coin"
+    
+    
+@eel.expose
+def make_qr(address):
+    """
+    address: string format of address
+    """
+    qrcode.make(address).save("web/images/QR.png")
+    return True
 
 
 @eel.expose
@@ -205,10 +216,12 @@ def get_seed():
     
 @eel.expose
 def decrypt_seed(password):
+    password = "Wallet #1 in 2020" # For right now, the password doesn't count.
     seed_path = Path(f".pwd.csv")
     seed_df = pd.read_csv(seed_path)
     ecnrypted_seed =bytes.fromhex(seed_df.loc[0]["seed"])   
     decrypted = scrypt.decrypt(ecnrypted_seed, password, maxtime=0.4)
+    #print(f"decrypted seed: \n{decrypted}")
     return decrypted
   
     
@@ -246,7 +259,7 @@ def set_password(pass_w, seed):
     file.close()
     """
     
-    password = {"seed": [hash_pass(seed ,pass_w).hex()], #we encrypt the mnemonic seed with the password
+    password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
                "password": [hash_pass(pass_w,"super wallet").hex()]} #ecnryption of the password with a salt
     psw_df = pd.DataFrame(password)
     pass_path = Path(f".pwd.csv")
