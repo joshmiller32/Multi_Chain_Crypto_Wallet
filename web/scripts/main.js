@@ -77,7 +77,7 @@ async function getWallets(password, coin, children) {
     //console.log(coin_purse);
     //coin_purse = setCoinPurse(seed)();
     coin_purse = await eel.get_wallets(seed)();
-    console.log(coin_purse);
+    //console.log(coin_purse);
 
     QRloaded = await eel.make_qr(coin_purse[coin][0].address)();
     var QRcode = new Image;
@@ -88,7 +88,8 @@ async function getWallets(password, coin, children) {
     let acc_balance = await eel.get_balance(coin, coin_purse[coin][0].privkey)();
     console.log(acc_balance);
        
-    let price_dict = await eel.get_prices()();
+    //let price_dict = await eel.get_prices()();
+    //console.log(price_dict);
     let usd_balance = acc_balance*price_dict[coin].USD;
     
     ///populating the wallet section///   
@@ -117,7 +118,7 @@ async function getPrices() {
     let zec_usd_container = document.getElementById('zec_usd');
     let xlm_usd_container = document.getElementById('xlm_usd');
     
-    price_dict = await eel.get_prices()();
+    window.price_dict = await eel.get_prices()();
     btc_usd_container.innerHTML = '$' + price_dict.BTC.USD;
     btg_usd_container.innerHTML = '$' + price_dict.BTG.USD;
     bch_usd_container.innerHTML = '$' + price_dict.BCH.USD;
@@ -151,6 +152,7 @@ async function getBalanceValue() {
     let xlm_balance = document.getElementById('xlm_balance');
     
     //price_dict = await eel.get_prices()();
+    //console.log(price_dict);
     btc_usd_value.innerHTML = '$' + (Math.round((btc_balance.innerHTML * price_dict.BTC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
     btg_usd_value.innerHTML = '$' + (Math.round((btg_balance.innerHTML * price_dict.BTG.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
     bch_usd_value.innerHTML = '$' + (Math.round((bch_balance.innerHTML * price_dict.BCH.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
@@ -204,7 +206,7 @@ async function setPassword() {
 
 async function populateWallet(currency) {
     
-    getPrices();
+    await getPrices();
     getWallets("b",currency,1);
     getBalanceValue();
     
