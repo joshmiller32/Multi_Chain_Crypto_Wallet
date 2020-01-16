@@ -42,6 +42,8 @@ async function getWords() {
 async function getWallets(password, coin, children) {
     let QR = document.getElementById('QR');
     let address = document.getElementById('address');
+    let balance = document.getElementById('balance');
+    let USDbalance = document.getElementById('USDbalance');
     //let BTC_address = document.getElementById('btc_address');
     //let BTG_address = document.getElementById('btg_address');
     //let BCH_address = document.getElementById('bch_address');
@@ -52,21 +54,37 @@ async function getWallets(password, coin, children) {
     //let ZEC_address = document.getElementById('zec_address');
     //let XLM_address = document.getElementById('xlm_address');
     //let seed = await eel.get_seed()();
+    
+    ///getting the variables///
     const seed = await eel.decrypt_seed(password)();
     console.log(seed);
-
+    
     let coin_purse = await eel.derive_wallets(seed,coin,children)();
     console.log(coin_purse);
-    QRloaded = await eel.make_qr(coin_purse.address)();
     
+    QRloaded = await eel.make_qr(coin_purse.address)();
     var QRcode = new Image;
+    
+    //let account = await eel.priv_key_to_account(coin, coin_purse.privkey)();
+    //console.log(account);
+    
+    let acc_balance = await eel.get_balance(coin, coin_purse.privkey)();
+    console.log(acc_balance);
+       
+    let price_dict = await eel.get_prices()();
+    let usd_balance = acc_balance*price_dict[coin].USD;
+    
+    ///populating the wallet section///   
     QRcode.onload = function() 
         {
         
         QR.src = this.src;
         }
-    QR.src = "images/QR.png"
+    QR.src = "images/QR.png";
     address.innerHTML = coin_purse.address;
+    
+    balance.innerHTML = acc_balance
+    USDbalance.innerHTML = usd_balance
     //BTC_address.innerHTML = coin_purse.BTC;    
     //BTG_address.innerHTML = coin_purse.BTG;
     //BCH_address.innerHTML = coin_purse.BCH;
@@ -178,8 +196,9 @@ async function populateWallet(currency) {
     
     //let allWallets = await eel.get_wallets(seed)();
     getPrices();
-    getBalanceValue();
     getWallets("b",currency,1);
+    getBalanceValue();
+    
     //return allWallets
 }
 

@@ -104,13 +104,19 @@ def get_wallets(seed):
     return coin_purse
 
 @eel.expose
-
 def priv_key_to_account(coin, priv_key):
+    print(f"coin: {coin} type: {type(coin)}\nprivate key: {priv_key} type: {type(priv_key)}")
     
     """Use it like this: my_btctest_account = priv_key_to_account("btc-test",coin_purse["btc-test"][0]["privkey"])"""
-    if coin == "ETH":        return Account.privateKeyToAccount(priv_key)       
-    elif coin == "btc-test": return PrivateKeyTestnet(priv_key)  
-    elif coin == "BTC":      return PrivateKey(priv_key) 
+    if coin == "ETH":        
+        return Account.privateKeyToAccount(priv_key)       
+    elif coin == "BTC-test": 
+        return PrivateKeyTestnet(priv_key)  
+    elif coin == "BTC":
+        print("a btc account is being created")
+        acc = PrivateKey(priv_key) 
+        print(acc)
+        return acc 
     else:                    return "Not a supported coin"
 
     
@@ -183,14 +189,15 @@ def send_tx(coin, account, to, amount):
     
 
 @eel.expose
-def get_balance(coin, account):
-    
+def get_balance(coin, privkey):
+    balance = -1
     if coin == "ETH": 
         return w3.eth.getBalance(account.address)
          
     
-    elif coin == "btc-test" or coin == "btc":
-        return account.get_balance("btc")
+    elif coin == "BTC-test" or coin == "BTC":        
+        balance = priv_key_to_account(coin, privkey).get_balance("btc")
+        return balance
     
     else:
         return "Not a supported coin"
