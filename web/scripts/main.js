@@ -166,9 +166,11 @@ async function checkPassword() {
     var pass = input.value;
     let loginCheck = await eel.check_password(pass)();
     console.log(loginCheck);
+
     if(loginCheck) {
         console.log("launching main window");
         return window.location.replace('mainWindow.html?password=${pass}');
+
     } else {
         console.log("try again");
         return input.innerHTML = "Incorrect Password";
@@ -190,6 +192,7 @@ function extractSeed() {
     
     
 async function setPassword() {
+
     let input = document.getElementById('newpassword');
     let pass = input.value;
     let seed = extractSeed();
@@ -211,8 +214,14 @@ async function populateWallet(currency) {
     //return allWallets
 }
 
+    var input = document.getElementById('newpassword');
+    var pass = input.value;
+    let loginCheck = await eel.set_password(pass)();
+    return window.location.replace('mainWindow.html');
+}
+
+
 function windowClose() {
     window.open('','_parent','');
     window.close();
-
 }
