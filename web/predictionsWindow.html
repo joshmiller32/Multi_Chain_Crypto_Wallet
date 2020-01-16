@@ -8,6 +8,8 @@
         <!-- Start of Scripts -->
         <script type="text/javascript" src="/eel.js"></script>
         <script type="text/javascript" src="scripts/main.js"></script>
+        <script type="text/javascript" src="scripts/jquery-3.4.1.js"></script>
+
         <!-- End of Scripts -->  
         
     </head>
@@ -18,7 +20,8 @@
                 <div class="colleft">
                     <div class="col1">
                         <!-- Column 1 start -->
-                        <center><h1>Plots for models</h1></center>
+                        <div id = "Graph"></div>
+                        
 
         </div>
 			<div class="col2">
@@ -45,7 +48,7 @@
                 <br>
                 <br>
                 <br>
-                <select name="Cryptocurrency" class = "dropdownBackgroundColor" style= "width: 250px">
+                <select id ="Coin" name="Cryptocurrency" class = "dropdownBackgroundColor" style= "width: 250px">
                     <option value = "Bitcoin">Bitcoin</option>
                     <option value = "Ether">Ether</option>
                     <option value = "Litecoin">Litecoin</option>
@@ -67,3 +70,17 @@
             </div>
         </div>
     </body>
+    <script>$("#Graph").load("figure.html");</script>
+    <script>
+        $( "#Coin" )
+          .change(function () {
+            var url = "";
+            $( "#Coin option:selected" ).each(function() {
+              url += $( this ).text() + ".html";
+            });
+            $( "#Graph").load( url )
+                
+          })
+          .change();
+    </script>
+     
