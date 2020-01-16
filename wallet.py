@@ -293,8 +293,5 @@ def check_password(pass_w):
     
     return decrypted == pass_w
 
-def rm(var):
-    g = globals()
-    if var in g: del g[var]
     
 eel.start('loginWindow.html', size=(1350, 750))
