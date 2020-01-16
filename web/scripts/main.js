@@ -11,11 +11,13 @@ async function setPassword(pass) {
 async function setCoinPurse(seed) {
     coin_purse = await eel.get_wallets(seed)();
     console.log(coin_purse);
+    return coin_purse;
 }
 
 async function setPriceDict() {
     price_dict = await eel.get_prices()();
     console.log(price_dict);
+    return price_dict;
 }
 
 
@@ -69,18 +71,21 @@ async function getWallets(password, coin, children) {
     
     ///getting the variables///
     const seed = await eel.decrypt_seed(password)();
-    console.log(seed);
+    //console.log(seed);
     
-    let coin_purse = await eel.derive_wallets(seed,coin,children)();
+    //let coin_purse = await eel.derive_wallets(seed,coin,children)();
+    //console.log(coin_purse);
+    //coin_purse = setCoinPurse(seed)();
+    coin_purse = await eel.get_wallets(seed)();
     console.log(coin_purse);
-    
-    QRloaded = await eel.make_qr(coin_purse.address)();
+
+    QRloaded = await eel.make_qr(coin_purse[coin][0].address)();
     var QRcode = new Image;
     
     //let account = await eel.priv_key_to_account(coin, coin_purse.privkey)();
     //console.log(account);
     
-    let acc_balance = await eel.get_balance(coin, coin_purse.privkey)();
+    let acc_balance = await eel.get_balance(coin, coin_purse[coin][0].privkey)();
     console.log(acc_balance);
        
     let price_dict = await eel.get_prices()();
@@ -93,10 +98,10 @@ async function getWallets(password, coin, children) {
         QR.src = this.src;
         }
     QR.src = "images/QR.png";
-    address.innerHTML = coin_purse.address;
+    address.innerHTML = coin_purse[coin][0].address;
     
-    balance.innerHTML = acc_balance
-    USDbalance.innerHTML = usd_balance
+    balance.innerHTML = acc_balance;
+    USDbalance.innerHTML = usd_balance;
       
 }
 
@@ -158,7 +163,7 @@ async function getBalanceValue() {
 }
 
 async function checkPassword() {
-    console.log("Checking Password")
+    console.log("Checking Password");
     let input = document.getElementById('loginpassword');
     var pass = input.value;
     let loginCheck = await eel.check_password(pass)();
@@ -207,7 +212,7 @@ async function populateWallet(currency) {
 
 async function sendTx(coin, to, amount){
 
-    tx = await eel.send_tx(coin, privkey, to, amount)   
+    tx = await eel.send_tx(coin, privkey, to, amount);   
 }
 
 

@@ -97,7 +97,7 @@ def get_wallets(seed):
     "BCH"     : derive_wallets(seed, "BCH", 10),
     "LTC"     : derive_wallets(seed, "LTC", 10),
     "DASH"    : derive_wallets(seed, "DASH", 10),
-    "DOGE"   : derive_wallets(seed, "DODGE", 10),
+    "DOGE"   : derive_wallets(seed, "DOGE", 10),
     #"XRP"     : derive_wallets(seed, "XRP", 10), #https://bitcoin.stackexchange.com/questions/75385/does-ripple-has-support-for-hd-wallets
     "ZCASH"   : derive_wallets(seed, "ZEC", 10),
     #"XML"     : derive_wallets(seed, "XML", 10),
@@ -116,7 +116,7 @@ def priv_key_to_account(coin, priv_key):
     elif coin == "BTC":
         print("a btc account is being created")
         acc = PrivateKey(priv_key) 
-        print(acc)
+        #print(acc)
         return acc 
     else:                    return "Not a supported coin"
 
