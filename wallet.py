@@ -97,7 +97,7 @@ def get_wallets(seed):
     "BCH"     : derive_wallets(seed, "BCH", 10),
     "LTC"     : derive_wallets(seed, "LTC", 10),
     "DASH"    : derive_wallets(seed, "DASH", 10),
-    "DOGE"   : derive_wallets(seed, "DODGE", 10),
+    "DOGE"   : derive_wallets(seed, "DOGE", 10),
     #"XRP"     : derive_wallets(seed, "XRP", 10), #https://bitcoin.stackexchange.com/questions/75385/does-ripple-has-support-for-hd-wallets
     "ZCASH"   : derive_wallets(seed, "ZEC", 10),
     #"XML"     : derive_wallets(seed, "XML", 10),
@@ -106,7 +106,7 @@ def get_wallets(seed):
 
 @eel.expose
 def priv_key_to_account(coin, priv_key):
-    print(f"coin: {coin} type: {type(coin)}\nprivate key: {priv_key} type: {type(priv_key)}")
+    #print(f"coin: {coin} type: {type(coin)}\nprivate key: {priv_key} type: {type(priv_key)}")
     
     """Use it like this: my_btctest_account = priv_key_to_account("btc-test",coin_purse["btc-test"][0]["privkey"])"""
     if coin == "ETH":        
@@ -159,10 +159,10 @@ def create_tx(coin, account, to, amount):
         return "Not a supported coin"
 
 @eel.expose
-def send_tx(coin, account, to, amount):
+def send_tx(coin, privkey, to, amount):
     """
     coin options: eth, btc-test.
-    account: account containing all the info like private and public 
+    privkey: ignore this (have to fix it): account containing all the info like private and public 
     key as well as address of a certain account. This must be obtained
     trough the method priv_key_to_account().
     to: address to transfer funds.
@@ -170,8 +170,8 @@ def send_tx(coin, account, to, amount):
     be expressed in weis.
     Example: send_tx(coin = "btc-test",account = my_btctest_account, to = coin_purse["btc-test"][1]["address"],amount= 0.01)
     """  
-    tx = create_tx(coin, account.address, to, amount)
-    signed_tx = account.sign_transaction(tx) #how to do this tho
+    tx = create_tx(coin, priv_key_to_account(coin, privkey).address, to, amount)
+    signed_tx = priv_key_to_account(coin, privkey).sign_transaction(tx) #how to do this tho
     
     if coin == "ETH": 
         result = w3.eth.sendRawTransaction(signed_tx.rawTransaction)
@@ -195,7 +195,7 @@ def get_balance(coin, privkey):
     balance = -1
     
     if coin == "ETH": 
-        return w3.eth.getBalance(account.address)
+        return w3.eth.getBalance(priv_key_to_account(coin, privkey).address)
             
     elif coin == "BTC-test" or coin == "BTC":        
         balance = priv_key_to_account(coin, privkey).get_balance("btc")
