@@ -140,6 +140,5 @@ async function setPassword() {
 }
 
 function windowClose() {
-    window.open('','_parent','');
     window.close();
 }

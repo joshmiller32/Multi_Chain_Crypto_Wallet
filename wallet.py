@@ -37,16 +37,26 @@ eel.init('web')
 
 @eel.expose
 def create_seed():
-    seed = re.sub("[^\w]", " ",  wallet.generate_mnemonic()).split()
+    seed =  wallet.generate_mnemonic()
+    clean_seed = re.sub("[^\w]", " ",  seed).split()
     count = 0
     seed_dict = {}
     for word in seed:
         count += 1
         word_count = "word" + str(count)
         seed_dict.update( {word_count : word} )
-        os.environ[word_count] = word
+    file = open(".sd", "w")
+    file.write(scrypt.encrypt(seed, hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest(), maxtime=0.2))
+    file.close()
     return seed_dict
 
+
+@eel.expose
+def get_seed(pass_w):
+    file = open(".sd", "r")
+    encrypted_seed_phrase = file.read()
+    seed_phrase = scrypt.decrypt(encrypted_seed_phrase, hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest(), maxtime=0.1)
+    return seed_phrase
 
 def derive_wallets(mnemonic, coin, nkeys):
 
@@ -100,8 +110,8 @@ def get_wallets(seed):
 }
     return coin_purse
 
-@eel.expose
 
+@eel.expose
 def priv_key_to_account(coin, priv_key):
     
     """Use it like this: my_btctest_account = priv_key_to_account("btc-test",coin_purse["btc-test"][0]["privkey"])"""
@@ -192,14 +202,6 @@ def get_balance(coin, account):
     else:
         return "Not a supported coin"
     
-@eel.expose
-def get_seed():
-    seed_phrase = ""
-    for i in range(12):
-        word = "word" + str(i + 1)
-        seed_phrase += os.environ[word] + " "
-    return seed_phrase
-    
     
 #Dashboard Functions
 
@@ -222,11 +224,12 @@ def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC',
 
 
 # Password Functions
+'''
+Stoped using since passlib does such a nice job
 
 def hash_pass(pass_w):
-    #return hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest() #Original
-    return scrypt.encrypt(pass_w , "Test", maxtime=0.2)
-
+    return scrypt.encrypt(pass_w, hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest(), maxtime=0.2)
+'''
 @eel.expose
 def set_password(pass_w):
     file = open(".pwd", "w")
@@ -239,8 +242,5 @@ def check_password(pass_w):
     file = open(".pwd", "r")
     return pwd_context.verify(pass_w, file.read()) 
 
-def rm(var):
-    g = globals()
-    if var in g: del g[var]
     
 eel.start('loginWindow.html', size=(1350, 750))
