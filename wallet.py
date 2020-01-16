@@ -7,6 +7,7 @@ import hashlib
 import os
 
 import scrypt
+import qrcode
 
 from constants import *
 from web3 import Web3
@@ -25,6 +26,9 @@ from bit.network import NetworkAPI, get_fee_cached, satoshi_to_currency_cached
 from bit.network.meta import Unspent
 #from bit.transaction import calc_txid, create_p2pkh_transaction, sanitize_tx_data
 from web3.middleware import geth_poa_middleware
+
+import pandas as pd
+from path import Path
 
 
 eel.init('web')
@@ -45,7 +49,7 @@ def create_seed():
         os.environ[word_count] = word
     return seed_dict
 
-
+@eel.expose
 def derive_wallets(mnemonic, coin, nkeys):
 
     command = f'./hd-wallet-derive/hd-wallet-derive.php --mnemonic="{mnemonic}" --coin={coin} --numderive={nkeys}  --format=json -g'
@@ -67,6 +71,7 @@ coin_purse = {}
 
 @eel.expose
 def get_wallets(seed):
+    #print(f"get_wallet. seed: \n{seed}")
     """
     coins = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZCASH','XLM']
     global coin_purse 
@@ -91,7 +96,7 @@ def get_wallets(seed):
     "BCH"     : derive_wallets(seed, "BCH", 10),
     "LTC"     : derive_wallets(seed, "LTC", 10),
     "DASH"    : derive_wallets(seed, "DASH", 10),
-    "DOGE"   : derive_wallets(seed, "DODGE", 10),
+    "DOGE"   : derive_wallets(seed, "DOGE", 10),
     #"XRP"     : derive_wallets(seed, "XRP", 10), #https://bitcoin.stackexchange.com/questions/75385/does-ripple-has-support-for-hd-wallets
     "ZCASH"   : derive_wallets(seed, "ZEC", 10),
     #"XML"     : derive_wallets(seed, "XML", 10),
@@ -99,13 +104,19 @@ def get_wallets(seed):
     return coin_purse
 
 @eel.expose
-
 def priv_key_to_account(coin, priv_key):
+    print(f"coin: {coin} type: {type(coin)}\nprivate key: {priv_key} type: {type(priv_key)}")
     
     """Use it like this: my_btctest_account = priv_key_to_account("btc-test",coin_purse["btc-test"][0]["privkey"])"""
-    if coin == "ETH":        return Account.privateKeyToAccount(priv_key)       
-    elif coin == "btc-test": return PrivateKeyTestnet(priv_key)  
-    elif coin == "BTC":      return PrivateKey(priv_key) 
+    if coin == "ETH":        
+        return Account.privateKeyToAccount(priv_key)       
+    elif coin == "BTC-test": 
+        return PrivateKeyTestnet(priv_key)  
+    elif coin == "BTC":
+        print("a btc account is being created")
+        acc = PrivateKey(priv_key) 
+        print(acc)
+        return acc 
     else:                    return "Not a supported coin"
 
     
@@ -178,29 +189,49 @@ def send_tx(coin, account, to, amount):
     
 
 @eel.expose
-def get_balance(coin, account):
+def get_balance(coin, privkey):
+    
+    balance = -1
     
     if coin == "ETH": 
         return w3.eth.getBalance(account.address)
-         
-    
-    elif coin == "btc-test" or coin == "btc":
-        return account.get_balance("btc")
+            
+    elif coin == "BTC-test" or coin == "BTC":        
+        balance = priv_key_to_account(coin, privkey).get_balance("btc")
+        return balance
     
     else:
         return "Not a supported coin"
+    
+    
+@eel.expose
+def make_qr(address):
+    """
+    address: string format of address
+    """
+    qrcode.make(address).save("web/images/QR.png")
+    return True
 
+
+@eel.expose
 def get_seed():
     seed_phrase = ""
     for i in range(12):
         word = "word" + str(i + 1)
         seed_phrase += os.environ[word] + " "
+
     return seed_phrase
     
-
-
-    
-    
+@eel.expose
+def decrypt_seed(password):
+    password = "Wallet #1 in 2020" # For right now, the password doesn't count.
+    seed_path = Path(f".pwd.csv")
+    seed_df = pd.read_csv(seed_path)
+    ecnrypted_seed =bytes.fromhex(seed_df.loc[0]["seed"])   
+    decrypted = scrypt.decrypt(ecnrypted_seed, password, maxtime=0.4)
+    #print(f"decrypted seed: \n{decrypted}")
+    return decrypted
+  
     
 #Dashboard Functions
 
@@ -224,32 +255,43 @@ def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC',
 
 # Password Functions
 
-def hash_pass(pass_w):
+def hash_pass(pass_w,salt):
     #return hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest() #Original
-    return scrypt.encrypt(pass_w , 'Josh Eric Christian Oscar', maxtime=0.2)
+    return scrypt.encrypt(pass_w , salt, maxtime=0.2)
 
 @eel.expose
-def set_password(pass_w):
-    file = open(".pwd", "w")
-    file.write(hash_pass(pass_w))
+def set_password(pass_w, seed):
+    """
+    file = open(".pwd.csv", "w")
+    file.write(hash_pass(pass_w)) 
     file.close()
+    """
+    
+    password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
+               "password": [hash_pass(pass_w,"super wallet").hex()]} #ecnryption of the password with a salt
+    psw_df = pd.DataFrame(password)
+    pass_path = Path(f".pwd.csv")
+    psw_df.to_csv(pass_path)
     return True
 
 @eel.expose
 def check_password(pass_w):
-    file = open(".pwd", "r")
+    
     """
     ######Original ######
+    file = open(".pwd", "r")
     if file.read() == hash_pass(pass_w): 
     
         return 'True'
     else:
         return 'False' 
         """
-    return scrypt.decrypt(file.read(),'Josh Eric Christian Oscar',maxtime=0.4) == pass_w
+    pass_path = Path(f".pwd.csv")
+    password = pd.read_csv(pass_path)
+    ecnrypted_pass =bytes.fromhex(password.loc[0]["password"])   
+    decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
+    
+    return decrypted == pass_w
 
-def rm(var):
-    g = globals()
-    if var in g: del g[var]
     
 eel.start('loginWindow.html', size=(1350, 750))
