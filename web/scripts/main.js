@@ -117,7 +117,7 @@ async function getPrices() {
     let zec_usd_container = document.getElementById('zec_usd');
     let xlm_usd_container = document.getElementById('xlm_usd');
     
-    let price_dict = await eel.get_prices()();
+    price_dict = await eel.get_prices()();
     btc_usd_container.innerHTML = '$' + price_dict.BTC.USD;
     btg_usd_container.innerHTML = '$' + price_dict.BTG.USD;
     bch_usd_container.innerHTML = '$' + price_dict.BCH.USD;
@@ -150,7 +150,7 @@ async function getBalanceValue() {
     let zec_balance = document.getElementById('zec_balance');
     let xlm_balance = document.getElementById('xlm_balance');
     
-    let price_dict = await eel.get_prices()();
+    //price_dict = await eel.get_prices()();
     btc_usd_value.innerHTML = '$' + (Math.round((btc_balance.innerHTML * price_dict.BTC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
     btg_usd_value.innerHTML = '$' + (Math.round((btg_balance.innerHTML * price_dict.BTG.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
     bch_usd_value.innerHTML = '$' + (Math.round((bch_balance.innerHTML * price_dict.BCH.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
