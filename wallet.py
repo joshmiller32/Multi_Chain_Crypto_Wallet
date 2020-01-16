@@ -40,15 +40,19 @@ eel.init('web')
 
 @eel.expose
 def create_seed():
-    seed = re.sub("[^\w]", " ",  wallet.generate_mnemonic()).split()
+    seed =  wallet.generate_mnemonic()
+    clean_seed = re.sub("[^\w]", " ",  seed).split()
     count = 0
     seed_dict = {}
     for word in seed:
         count += 1
         word_count = "word" + str(count)
         seed_dict.update( {word_count : word} )
-        os.environ[word_count] = word
+    file = open(".sd", "w")
+    file.write(scrypt.encrypt(seed, hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest(), maxtime=0.2))
+    file.close()
     return seed_dict
+
 
 @eel.expose
 def derive_wallets(mnemonic, coin, nkeys):
@@ -103,6 +107,7 @@ def get_wallets(seed):
     #"XML"     : derive_wallets(seed, "XML", 10),
 }
     return coin_purse
+
 
 @eel.expose
 def priv_key_to_account(coin, priv_key):
@@ -204,6 +209,7 @@ def get_balance(coin, privkey):
     else:
         return "Not a supported coin"
     
+
 @eel.expose
 def make_qr(address):
     """
@@ -233,6 +239,7 @@ def decrypt_seed(password):
     #print(f"decrypted seed: \n{decrypted}")
     return decrypted
   
+
 
     
 #Dashboard Functions
@@ -279,6 +286,7 @@ def check_password(pass_w):
     password = pd.read_csv(pass_path)
     ecnrypted_pass =bytes.fromhex(password.loc[0]["password"])   
     decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
+
     
     return decrypted == pass_w
  
