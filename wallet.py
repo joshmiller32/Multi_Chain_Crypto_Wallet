@@ -190,11 +190,12 @@ def send_tx(coin, account, to, amount):
 
 @eel.expose
 def get_balance(coin, privkey):
+    
     balance = -1
+    
     if coin == "ETH": 
         return w3.eth.getBalance(account.address)
-         
-    
+            
     elif coin == "BTC-test" or coin == "BTC":        
         balance = priv_key_to_account(coin, privkey).get_balance("btc")
         return balance

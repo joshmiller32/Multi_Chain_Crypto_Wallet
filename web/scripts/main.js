@@ -1,4 +1,11 @@
 var word_dict = {}; //We'll have to ask Cam about how to avoid this security vulnerability
+let password;
+
+async function setPassword(pass) {
+    password = pass;
+    console.log("password: ${password}");
+}
+
 async function getWords() {
 // Create the JAVA containers (variable) and link them to the HTML container.      
 // There needs to be a container with the id= to the getElementById() argument.  (HTML Example for the argument used below <div id="word1_box"></div>)
@@ -159,9 +166,11 @@ async function checkPassword() {
     var pass = input.value;
     let loginCheck = await eel.check_password(pass)();
     console.log(loginCheck);
-    if(loginCheck == "True") {
-        return window.location.replace('mainWindow.html?password={pass}');
+    if(loginCheck) {
+        console.log("launching main window");
+        return window.location.replace('mainWindow.html?password=${pass}');
     } else {
+        console.log("try again");
         return input.innerHTML = "Incorrect Password";
     }
 }
