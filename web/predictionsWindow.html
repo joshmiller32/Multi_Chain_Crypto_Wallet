@@ -3,7 +3,7 @@
     <head>
         <title>Multi-Asset Crypto Wallet v0.1.0</title>
 
-        <link rel="stylesheet" type="text/css" href="css/main.css">  
+        <link rel="stylesheet" type="text/css" href="css/predictions.css">  
         
         <!-- Start of Scripts -->
         <script type="text/javascript" src="/eel.js"></script>
@@ -70,16 +70,16 @@
             </div>
         </div>
     </body>
-    <script>$("#Graph").load("figure.html");</script>
+    <script>$("#Graph").load("bitcoin.html");</script>
     <script>
         $( "#Coin" )
           .change(function () {
-            var url = "";
+            var mlPlot = "";
             $( "#Coin option:selected" ).each(function() {
-              url += $( this ).text() + ".html";
+              mlPlot += $( this ).text() + ".html";
             });
-            $( "#Graph").load( url )
-                
+            $("#Graph").load(mlPlot);
+            
           })
           .change();
     </script>
