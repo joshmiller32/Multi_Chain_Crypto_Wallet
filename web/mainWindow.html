@@ -8,20 +8,29 @@
         <!-- Start of Scripts -->
         <script type="text/javascript" src="/eel.js"></script>
         <script type="text/javascript" src="scripts/main.js"></script>
-        <script type="text/javascript">
-            window.onload=function(){
-            getPrices();
-            getBalanceValue();
-            getWallets();
-            } 
-        </script>
+      
 
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        
+          
+         <script language="JavaScript">
+                          function processUser()
+                          {
+                            var parameters = location.search.substring(1);
+
+                            var pass = parameters.split("=");
+                            setPassword(pass[0])
+                          }
+                        </script>
         <!-- End of Scripts -->
+        
+        
         
     </head>
     
-    <body>
+    <body onload="populateWallet('BTC')">
+      
+            
         <div class="colmask threecol">
             <div class="colmid">
                 <div class="colleft">
@@ -36,7 +45,7 @@
             <th>Wallet Value (USD)</th>
             <th>Price (USD)</th>
         </tr>
-        <tr>
+        <tr data-coin="BTC">
             <td><img src="https://cryptoicons.org/api/icon/btc/25"></td>
             <td>Bitcoin</td>
             <td>BTC</td>
@@ -44,7 +53,7 @@
             <td><div id='btc_usd_value'></div></td>
             <td><div id='btc_usd'></div></td>
         </tr>           
-        <tr>
+        <tr data-coin="BTG">
             <td><img src="https://cryptoicons.org/api/icon/btg/25"></td>
             <td>Bitcoin Gold</td>
             <td>BTG</td>
@@ -52,7 +61,7 @@
             <td><div id='btg_usd_value'></div></td>  
             <td><div id='btg_usd'></div></td>
         </tr>
-        <tr>
+        <tr data-coin="BCH">
             <td><img src="https://cryptoicons.org/api/icon/bch/25"></td>
             <td>Bitcoin Cash</td>
             <td>BCH</td>
@@ -60,7 +69,7 @@
             <td><div id='bch_usd_value'></div></td>  
             <td><div id='bch_usd'></div></td>
         </tr>
-        <tr>
+        <tr data-coin="LTC">
             <td><img src="https://cryptoicons.org/api/icon/ltc/25"></td>
             <td>Litecoin</td>
             <td>LTC</td>
@@ -68,7 +77,7 @@
             <td><div id='ltc_usd_value'></div></td>  
             <td><div id='ltc_usd'></div></td>
         </tr>
-        <tr>
+        <tr data-coin="DASH">
             <td><img src="https://cryptoicons.org/api/icon/dash/25"></td>
             <td>Dash</td>
             <td>DASH</td>
@@ -76,7 +85,7 @@
             <td><div id='dash_usd_value'></div></td>
             <td><div id='dash_usd'></div></td>
         </tr>
-        <tr>
+        <tr data-coin="DOGE">
             <td><img src="https://cryptoicons.org/api/icon/doge/25"></td>
             <td>Dogecoin</td>
             <td>DOGE</td>
@@ -84,7 +93,7 @@
             <td><div id='doge_usd_value'></div></td>  
             <td><div id='doge_usd'></div></td>
         </tr>
-        <tr>
+        <tr data-coin="XRP">
             <td><img src="https://cryptoicons.org/api/icon/xrp/25"></td>
             <td>Ripple</td>
             <td>XRP</td>
@@ -92,7 +101,7 @@
             <td><div id='xrp_usd_value'></div></td>  
             <td><div id='xrp_usd'></div></td>
         </tr>
-        <tr>
+        <tr data-coin="ZEC">
             <td><img src="https://cryptoicons.org/api/icon/zec/25"></td>
             <td>ZCash</td>
             <td>ZEC</td>
@@ -100,7 +109,7 @@
             <td><div id='zec_usd_value'></div></td>
             <td><div id='zec_usd'></div></td>
         </tr>
-        <tr>
+        <tr data-coin="XLM">
             <td><img src="https://cryptoicons.org/api/icon/xlm/25"></td>
             <td>Stellar Lumens</td>
             <td>XLM</td>
@@ -129,25 +138,59 @@
 				<!-- Column 3 start -->
                 <h2><center>Bitcoin (BTC)</center></h2>
                 <p>Breif descripton about bitcoin here.  Mention its origins, uses and anything else relavant to new users.<p><br>
-                <br>
-                <center><img src="/images/btc_qr.png" alt="Bitcoin Wallet Address" height="150" width="150"><br>
-                    <br>
+                
+                <center><img id="QR" src="getQR()" alt="Wallet Address" height="200" width="200"><br>
+                    
+                   
+                    
                         <ul>
-                            <span><u>Wallet Address</u></span><br>
+                            <span><u>Wallet Address:</u></span><br>
 
-                            <li><span><div id='btc_address'></div></span></li><br><br>
-                            <li><span>Current Balance : </span><span style="color: gold; font-size: 18px;">0.01240059</span></li>
-                            <li><span>USD Value : </span><span style="color: green; font-size: 18px;">$85.96</span></li><br>
+                            <li><span><div id='address'>...still loading. Please wait.</div></span></li><br><br>
+                            
+                            <li><span>Current Balance : </span>
+                            <span id="balance" style="color: gold; font-size: 18px;">
+                                ...Getting your balance..
+                            </span></li>
+                            
+                            <li><span>USD Value : </span>
+                            <span id="USDbalance" style="color: green; font-size: 18px;">
+                                $85.96
+                            </span></li><br>
                             <br>
+
                             <center><p><hr><h3> Send Coins </h3>
                                 <form>Reciepient Address:<br>
                                 <input type="text" name="reciepient"><br><br>
                                 Amount:<br>
                                 <input type="text" name="amount"></form></center>
+                            <br>
+                            <button id="send_tx" type="submit" onclick="sendTx();">Send</button>
+
                 <!-- Column 3 end -->      
                     </div>
                 </div>
             </div>
         </div>
+
+        <script>
+
+            document.addEventListener("DOMContentLoaded", () => {
+
+                const rows = document.querySelectorAll("tr[data-coin]");
+
+                console.log(rows)
+
+                rows.forEach(row => {
+
+                    row.addEventListener("click", () => {
+                        populateWallet(row.dataset.coin);
+
+                    });
+                });
+
+            });
+        
+        </script>
     </body>
 </html>

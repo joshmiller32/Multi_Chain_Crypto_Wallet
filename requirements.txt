@@ -1,5 +1,9 @@
 pip install py_hd_wallet
 pip install eel
+pip install qrcode
+pip install clove
+
+conda install -c conda-forge scrypt
 
 ## Installation hd_wallet_derive ##
 
@@ -9,7 +13,3 @@ pip install eel
  php composer.phar install
 
 ###################################
-
-conda install -c conda-forge scrypt
-
-pip install clove
