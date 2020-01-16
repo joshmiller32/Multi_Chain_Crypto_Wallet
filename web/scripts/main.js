@@ -51,16 +51,7 @@ async function getWallets(password, coin, children) {
     let address = document.getElementById('address');
     let balance = document.getElementById('balance');
     let USDbalance = document.getElementById('USDbalance');
-    //let BTC_address = document.getElementById('btc_address');
-    //let BTG_address = document.getElementById('btg_address');
-    //let BCH_address = document.getElementById('bch_address');
-    //let LTC_address = document.getElementById('ltc_address');
-    //let DASH_address = document.getElementById('dash_address');
-    //let DOGE_address = document.getElementById('doge_address');
-    //let XRP_address = document.getElementById('xrp_address');
-    //let ZEC_address = document.getElementById('zec_address');
-    //let XLM_address = document.getElementById('xlm_address');
-    //let seed = await eel.get_seed()();
+    
     
     ///getting the variables///
     const seed = await eel.decrypt_seed(password)();
@@ -92,15 +83,7 @@ async function getWallets(password, coin, children) {
     
     balance.innerHTML = acc_balance
     USDbalance.innerHTML = usd_balance
-    //BTC_address.innerHTML = coin_purse.BTC;    
-    //BTG_address.innerHTML = coin_purse.BTG;
-    //BCH_address.innerHTML = coin_purse.BCH;
-    //LTC_address.innerHTML = coin_purse.LTC;
-    //DASH_address.innerHTML = coin_purse.DASH;
-    //DOGE_address.innerHTML = coin_purse.DOGE;
-    //XRP_address.innerHTML = coin_purse.XRP;
-    //ZEC_address.innerHTML = coin_purse.ZCASH;
-    //XLM_address.innerHTML = coin_purse.XLM;    
+      
 }
 
 
@@ -206,19 +189,17 @@ async function setPassword() {
 
 async function populateWallet(currency) {
     
-    //let allWallets = await eel.get_wallets(seed)();
     getPrices();
     getWallets("b",currency,1);
     getBalanceValue();
     
-    //return allWallets
 }
 
-    //var input = document.getElementById('newpassword');
-    //var pass = input.value;
-    //let loginCheck = await eel.set_password(pass)();
-    //return window.location.replace('mainWindow.html');
-//}
+async function sendTx(coin, to, amount){
+
+    
+}
+
 
 
 function windowClose() {
