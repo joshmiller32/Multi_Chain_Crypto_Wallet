@@ -1,10 +1,24 @@
 var word_dict = {}; //We'll have to ask Cam about how to avoid this security vulnerability
 let password;
+var coin_purse = {};
+var price_dict = {};
 
 async function setPassword(pass) {
     password = pass;
     console.log("password: ${password}");
 }
+
+async function setCoinPurse(seed) {
+    coin_purse = await eel.get_wallets(seed)();
+    console.log(coin_purse);
+}
+
+async function setPriceDict() {
+    price_dict = await eel.get_prices()();
+    console.log(price_dict);
+}
+
+
 
 async function getWords() {
 // Create the JAVA containers (variable) and link them to the HTML container.      
@@ -166,10 +180,6 @@ function extractSeed() {
     for(var key in word_dict) {
       seed += word_dict[key] +  " ";
     }
-    //for (i=1; i <= word_dict.length; i++){
-    //    key = 'word${i}';
-    //    seed += word_dict[key] +  " ";        
-    //}
     return seed;
     }
     
@@ -197,7 +207,7 @@ async function populateWallet(currency) {
 
 async function sendTx(coin, to, amount){
 
-    
+    tx = await eel.send_tx(coin, privkey, to, amount)   
 }
 
 
