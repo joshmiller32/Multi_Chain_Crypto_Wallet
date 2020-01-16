@@ -220,6 +220,5 @@ async function sendTx(coin, to, amount){
 
 
 function windowClose() {
-    window.open('','_parent','');
     window.close();
 }
