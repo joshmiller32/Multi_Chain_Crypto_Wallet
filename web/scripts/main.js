@@ -1,10 +1,26 @@
 var word_dict = {}; //We'll have to ask Cam about how to avoid this security vulnerability
 let password;
+var coin_purse = {};
+var price_dict = {};
 
 async function setPassword(pass) {
     password = pass;
     console.log("password: ${password}");
 }
+
+async function setCoinPurse(seed) {
+    coin_purse = await eel.get_wallets(seed)();
+    console.log(coin_purse);
+    return coin_purse;
+}
+
+async function setPriceDict() {
+    price_dict = await eel.get_prices()();
+    console.log(price_dict);
+    return price_dict;
+}
+
+
 
 async function getWords() {
 // Create the JAVA containers (variable) and link them to the HTML container.      
@@ -51,34 +67,29 @@ async function getWallets(password, coin, children) {
     let address = document.getElementById('address');
     let balance = document.getElementById('balance');
     let USDbalance = document.getElementById('USDbalance');
-    //let BTC_address = document.getElementById('btc_address');
-    //let BTG_address = document.getElementById('btg_address');
-    //let BCH_address = document.getElementById('bch_address');
-    //let LTC_address = document.getElementById('ltc_address');
-    //let DASH_address = document.getElementById('dash_address');
-    //let DOGE_address = document.getElementById('doge_address');
-    //let XRP_address = document.getElementById('xrp_address');
-    //let ZEC_address = document.getElementById('zec_address');
-    //let XLM_address = document.getElementById('xlm_address');
-    //let seed = await eel.get_seed()();
+    
     
     ///getting the variables///
     const seed = await eel.decrypt_seed(password)();
-    console.log(seed);
+    //console.log(seed);
     
-    let coin_purse = await eel.derive_wallets(seed,coin,children)();
-    console.log(coin_purse);
-    
-    QRloaded = await eel.make_qr(coin_purse.address)();
+    //let coin_purse = await eel.derive_wallets(seed,coin,children)();
+    //console.log(coin_purse);
+    //coin_purse = setCoinPurse(seed)();
+    coin_purse = await eel.get_wallets(seed)();
+    //console.log(coin_purse);
+
+    QRloaded = await eel.make_qr(coin_purse[coin][0].address)();
     var QRcode = new Image;
     
     //let account = await eel.priv_key_to_account(coin, coin_purse.privkey)();
     //console.log(account);
     
-    let acc_balance = await eel.get_balance(coin, coin_purse.privkey)();
+    let acc_balance = await eel.get_balance(coin, coin_purse[coin][0].privkey)();
     console.log(acc_balance);
        
-    let price_dict = await eel.get_prices()();
+    //let price_dict = await eel.get_prices()();
+    //console.log(price_dict);
     let usd_balance = acc_balance*price_dict[coin].USD;
     
     ///populating the wallet section///   
@@ -88,19 +99,11 @@ async function getWallets(password, coin, children) {
         QR.src = this.src;
         }
     QR.src = "images/QR.png";
-    address.innerHTML = coin_purse.address;
+    address.innerHTML = coin_purse[coin][0].address;
     
-    balance.innerHTML = acc_balance
-    USDbalance.innerHTML = usd_balance
-    //BTC_address.innerHTML = coin_purse.BTC;    
-    //BTG_address.innerHTML = coin_purse.BTG;
-    //BCH_address.innerHTML = coin_purse.BCH;
-    //LTC_address.innerHTML = coin_purse.LTC;
-    //DASH_address.innerHTML = coin_purse.DASH;
-    //DOGE_address.innerHTML = coin_purse.DOGE;
-    //XRP_address.innerHTML = coin_purse.XRP;
-    //ZEC_address.innerHTML = coin_purse.ZCASH;
-    //XLM_address.innerHTML = coin_purse.XLM;    
+    balance.innerHTML = acc_balance;
+    USDbalance.innerHTML = usd_balance;
+      
 }
 
 
@@ -115,7 +118,7 @@ async function getPrices() {
     let zec_usd_container = document.getElementById('zec_usd');
     let xlm_usd_container = document.getElementById('xlm_usd');
     
-    let price_dict = await eel.get_prices()();
+    window.price_dict = await eel.get_prices()();
     btc_usd_container.innerHTML = '$' + price_dict.BTC.USD;
     btg_usd_container.innerHTML = '$' + price_dict.BTG.USD;
     bch_usd_container.innerHTML = '$' + price_dict.BCH.USD;
@@ -148,7 +151,8 @@ async function getBalanceValue() {
     let zec_balance = document.getElementById('zec_balance');
     let xlm_balance = document.getElementById('xlm_balance');
     
-    let price_dict = await eel.get_prices()();
+    //price_dict = await eel.get_prices()();
+    //console.log(price_dict);
     btc_usd_value.innerHTML = '$' + (Math.round((btc_balance.innerHTML * price_dict.BTC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
     btg_usd_value.innerHTML = '$' + (Math.round((btg_balance.innerHTML * price_dict.BTG.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
     bch_usd_value.innerHTML = '$' + (Math.round((bch_balance.innerHTML * price_dict.BCH.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
@@ -161,7 +165,7 @@ async function getBalanceValue() {
 }
 
 async function checkPassword() {
-    console.log("Checking Password")
+    console.log("Checking Password");
     let input = document.getElementById('loginpassword');
     var pass = input.value;
     let loginCheck = await eel.check_password(pass)();
@@ -183,10 +187,6 @@ function extractSeed() {
     for(var key in word_dict) {
       seed += word_dict[key] +  " ";
     }
-    //for (i=1; i <= word_dict.length; i++){
-    //    key = 'word${i}';
-    //    seed += word_dict[key] +  " ";        
-    //}
     return seed;
     }
     
@@ -206,19 +206,17 @@ async function setPassword() {
 
 async function populateWallet(currency) {
     
-    //let allWallets = await eel.get_wallets(seed)();
-    getPrices();
+    await getPrices();
     getWallets("b",currency,1);
     getBalanceValue();
     
-    //return allWallets
 }
 
-    //var input = document.getElementById('newpassword');
-    //var pass = input.value;
-    //let loginCheck = await eel.set_password(pass)();
-    //return window.location.replace('mainWindow.html');
-//}
+async function sendTx(coin, to, amount){
+
+    tx = await eel.send_tx(coin, privkey, to, amount);   
+}
+
 
 
 function windowClose() {
