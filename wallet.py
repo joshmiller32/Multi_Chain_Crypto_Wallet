@@ -116,7 +116,7 @@ def priv_key_to_account(coin, priv_key):
     elif coin == "BTC":
         print("a btc account is being created")
         acc = PrivateKey(priv_key) 
-        print(acc)
+        #print(acc)
         return acc 
     else:                    return "Not a supported coin"
 
@@ -257,12 +257,12 @@ def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC',
 
 # Password Functions
 
-def hash_pass(pass_w):
+def hash_pass(pass_w, salt):
     #return hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest() #Original
-    return scrypt.encrypt(pass_w , "Test", maxtime=0.2)
+    return scrypt.encrypt(pass_w , salt, maxtime=0.2)
 
 @eel.expose
-def set_password(pass_w):
+def set_password(pass_w, seed):
     
     password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
                "password": [hash_pass(pass_w,"super wallet").hex()]} #ecnryption of the password with a salt
