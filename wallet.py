@@ -7,12 +7,13 @@ import hashlib
 import os
 
 import scrypt
+import qrcode
 
 from constants import *
 from web3 import Web3
-import os 
+import os
 from dotenv import load_dotenv
-from eth_account import Account 
+from eth_account import Account
 import subprocess
 import json
 from bit import Key, PrivateKey, PrivateKeyTestnet
@@ -25,8 +26,10 @@ from bit.network import NetworkAPI, get_fee_cached, satoshi_to_currency_cached
 from bit.network.meta import Unspent
 #from bit.transaction import calc_txid, create_p2pkh_transaction, sanitize_tx_data
 from web3.middleware import geth_poa_middleware
+from path import Path
+import pandas as pd
 
-from passlib.apps import custom_app_context as pwd_context
+#from passlib.apps import custom_app_context as pwd_context
 
 
 eel.init('web')
@@ -50,14 +53,7 @@ def create_seed():
     file.close()
     return seed_dict
 
-
 @eel.expose
-def get_seed(pass_w):
-    file = open(".sd", "r")
-    encrypted_seed_phrase = file.read()
-    seed_phrase = scrypt.decrypt(encrypted_seed_phrase, hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest(), maxtime=0.1)
-    return seed_phrase
-
 def derive_wallets(mnemonic, coin, nkeys):
 
     command = f'./hd-wallet-derive/hd-wallet-derive.php --mnemonic="{mnemonic}" --coin={coin} --numderive={nkeys}  --format=json -g'
@@ -79,9 +75,10 @@ coin_purse = {}
 
 @eel.expose
 def get_wallets(seed):
+    #print(f"get_wallet. seed: \n{seed}")
     """
     coins = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZCASH','XLM']
-    global coin_purse 
+    global coin_purse
     for coin in coins:
         w = wallet.create_wallet(network=coin, seed=seed, children=1)
         coin_purse.update({
@@ -90,13 +87,13 @@ def get_wallets(seed):
                    "publick" : w["xpublic_key"],
                    "children": w["children"]
                    }
-                   # a disadvantage of hd_derive_wallet is that it doesn't generate 
+                   # a disadvantage of hd_derive_wallet is that it doesn't generate
                    # a specific child. For instance, like the child with index 19384.
                    # So you are forced to create the whole chain of child addresses
                    # from 0 to 19384.
         })"""
     coin_purse = {  #We'll have to add more coins, specially ERC20 tokens
-    "ETH"     : derive_wallets(seed, "ETH", 10), 
+    "ETH"     : derive_wallets(seed, "ETH", 10),
     "BTC-test": derive_wallets(seed, "BTC-test", 10),
     "BTC"     : derive_wallets(seed, "BTC", 10),
     "BTG"     : derive_wallets(seed, "BTG", 10),
@@ -110,25 +107,31 @@ def get_wallets(seed):
 }
     return coin_purse
 
-
 @eel.expose
 def priv_key_to_account(coin, priv_key):
-    
+    print(f"coin: {coin} type: {type(coin)}\nprivate key: {priv_key} type: {type(priv_key)}")
+
     """Use it like this: my_btctest_account = priv_key_to_account("btc-test",coin_purse["btc-test"][0]["privkey"])"""
-    if coin == "ETH":        return Account.privateKeyToAccount(priv_key)       
-    elif coin == "btc-test": return PrivateKeyTestnet(priv_key)  
-    elif coin == "BTC":      return PrivateKey(priv_key) 
+    if coin == "ETH":
+        return Account.privateKeyToAccount(priv_key)
+    elif coin == "BTC-test":
+        return PrivateKeyTestnet(priv_key)
+    elif coin == "BTC":
+        print("a btc account is being created")
+        acc = PrivateKey(priv_key)
+        print(acc)
+        return acc
     else:                    return "Not a supported coin"
 
-    
+
 def create_tx(coin, account, to, amount):
     """
     coin options: eth, btc-test, btc.
-    account: account containing all the info like private and public 
+    account: account containing all the info like private and public
     key as well as address of a certain account. This must be obtained
     trough the method priv_key_to_account().
     to: address to transfer funds.
-    amount: amount of the currency. Take into account that Ether must 
+    amount: amount of the currency. Take into account that Ether must
     be expressed in weis.
     """
     if coin == "ETH":
@@ -151,10 +154,10 @@ def create_tx(coin, account, to, amount):
 
     elif coin == "btc-test":
         return PrivateKeyTestnet.prepare_transaction(account.address, [(to, amount, BTC)])
-    
+
     elif coin == "BTC":
         return PrivateKey.prepare_transaction(account.address, [(to, amount, BTC)])
-    
+
     else:
         return "Not a supported coin"
 
@@ -162,47 +165,79 @@ def create_tx(coin, account, to, amount):
 def send_tx(coin, account, to, amount):
     """
     coin options: eth, btc-test.
-    account: account containing all the info like private and public 
+    account: account containing all the info like private and public
     key as well as address of a certain account. This must be obtained
     trough the method priv_key_to_account().
     to: address to transfer funds.
-    amount: amount of the currency. Take into account that Ether must 
+    amount: amount of the currency. Take into account that Ether must
     be expressed in weis.
     Example: send_tx(coin = "btc-test",account = my_btctest_account, to = coin_purse["btc-test"][1]["address"],amount= 0.01)
-    """  
+    """
     tx = create_tx(coin, account.address, to, amount)
     signed_tx = account.sign_transaction(tx) #how to do this tho
-    
-    if coin == "ETH": 
+
+    if coin == "ETH":
         result = w3.eth.sendRawTransaction(signed_tx.rawTransaction)
         return result.hex()
-    
+
     elif coin == "btc-test":
         result = NetworkAPI.broadcast_tx_testnet(signed_tx)
         return result
-    
+
     elif coin == "BTC":
         result = NetworkAPI.broadcast_tx(signed_tx)
         return result
-    
+
     else:
         return "Not a supported coin"
-    
+
 
 @eel.expose
-def get_balance(coin, account):
-    
-    if coin == "ETH": 
+def get_balance(coin, privkey):
+
+    balance = -1
+
+    if coin == "ETH":
         return w3.eth.getBalance(account.address)
-         
-    
-    elif coin == "btc-test" or coin == "btc":
-        return account.get_balance("btc")
-    
+
+    elif coin == "BTC-test" or coin == "BTC":
+        balance = priv_key_to_account(coin, privkey).get_balance("btc")
+        return balance
+
     else:
         return "Not a supported coin"
-    
-    
+
+@eel.expose
+def make_qr(address):
+    """
+    address: string format of address
+    """
+    qrcode.make(address).save("web/images/QR.png")
+    return True
+
+
+
+@eel.expose
+def get_seed():
+    seed_phrase = ""
+    for i in range(12):
+        word = "word" + str(i + 1)
+        seed_phrase += os.environ[word] + " "
+    return seed_phrase
+
+
+@eel.expose
+def decrypt_seed(password):
+    password = "Wallet #1 in 2020" # For right now, the password doesn't count.
+    seed_path = Path(f".pwd.csv")
+    seed_df = pd.read_csv(seed_path)
+    ecnrypted_seed =bytes.fromhex(seed_df.loc[0]["seed"])
+    decrypted = scrypt.decrypt(ecnrypted_seed, password, maxtime=0.4)
+    #print(f"decrypted seed: \n{decrypted}")
+    return decrypted
+
+
+
 #Dashboard Functions
 
 def read_json(url):
@@ -213,7 +248,7 @@ def read_json(url):
     return url2
 
 @eel.expose
-def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC','XLM']): 
+def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC','XLM']):
     # Leaving this an argument instead of fixed string for flexibility, can be simpler/faster with fixed url input
     ticker_string=""
     for ticker in ticker_list:
@@ -232,15 +267,23 @@ def hash_pass(pass_w):
 '''
 @eel.expose
 def set_password(pass_w):
-    file = open(".pwd", "w")
-    file.write(pwd_context.hash(pass_w))
-    file.close()
+
+    password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
+               "password": [hash_pass(pass_w,"super wallet").hex()]} #ecnryption of the password with a salt
+    psw_df = pd.DataFrame(password)
+    pass_path = Path(f".pwd.csv")
+    psw_df.to_csv(pass_path)
+
     return True
 
 @eel.expose
 def check_password(pass_w):
-    file = open(".pwd", "r")
-    return pwd_context.verify(pass_w, file.read()) 
 
-    
+    pass_path = Path(f".pwd.csv")
+    password = pd.read_csv(pass_path)
+    ecnrypted_pass =bytes.fromhex(password.loc[0]["password"])
+    decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
+
+    return decrypted == pass_w
+
 eel.start('loginWindow.html', size=(1350, 750))
