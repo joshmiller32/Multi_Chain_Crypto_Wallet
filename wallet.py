@@ -53,6 +53,7 @@ def create_seed():
     file.close()
     return seed_dict
 
+
 @eel.expose
 def derive_wallets(mnemonic, coin, nkeys):
 
@@ -118,7 +119,7 @@ def priv_key_to_account(coin, priv_key):
         return PrivateKeyTestnet(priv_key)
     elif coin == "BTC":
         print("a btc account is being created")
-        acc = PrivateKey(priv_key) 
+        acc = PrivateKey(priv_key)
         #print(acc)
         return acc
     else:                    return "Not a supported coin"
@@ -207,6 +208,7 @@ def get_balance(coin, privkey):
     else:
         return "Not a supported coin"
 
+
 @eel.expose
 def make_qr(address):
     """
@@ -259,8 +261,6 @@ def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC',
 
 
 # Password Functions
-'''
-Stoped using since passlib does such a nice job
 
 def hash_pass(pass_w, salt):
     #return hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest() #Original
