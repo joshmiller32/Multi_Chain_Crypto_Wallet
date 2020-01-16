@@ -214,11 +214,11 @@ async function populateWallet(currency) {
     //return allWallets
 }
 
-    var input = document.getElementById('newpassword');
-    var pass = input.value;
-    let loginCheck = await eel.set_password(pass)();
-    return window.location.replace('mainWindow.html');
-}
+    //var input = document.getElementById('newpassword');
+    //var pass = input.value;
+    //let loginCheck = await eel.set_password(pass)();
+    //return window.location.replace('mainWindow.html');
+//}
 
 
 function windowClose() {
