@@ -129,3 +129,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#test files
+wallet_tx_test.ipynb
+.pwd
+.ipynb
+.pwd.csv
