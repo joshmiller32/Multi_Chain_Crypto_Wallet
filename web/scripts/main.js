@@ -1,7 +1,9 @@
 var word_dict = {}; //We'll have to ask Cam about how to avoid this security vulnerability
 let password;
+var seed_index;
 var coin_purse = {};
 var price_dict = {};
+var currency;
 
 async function setPassword(pass) {
     password = pass;
@@ -70,8 +72,10 @@ async function getWallets(password, coin, children) {
     
     
     ///getting the variables///
-    const seed = await eel.decrypt_seed(password)();
-    //console.log(seed);
+    console.log(seed_index);
+    seed_index = 0; //UNTIL WE FIND A WAY TO SEND THIS VALUE FROM LOG IN TO MAIN
+    const seed = await eel.decrypt_seed(seed_index)();
+    console.log(seed);
     
     //let coin_purse = await eel.derive_wallets(seed,coin,children)();
     //console.log(coin_purse);
@@ -169,10 +173,13 @@ async function checkPassword() {
     let input = document.getElementById('loginpassword');
     var pass = input.value;
     let loginCheck = await eel.check_password(pass)();
+    console.log("loginCheck");
     console.log(loginCheck);
 
-    if(loginCheck) {
+    if (loginCheck > -1) {
         console.log("launching main window");
+        window.seed_index = loginCheck;
+        console.log(seed_index);
         return window.location.replace('mainWindow.html?password=${pass}');
 
     } else {
@@ -196,8 +203,11 @@ async function setPassword() {
     let input = document.getElementById('newpassword');
     let pass = input.value;
     let seed = extractSeed();
+    console.log(pass);
+    console.log(seed);
     let loginCheck = await eel.set_password(pass, seed)();
-    seed = await eel.decrypt_seed(pass)();
+    window.seed_index = -1
+    seed = await eel.decrypt_seed(seed_index)();
     console.log(seed);
     
     return window.location.replace('mainWindow.html');
@@ -205,6 +215,8 @@ async function setPassword() {
 
 
 async function populateWallet(currency) {
+
+    window.currency = currency
     
     await getPrices();
     getWallets("b",currency,1);
@@ -212,9 +224,14 @@ async function populateWallet(currency) {
     
 }
 
-async function sendTx(coin, to, amount){
+async function sendTx(){
 
-    tx = await eel.send_tx(coin, privkey, to, amount);   
+    let SendToInput = document.getElementById('sendTo');
+    let amountInput = document.getElementById('amount');
+    let to = SendToInput.value;
+    let amount = amountInput.value;
+    
+    tx = await eel.send_tx(currency, coin_purse[currency][0].privkey, to, amount);   
 }
 
 

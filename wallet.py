@@ -170,7 +170,9 @@ def send_tx(coin, privkey, to, amount):
     be expressed in weis.
     Example: send_tx(coin = "btc-test",account = my_btctest_account, to = coin_purse["btc-test"][1]["address"],amount= 0.01)
     """  
-    tx = create_tx(coin, priv_key_to_account(coin, privkey).address, to, amount)
+    print(f"{coin}, {privkey}, {to}, {amount}")
+    tx = create_tx(coin, priv_key_to_account(coin, privkey), to, amount)
+    print(tx)
     signed_tx = priv_key_to_account(coin, privkey).sign_transaction(tx) #how to do this tho
     
     if coin == "ETH": 
@@ -183,6 +185,7 @@ def send_tx(coin, privkey, to, amount):
     
     elif coin == "BTC":
         result = NetworkAPI.broadcast_tx(signed_tx)
+        print(result)
         return result
     
     else:
@@ -224,11 +227,12 @@ def get_seed():
     
 
 @eel.expose
-def decrypt_seed(password):
+def decrypt_seed(seed_index):
+    print(f"seed index: {seed_index}")
     password = "Wallet #1 in 2020" # For right now, the password doesn't count.
     seed_path = Path(f".pwd.csv")
     seed_df = pd.read_csv(seed_path)
-    ecnrypted_seed =bytes.fromhex(seed_df.loc[0]["seed"])   
+    ecnrypted_seed =bytes.fromhex(seed_df["seed"].iloc[int(seed_index)])   
     decrypted = scrypt.decrypt(ecnrypted_seed, password, maxtime=0.4)
     #print(f"decrypted seed: \n{decrypted}")
     return decrypted
@@ -263,12 +267,26 @@ def hash_pass(pass_w, salt):
 
 @eel.expose
 def set_password(pass_w, seed):
+    print(f"pass: {pass_w}\nseed: {seed}")
     
     password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
                "password": [hash_pass(pass_w,"super wallet").hex()]} #ecnryption of the password with a salt
-    psw_df = pd.DataFrame(password)
+    
+    psw_df = pd.DataFrame(password)    
     pass_path = Path(f".pwd.csv")
-    psw_df.to_csv(pass_path)
+    
+    try:
+        current_df = pd.read_csv(pass_path)
+        print("found file")
+        current_df.drop(columns=["Unnamed: 0"], inplace = True)        
+        updated_df = pd.concat([current_df, psw_df], axis = 0, ignore_index=True, sort=True)
+        print("concatenated succesfully")
+        print(updated_df)
+        updated_df.to_csv(pass_path)
+        
+    except:
+        print("no password db found")
+        psw_df.to_csv(pass_path)
 
     return True
 
@@ -277,9 +295,14 @@ def check_password(pass_w):
    
     pass_path = Path(f".pwd.csv")
     password = pd.read_csv(pass_path)
-    ecnrypted_pass =bytes.fromhex(password.loc[0]["password"])   
-    decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
-    
-    return decrypted == pass_w
+    for row in range(password.shape[0]):
+        print(row)
+        ecnrypted_pass =bytes.fromhex(password["password"].iloc[row])   
+        decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
+        print(decrypted)
+        if decrypted == pass_w: 
+            return row
+    print("no password found")
+    return -1
  
 eel.start('loginWindow.html', size=(1350, 750))
