@@ -1,9 +1,6 @@
 import pandas as pd
 import requests
 import os
-import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.use('Agg')
 import numpy as np
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from scipy.stats import boxcox
