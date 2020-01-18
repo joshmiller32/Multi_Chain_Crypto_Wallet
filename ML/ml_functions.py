@@ -5,6 +5,9 @@ import numpy as np
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from scipy.stats import boxcox
 from scipy.special import inv_boxcox
+import plotly.express as px
+from plotly.io import write_html
+from datetime import datetime
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -24,12 +27,11 @@ def get_historical_data(ticker, days_previous):
     coin_df = pd.DataFrame(result['Data']['Data'])
     coin_df['time'] = pd.to_datetime(coin_df['time'], unit = 's')
     coin_df = coin_df[['close', 'time']]
-    coin_df = coin_df.rename(columns = {'time': 'Date'})
-    coin_df = coin_df.set_index('Date')
+    coin_df = coin_df.rename(columns = {'time': 'Date'}).set_index('Date')
     return coin_df
 
 def get_arima_forecast(ticker):
-    days_previous_dict = {'BTC': 730, 'ETH': 365, 'LTC': 365}
+    days_previous_dict = {'BTC': 730, 'ETH': 730, 'LTC': 730}
     days_previous = days_previous_dict[ticker]
     coin_df = get_historical_data(ticker, days_previous)
     transformed_data, lmda = boxcox(coin_df)
@@ -52,23 +54,21 @@ def get_arima_forecast(ticker):
     predictions = model_fit.predict(start= start, end = end)
     predicted_close = inv_boxcox(predictions, lmda)
     final_df = confidence_intervals.copy()
-    final_df['predicted_close'] = predicted_close
+    final_df['Predicted Price'] = predicted_close
     final_df = final_df.round(2)
+    final_df = final_df.reset_index()
+    final_df = final_df.rename(columns = {'index': 'Date'})
     return final_df
 
-def get_arima_forecast_plot(ticker):
-    forecast_df = get_arima_forecast(ticker)
-    plt.style.use('dark_background')
-    fig = plt.figure(figsize = (15,8))
-    plt.plot(forecast_df['predicted_close'], marker = 'o', color = 'y')
-    plt.fill_between(forecast_df.index, forecast_df['lower close'],forecast_df['upper close'], color = 'b', alpha = 0.6)
-    plt.ylabel('Price')
-    plt.xlabel('Date')
-    plt.margins(0.02)
-    plt.xticks(forecast_df.index)
-    for i,j in zip(forecast_df.index[0:4], forecast_df['predicted_close'][0:4]):
-        plt.annotate(str(j),xy=(i,j), xytext = (10,5), textcoords= 'offset points')
-    return fig
-    
+def get_arima_forecast_plot():
+    ticker_list = ['BTC', 'ETH', 'LTC']
+    for ticker in ticker_list:
+        forecast_df = get_arima_forecast(ticker)
+        fig = px.linefig = px.line(forecast_df, x ='Date', y = 'Predicted Price')
+        fig.update_xaxes(nticks = 5)
+        fig.update_yaxes(automargin=True)
+        fig.update_layout(title_text = f'{ticker} Arima Model', autosize = True, height = 800, width = 950, template = 'seaborn')
+        write_html(fig, f'./web/{ticker}Arima.html')
+
     
     
