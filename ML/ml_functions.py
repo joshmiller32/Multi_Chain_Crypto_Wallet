@@ -7,6 +7,7 @@ from scipy.stats import boxcox
 from scipy.special import inv_boxcox
 import plotly.express as px
 from plotly.io import write_html
+from datetime import date, timedelta
 from datetime import datetime
 import warnings
 warnings.filterwarnings("ignore")
@@ -70,5 +71,46 @@ def get_arima_forecast_plot():
         fig.update_layout(title_text = f'{ticker} Arima Model', autosize = True, height = 800, width = 950, template = 'seaborn')
         write_html(fig, f'./web/{ticker}Arima.html')
 
-    
-    
+def get_random_forest_df():
+    end_date = date.today().isoformat()
+    delta = timedelta(730)
+    start_date = (date.today() - delta).isoformat()
+    url = 'https://api.exchangeratesapi.io/history'
+    payload = {
+    "start_at": start_date,
+    "end_at": end_date,
+    "symbols": "CNY,JPY,EUR",
+    "base": "USD"
+    }
+    result = requests.get(url, params = payload).json()
+    rate_df = pd.DataFrame(result['rates']).transpose()
+    rate_df = rate_df.sort_index()
+    rate_df.index = pd.to_datetime(rate_df.index, format = '%Y-%m-%d')
+    btc_price = get_historical_data('BTC', 730)
+    btc_price = btc_price.rename(columns = {'close': 'BTC'})
+    eth_price = get_historical_data('ETH', 730)
+    eth_price = eth_price.rename(columns = {'close': 'ETH'})
+    ltc_price = get_historical_data('LTC', 730)
+    ltc_price = ltc_price.rename(columns = {'close': 'LTC'})
+    coin_df = btc_price
+    coin_df['LTC'] = ltc_price
+    coin_df['ETH'] = eth_price
+    combined_df = pd.concat([coin_df, rate_df], axis = 1 )
+    combined_df['EUR'] = combined_df['EUR'].ffill()
+    combined_df['CNY'] = combined_df['JPY'].ffill()
+    combined_df['JPY'] = combined_df['CNY'].ffill()
+    combined_df = combined_df.reset_index()
+    delta = timedelta(1)
+    add_row_date = (date.today() + delta).isoformat()
+    df2 = pd.DataFrame([[add_row_date,0,0,0,0,0,0]], columns= ['index','BTC','LTC','ETH','EUR','CNY','JPY'])
+    combined_df = combined_df.append(df2, ignore_index = True)
+    combined_df = combined_df.set_index('index')
+    combined_df['BTC_Previous_Day'] = combined_df['BTC'].shift(1)
+    combined_df['LTC_Previous_Day'] = combined_df['LTC'].shift(1)
+    combined_df['ETH_Previous_Day'] = combined_df['ETH'].shift(1)
+    combined_df['EUR_Previous_Day'] = combined_df['EUR'].shift(1)
+    combined_df['CNY_Previous_Day'] = combined_df['CNY'].shift(1)
+    combined_df['JPY_Previous_Day'] = combined_df['JPY'].shift(1)
+    combined_df = combined_df.drop(columns = ['EUR', 'CNY', 'JPY'])
+    combined_df = combined_df.dropna()
+    return combined_df
