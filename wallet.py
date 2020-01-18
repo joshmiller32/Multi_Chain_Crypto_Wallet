@@ -32,7 +32,7 @@ from ML.ml_functions import get_arima_forecast_plot
 
 #from passlib.apps import custom_app_context as pwd_context
 
-
+get_arima_forecast_plot()
 eel.init('web')
 
 
