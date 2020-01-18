@@ -49,20 +49,11 @@
                 <br>
                 <br>
                 <select id ="Coin" name="Cryptocurrency" class = "dropdownBackgroundColor" style= "width: 250px">
-                    <option value = "Bitcoin">Bitcoin</option>
-                    <option value = "Ether">Ether</option>
-                    <option value = "Litecoin">Litecoin</option>
+                    <option value = "BTCArima">Bitcoin ARIMA Forecast</option>
+                    <option value = "ETHArima">Ether ARIMA Forecast</option>
+                    <option value = "LTCArima">Litecoin ARIMA Forecast</option>
                     </select>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <select name="Machine Learning Models" class = "dropdownBackgroundColor" style= "width: 250px;">
-                    <option value = "ARIMA">ARIMA</option>
-                    <option value = "Random Forest Ensemble">Random Forest Ensemble</option>
-                    <option value = "Prophet">Prophet</option>
-                    </select>
+                
                 
                 <!-- Column 3 end -->      
                     </div>
@@ -70,13 +61,12 @@
             </div>
         </div>
     </body>
-    <script>$("#Graph").load("bitcoin.html");</script>
     <script>
         $( "#Coin" )
           .change(function () {
             var mlPlot = "";
             $( "#Coin option:selected" ).each(function() {
-              mlPlot += $( this ).text() + ".html";
+              mlPlot += $( this ).val() + ".html";
             });
             $("#Graph").load(mlPlot);
             
