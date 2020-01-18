@@ -132,6 +132,10 @@ dmypy.json
 
 #test files
 wallet_tx_test.ipynb
+
+#Wallet Files
 .pwd
 .ipynb
 .pwd.csv
+*Arima.html
+

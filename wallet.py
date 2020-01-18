@@ -28,11 +28,10 @@ from bit.network.meta import Unspent
 from web3.middleware import geth_poa_middleware
 from path import Path
 import pandas as pd
-from ML.ml_functions import get_arima_forecast_plot
 
 #from passlib.apps import custom_app_context as pwd_context
 
-get_arima_forecast_plot()
+
 eel.init('web')
 
 
@@ -98,7 +97,7 @@ def get_wallets(seed):
     "BCH"     : derive_wallets(seed, "BCH", 10),
     "LTC"     : derive_wallets(seed, "LTC", 10),
     "DASH"    : derive_wallets(seed, "DASH", 10),
-    "DOGE"   : derive_wallets(seed, "DODGE", 10),
+    "DOGE"   : derive_wallets(seed, "DOGE", 10),
     #"XRP"     : derive_wallets(seed, "XRP", 10), #https://bitcoin.stackexchange.com/questions/75385/does-ripple-has-support-for-hd-wallets
     "ZCASH"   : derive_wallets(seed, "ZEC", 10),
     #"XML"     : derive_wallets(seed, "XML", 10),
@@ -107,7 +106,7 @@ def get_wallets(seed):
 
 @eel.expose
 def priv_key_to_account(coin, priv_key):
-    print(f"coin: {coin} type: {type(coin)}\nprivate key: {priv_key} type: {type(priv_key)}")
+    #print(f"coin: {coin} type: {type(coin)}\nprivate key: {priv_key} type: {type(priv_key)}")
     
     """Use it like this: my_btctest_account = priv_key_to_account("btc-test",coin_purse["btc-test"][0]["privkey"])"""
     if coin == "ETH":        
@@ -160,10 +159,10 @@ def create_tx(coin, account, to, amount):
         return "Not a supported coin"
 
 @eel.expose
-def send_tx(coin, account, to, amount):
+def send_tx(coin, privkey, to, amount):
     """
     coin options: eth, btc-test.
-    account: account containing all the info like private and public 
+    privkey: ignore this (have to fix it): account containing all the info like private and public 
     key as well as address of a certain account. This must be obtained
     trough the method priv_key_to_account().
     to: address to transfer funds.
@@ -171,8 +170,10 @@ def send_tx(coin, account, to, amount):
     be expressed in weis.
     Example: send_tx(coin = "btc-test",account = my_btctest_account, to = coin_purse["btc-test"][1]["address"],amount= 0.01)
     """  
-    tx = create_tx(coin, account.address, to, amount)
-    signed_tx = account.sign_transaction(tx) #how to do this tho
+    print(f"{coin}, {privkey}, {to}, {amount}")
+    tx = create_tx(coin, priv_key_to_account(coin, privkey), to, amount)
+    print(tx)
+    signed_tx = priv_key_to_account(coin, privkey).sign_transaction(tx) #how to do this tho
     
     if coin == "ETH": 
         result = w3.eth.sendRawTransaction(signed_tx.rawTransaction)
@@ -184,6 +185,7 @@ def send_tx(coin, account, to, amount):
     
     elif coin == "BTC":
         result = NetworkAPI.broadcast_tx(signed_tx)
+        print(result)
         return result
     
     else:
@@ -196,7 +198,7 @@ def get_balance(coin, privkey):
     balance = -1
     
     if coin == "ETH": 
-        return w3.eth.getBalance(account.address)
+        return w3.eth.getBalance(priv_key_to_account(coin, privkey).address)
             
     elif coin == "BTC-test" or coin == "BTC":        
         balance = priv_key_to_account(coin, privkey).get_balance("btc")
@@ -225,11 +227,12 @@ def get_seed():
     
 
 @eel.expose
-def decrypt_seed(password):
+def decrypt_seed(seed_index):
+    print(f"seed index: {seed_index}")
     password = "Wallet #1 in 2020" # For right now, the password doesn't count.
     seed_path = Path(f".pwd.csv")
     seed_df = pd.read_csv(seed_path)
-    ecnrypted_seed =bytes.fromhex(seed_df.loc[0]["seed"])   
+    ecnrypted_seed =bytes.fromhex(seed_df["seed"].iloc[int(seed_index)])   
     decrypted = scrypt.decrypt(ecnrypted_seed, password, maxtime=0.4)
     #print(f"decrypted seed: \n{decrypted}")
     return decrypted
@@ -264,12 +267,26 @@ def hash_pass(pass_w, salt):
 
 @eel.expose
 def set_password(pass_w, seed):
+    print(f"pass: {pass_w}\nseed: {seed}")
     
     password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
                "password": [hash_pass(pass_w,"super wallet").hex()]} #ecnryption of the password with a salt
-    psw_df = pd.DataFrame(password)
+    
+    psw_df = pd.DataFrame(password)    
     pass_path = Path(f".pwd.csv")
-    psw_df.to_csv(pass_path)
+    
+    try:
+        current_df = pd.read_csv(pass_path)
+        print("found file")
+        current_df.drop(columns=["Unnamed: 0"], inplace = True)        
+        updated_df = pd.concat([current_df, psw_df], axis = 0, ignore_index=True, sort=True)
+        print("concatenated succesfully")
+        print(updated_df)
+        updated_df.to_csv(pass_path)
+        
+    except:
+        print("no password db found")
+        psw_df.to_csv(pass_path)
 
     return True
 
@@ -278,10 +295,14 @@ def check_password(pass_w):
    
     pass_path = Path(f".pwd.csv")
     password = pd.read_csv(pass_path)
-    ecnrypted_pass =bytes.fromhex(password.loc[0]["password"])   
-    decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
-    
-    return decrypted == pass_w
+    for row in range(password.shape[0]):
+        print(row)
+        ecnrypted_pass =bytes.fromhex(password["password"].iloc[row])   
+        decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
+        print(decrypted)
+        if decrypted == pass_w: 
+            return row
+    print("no password found")
+    return -1
  
 eel.start('loginWindow.html', size=(1350, 750))
-
