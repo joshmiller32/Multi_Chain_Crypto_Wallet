@@ -20,7 +20,7 @@
                 <div class="colleft">
                     <div class="col1">
                         <!-- Column 1 start -->
-                        <div id = "Graph"></div>
+                        <div id="graph" style="width=100%"></div>
                         
 
         </div>
@@ -68,7 +68,7 @@
             $( "#Coin option:selected" ).each(function() {
               mlPlot += $( this ).val() + ".html";
             });
-            $("#Graph").load(mlPlot);
+            $("#graph").load(mlPlot);
             
           })
           .change();

@@ -2,6 +2,10 @@ pip install py_hd_wallet
 pip install eel
 pip install qrcode
 pip install clove
+pip install web3
+pip install python-dotenv
+pip install bit
+pip install plotly
 
 conda install -c conda-forge scrypt
 

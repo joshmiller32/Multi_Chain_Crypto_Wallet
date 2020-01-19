@@ -139,14 +139,14 @@
                 <h2><center>Bitcoin (BTC)</center></h2>
                 <p>Breif descripton about bitcoin here.  Mention its origins, uses and anything else relavant to new users.<p><br>
                 
-                <center><img id="QR" src="getQR()" alt="Wallet Address" height="200" width="200"><br>
+                <center><img id="QR" src="images/loading.png" alt="Wallet Address" height="180" width="180"><br>
                     
                    
                     
                         <ul>
                             <span><u>Wallet Address:</u></span><br>
 
-                            <li><span><div id='address'>...still loading. Please wait.</div></span></li><br><br>
+                            <li><span><div id='address'>Requesting New Address From The Blockchain</div></span></li><br><br>
                             
                             <li><span>Current Balance : </span>
                             <span id="balance" style="color: gold; font-size: 18px;">
@@ -155,16 +155,19 @@
                             
                             <li><span>USD Value : </span>
                             <span id="USDbalance" style="color: green; font-size: 18px;">
-                                $85.96
+                                $00.00
                             </span></li><br>
                             <br>
 
                             <center><p><hr><h3> Send Coins </h3>
-                                <form>Reciepient Address:<br>
-                                <input id="sendTo" type="text" name="reciepient"><br><br>
-                                Amount:<br>
-                                <input id="amount" type="text" name="amount"></form></center>
-                            <br>
+                                <form>
+                                    Reciepient Address:<br>
+                                    <input id="sendTo" type="text" name="reciepient"><br><br>
+                                    Amount:<br>
+                                    <input id="amount" type="text" name="amount">
+                                </form>
+                            </center>
+                                <br>
                             <button id="send_tx" type="submit" onclick="sendTx();">Send</button>
 
                 <!-- Column 3 end -->      
@@ -176,21 +179,23 @@
         <script>
 
             document.addEventListener("DOMContentLoaded", () => {
-
                 const rows = document.querySelectorAll("tr[data-coin]");
-
                 console.log(rows)
-
                 rows.forEach(row => {
 
                     row.addEventListener("click", () => {
+                        let qr_img = document.getElementById('QR');
+                        let address = document.getElementById('address');
+                        myFunction(this);
+                        address.innerHTML = "Loading New Address"
+                        qr_img.src = "images/loading.png"
                         populateWallet(row.dataset.coin);
 
                     });
                 });
 
             });
-        
+            
         </script>
     </body>
 </html>
