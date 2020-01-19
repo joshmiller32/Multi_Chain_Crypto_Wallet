@@ -240,3 +240,7 @@ function windowClose() {
     window.open('','_parent','');
     window.close();
 }
+
+function myFunction(x) {
+  console.log("Row index is: " + x.rowIndex);
+}

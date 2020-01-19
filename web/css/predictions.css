@@ -231,3 +231,8 @@ img {
 
 }
 
+#graph {
+    position:center;
+    height:100vh;
+    width:50%;
+}
