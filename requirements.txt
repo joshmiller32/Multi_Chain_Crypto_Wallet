@@ -19,3 +19,5 @@ conda install -c conda-forge scrypt
  php composer.phar install
 
 ###################################
+
+pip install skgarden
