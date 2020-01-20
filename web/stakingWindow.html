@@ -3,13 +3,11 @@
     <head>
         <title>Multi-Asset Crypto Wallet v0.1.0</title>
 
-        <link rel="stylesheet" type="text/css" href="css/predictions.css">  
+        <link rel="stylesheet" type="text/css" href="css/staking.css">  
         
         <!-- Start of Scripts -->
         <script type="text/javascript" src="/eel.js"></script>
         <script type="text/javascript" src="scripts/main.js"></script>
-        <script type="text/javascript" src="scripts/jquery-3.4.1.js"></script>
-
         <!-- End of Scripts -->  
         
     </head>
@@ -18,10 +16,11 @@
         <div class="colmask threecol">
             <div class="colmid">
                 <div class="colleft">
-                    <div id="mid" class="col1">
+                    <div class="col1">
                         <!-- Column 1 start -->
-                        <div id="graph" style="width=100%"></div>
-                        
+                        <center><h1>Cryptocurrency Staking</h1>
+                            <p>Earn Over 6% Annually with Staking! </p>
+                        <img class="construction" src="images/construction.png" height="400" width="500"></center>
 
         </div>
 			<div class="col2">
@@ -38,21 +37,22 @@
 
                 </ul><br><br><br><br><br><br><br>
                 <img src="images/back.png" height="25px" width="30px">&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="history.back()" style="vertical-align: top;" />Back<br><br><br>
-                <img src="images/exit.png" height="25px" width="30px">&nbsp;&nbsp;<a href="#" onclick="windowClose()" style="vertical-align: top;">Close Wallet</a>
+                <img src="images/exit.png" height="25px" width="30px">&nbsp;&nbsp;<a href="" onclick="windowClose()" style="vertical-align: top;">Close Wallet</a>
                 <!-- Column 2 end -->
 			</div>
-			<div class="col3">
-                <!-- Column 3 start -->
-                <h2>Machine Learning Predictions</h2><br><br><span style="color: gold; font-size: 15px;">These Projections Are For Informational Purposes Only</span><br><br><p>YOU ARE RESPONSIBLE FOR ALL THE RISKS AND FINANCIAL RESOURCES YOU USE AND FOR THE CHOSEN TRADING SYSTEM<br><br><hr>
-                <br>
-                <br>
-                <br>
-                <select id ="Coin" name="Cryptocurrency" class = "dropdownBackgroundColor" style= "width: 250px">
-                    <option value = "BTCArima">Bitcoin ARIMA Forecast</option>
-                    <option value = "ETHArima">Ether ARIMA Forecast</option>
-                    <option value = "LTCArima">Litecoin ARIMA Forecast</option>
-                    </select>
-                
+			<div class="col3"><br>
+				<!-- Column 3 start -->
+                <h2><center>What Is Staking?</h2>
+                <p><br>
+                &nbsp;&nbsp;Staking is the purchase of cryptocoins and keeping (holding) them in a cryptocurrency wallet for a particular period of time. This is similar to a fixed deposit in the fiat currency world which rewards you with a fixed interest rate at the end of the stipulated time in the contract.<br><br>
+
+                &nbsp;&nbsp;This brings us to the concept of Proof of Staking (PoS). It is an agreement algorithm for some cryptocurrencies which creates new blocks that you can add to the blockchain. These created blocks are actually staked by somebody who is holding some cryptocoins already and helps to validate a new deal on the platform.<br><br>
+
+                &nbsp;&nbsp;You are able to mine or validate new deals for cryptocoins that are equal to the number of cryptocoins you have really staked. The more cryptocoins you stake, the higher your power to validate transactions. Likewise, the longer you hold your cryptocoins in your wallet, the higher the number of your coins.<br><br>
+
+                &nbsp;&nbsp;In fact, only a handful of individuals understand staking and its benefits when compared to the majority who knows about mining and the equipment related to it.<br><br>
+                    <br><br>
+                <u>To learn more goto <a href="https://cryptoblockwire.com/what-is-cryptocurrency-staking/">cryptoblockwire.com</a></u></p></center>
                 
                 <!-- Column 3 end -->      
                     </div>
@@ -60,16 +60,4 @@
             </div>
         </div>
     </body>
-    <script>
-        $( "#Coin" )
-          .change(function () {
-            var mlPlot = "";
-            $( "#Coin option:selected" ).each(function() {
-              mlPlot += $( this ).val() + ".html";
-            });
-            $("#graph").load(mlPlot);
-            
-          })
-          .change();
-    </script>
-     
+</html>
