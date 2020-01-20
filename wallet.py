@@ -54,7 +54,7 @@ def create_seed():
 @eel.expose
 def derive_wallets(mnemonic, coin, nkeys):
 
-    command = f'./hd-wallet-derive/hd-wallet-derive.php --mnemonic="{mnemonic}" --coin={coin} --numderive={nkeys}  --format=json -g'
+    command = f'php ./hd-wallet-derive/hd-wallet-derive.php --mnemonic="{mnemonic}" --coin={coin} --numderive={nkeys}  --format=json -g'
     available_coins = "./hd-wallet-derive.php --help-coins" # --> currently not in use
     new_process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
 
@@ -65,7 +65,6 @@ def derive_wallets(mnemonic, coin, nkeys):
     if err:
         print("\nError:###\n\n")
         return err
-
     return json.loads(output)
 
 coin_purse = {}
@@ -73,7 +72,7 @@ coin_purse = {}
 
 @eel.expose
 def get_wallets(seed):
-    #print(f"get_wallet. seed: \n{seed}")
+    print(f"get_wallet. seed: \n{seed}")
     """
     coins = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZCASH','XLM']
     global coin_purse 
