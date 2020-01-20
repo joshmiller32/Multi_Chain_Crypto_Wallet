@@ -30,6 +30,10 @@ from path import Path
 import pandas as pd
 from ML.ml_functions import get_arima_forecast_plot
 
+import pprint as pp
+import requests
+import hmac
+
 #from passlib.apps import custom_app_context as pwd_context
 
 get_arima_forecast_plot()
@@ -304,5 +308,40 @@ def check_password(pass_w):
             return row
     print("no password found")
     return -1
- 
+
+def getCurrencies():
+    '''
+    Should be called when the user goes to the exchange screen. No Parameters.
+    
+    Should return a list of possible swaps.
+    
+    120 X 119 pairs, at 14280 possibiliy pairs
+    '''
+    #API CALL
+    message = {
+    'jsonrpc': '2.0',
+    'id': 1,
+    'method': 'getCurrencies', #getCurrenciesFull will return all available and their state
+    'params': []
+    }
+
+    serialized_data = json.dumps(message)
+
+    sign = hmac.new(API_SECRET.encode('utf-8'), serialized_data.encode('utf-8'), hashlib.sha512).hexdigest()
+
+    headers = {'api-key': API_KEY, 'sign': sign, 'Content-type': 'application/json'}
+    
+    response_getcurrencies = requests.post(API_URL, headers=headers, data=serialized_data)
+    
+    #Error handling if serve is down or crashes
+    if '<Response [200]>' == str(response_getcurrencies) :
+        pass
+    else:
+        raise ValueError("Serve may have crashed or is down for repairs. Please try again later.")
+    
+    #List of possible currencies
+    list_of_currencies = response_getcurrencies.json()['result']
+    
+    return list_of_currencies
+
 eel.start('loginWindow.html', size=(1350, 750))
