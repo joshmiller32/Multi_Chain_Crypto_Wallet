@@ -20,4 +20,4 @@ conda install -c conda-forge scrypt
 
 ###################################
 
-pip install skgarden
+pip install scikit-garden

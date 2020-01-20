@@ -15,6 +15,7 @@ warnings.filterwarnings("ignore")
 
 
 
+
 def get_historical_data(ticker, days_previous):
     
     url = "https://min-api.cryptocompare.com/data/v2/histoday"
