@@ -5,6 +5,11 @@ var coin_purse = {};
 var price_dict = {};
 var currency;
 
+async function setSeedIndex(index) {
+    window.seed_index = index;
+    console.log("seed_index:" +seed_index);
+}
+
 async function setPassword(pass) {
     password = pass;
     console.log("password: ${password}");
@@ -73,7 +78,7 @@ async function getWallets(password, coin, children) {
     
     ///getting the variables///
     console.log(seed_index);
-    seed_index = 0; //UNTIL WE FIND A WAY TO SEND THIS VALUE FROM LOG IN TO MAIN
+    //seed_index = 0; //UNTIL WE FIND A WAY TO SEND THIS VALUE FROM LOG IN TO MAIN
     const seed = await eel.decrypt_seed(seed_index)();
     console.log(seed);
     
@@ -180,7 +185,7 @@ async function checkPassword() {
         console.log("launching main window");
         window.seed_index = loginCheck;
         console.log(seed_index);
-        return window.location.replace('mainWindow.html?password=${pass}');
+        return window.location.replace('mainWindow.html?index='+seed_index);
 
     } else {
         console.log("try again");
@@ -210,7 +215,7 @@ async function setPassword() {
     seed = await eel.decrypt_seed(seed_index)();
     console.log(seed);
     
-    return window.location.replace('mainWindow.html');
+    return window.location.replace('mainWindow.html?index=-1');
 }
 
 
@@ -230,7 +235,7 @@ async function sendTx(){
     let amountInput = document.getElementById('amount');
     let to = SendToInput.value;
     let amount = amountInput.value;
-    
+
     tx = await eel.send_tx(currency, coin_purse[currency][0].privkey, to, amount);   
 }
 
