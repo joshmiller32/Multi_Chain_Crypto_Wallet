@@ -138,9 +138,10 @@
 			</div>
 			<div class="col3"><br>
 				<!-- Column 3 start -->
-                <h2><center><span><div id='title'>Bitcoin (BTC)</div></span></center></h2>
-                <span><div id='description'>
-                <p>Breif descripton about bitcoin here.  Mention its origins, uses and anything else relavant to new users.<p><br>
+                <h2><center><span><div id='title'>Bitcoin</div></span></center></h2>
+               
+                    <span><div id='description' style="color: white;">
+                    ...loading description...<br><br>
 
                 </div></span>
                 <center><img id="QR" src="images/loading.png" alt="Wallet Address" height="180" width="180"><br>
@@ -160,7 +161,7 @@
                             
                             <li><span>USD Value : </span>
                             <span id="USDbalance" style="color: green; font-size: 18px;">
-                                $00.00
+                                ..loading USD value...
                             </span></li><br>
                             <br>
 
@@ -202,9 +203,13 @@
                     row.addEventListener("click", () => {
                         let qr_img = document.getElementById('QR');
                         let address = document.getElementById('address');
+                        let balance = document.getElementById('balance');
+                        let USDBalance = document.getElementById('USDbalance');
                         myFunction(this);
                         address.innerHTML = "Loading New Address"
                         qr_img.src = "images/loading.png"
+                        balance.innerHTML = "..loading your balance..."
+                        USDBalance.innerHTML = "..loading your USD balance..."
                         getWallet(row.dataset.coin);
 
                     });
