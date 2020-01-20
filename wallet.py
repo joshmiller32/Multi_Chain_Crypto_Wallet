@@ -76,7 +76,7 @@ coin_purse = {}
 
 @eel.expose
 def get_wallets(seed):
-    print(f"get_wallet. seed: \n{seed}")
+    #print(f"get_wallet. seed: \n{seed}")
     """
     coins = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZCASH','XLM']
     global coin_purse 
@@ -94,16 +94,16 @@ def get_wallets(seed):
                    # from 0 to 19384.
         })"""
     coin_purse = {  #We'll have to add more coins, specially ERC20 tokens
-    "ETH"     : derive_wallets(seed, "ETH", 10), 
-    "BTC-test": derive_wallets(seed, "BTC-test", 10),
-    "BTC"     : derive_wallets(seed, "BTC", 10),
-    "BTG"     : derive_wallets(seed, "BTG", 10),
-    "BCH"     : derive_wallets(seed, "BCH", 10),
-    "LTC"     : derive_wallets(seed, "LTC", 10),
-    "DASH"    : derive_wallets(seed, "DASH", 10),
-    "DOGE"   : derive_wallets(seed, "DOGE", 10),
+    "ETH"     : derive_wallets(seed, "ETH", 2), 
+    "BTC-test": derive_wallets(seed, "BTC-test", 2),
+    "BTC"     : derive_wallets(seed, "BTC", 2),
+    "BTG"     : derive_wallets(seed, "BTG", 2),
+    "BCH"     : derive_wallets(seed, "BCH", 2),
+    "LTC"     : derive_wallets(seed, "LTC", 2),
+    "DASH"    : derive_wallets(seed, "DASH", 2),
+    "DOGE"   : derive_wallets(seed, "DOGE", 2),
     #"XRP"     : derive_wallets(seed, "XRP", 10), #https://bitcoin.stackexchange.com/questions/75385/does-ripple-has-support-for-hd-wallets
-    "ZCASH"   : derive_wallets(seed, "ZEC", 10),
+    "ZCASH"   : derive_wallets(seed, "ZEC", 2),
     #"XML"     : derive_wallets(seed, "XML", 10),
 }
     return coin_purse
@@ -174,7 +174,7 @@ def send_tx(coin, privkey, to, amount):
     be expressed in weis.
     Example: send_tx(coin = "btc-test",account = my_btctest_account, to = coin_purse["btc-test"][1]["address"],amount= 0.01)
     """  
-    print(f"{coin}, {privkey}, {to}, {amount}")
+    #print(f"{coin}, {privkey}, {to}, {amount}")
     tx = create_tx(coin, priv_key_to_account(coin, privkey), to, amount)
     print(tx)
     signed_tx = priv_key_to_account(coin, privkey).sign_transaction(tx) #how to do this tho
@@ -271,7 +271,7 @@ def hash_pass(pass_w, salt):
 
 @eel.expose
 def set_password(pass_w, seed):
-    print(f"pass: {pass_w}\nseed: {seed}")
+    #print(f"pass: {pass_w}\nseed: {seed}")
     
     password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
                "password": [hash_pass(pass_w,"super wallet").hex()]} #ecnryption of the password with a salt

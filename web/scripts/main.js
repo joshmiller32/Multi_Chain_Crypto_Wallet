@@ -185,11 +185,9 @@ async function setPassword() {
     console.log(pass);
     console.log(seed);
     let loginCheck = await eel.set_password(pass, seed)();
-    window.seed_index = -1
-    seed = await eel.decrypt_seed(seed_index)();
-    console.log(seed);
+    window.seed_index = -1;
     
-    return window.location.replace('mainWindow.html?index=-1');
+    return window.location.replace('mainWindow.html?index='+seed_index);
 }
 
 
@@ -218,7 +216,7 @@ async function populateWallet(currency) {
     const seed = await eel.decrypt_seed(seed_index)();
     
     window.coin_purse = await eel.get_wallets(seed)();
-    console.log(coin_purse);
+    //console.log(coin_purse);
 
     getWallet(currency);
     getBalanceValue();

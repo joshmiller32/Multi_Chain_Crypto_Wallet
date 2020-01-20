@@ -141,13 +141,10 @@
                 <h2><center><span><div id='title'>Bitcoin (BTC)</div></span></center></h2>
                 <span><div id='description'>
                 <p>Breif descripton about bitcoin here.  Mention its origins, uses and anything else relavant to new users.<p><br>
-<<<<<<< HEAD
+
                 </div></span>
                 <center><img id="QR" src="images/loading.png" alt="Wallet Address" height="180" width="180"><br>
-=======
-                
-                <center><img id="QR" src="images/loading.png" alt="Wallet Address" height="170" width="170"><br>
->>>>>>> f4e84c94168ed882056dc6403d2ba9f110995b7e
+
                     
                    
                     
@@ -190,6 +187,7 @@
             var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
                 vars[key] = value;
             });
+            console.log("from mainWindow: index = "+vars["index"])
             setSeedIndex(vars["index"]);
             
         </script>
