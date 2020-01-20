@@ -300,10 +300,10 @@ def check_password(pass_w):
     pass_path = Path(f".pwd.csv")
     password = pd.read_csv(pass_path)
     for row in range(password.shape[0]):
-        print(row)
+        #print(row)
         ecnrypted_pass =bytes.fromhex(password["password"].iloc[row])   
         decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
-        print(decrypted)
+        #print(decrypted)
         if decrypted == pass_w: 
             return row
     print("no password found")

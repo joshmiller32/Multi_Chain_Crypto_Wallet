@@ -4,30 +4,12 @@ var seed_index;
 var coin_purse = {};
 var price_dict = {};
 var currency;
+var xmlDoc;
 
 async function setSeedIndex(index) {
     window.seed_index = index;
     console.log("seed_index:" +seed_index);
 }
-
-async function setPassword(pass) {
-    password = pass;
-    console.log("password: ${password}");
-}
-
-async function setCoinPurse(seed) {
-    coin_purse = await eel.get_wallets(seed)();
-    console.log(coin_purse);
-    return coin_purse;
-}
-
-async function setPriceDict() {
-    price_dict = await eel.get_prices()();
-    console.log(price_dict);
-    return price_dict;
-}
-
-
 
 async function getWords() {
 // Create the JAVA containers (variable) and link them to the HTML container.      
@@ -69,39 +51,31 @@ async function getWords() {
 }
 
 
-async function getWallets(password, coin, children) {
+async function getWallet(coin) {
     let QR = document.getElementById('QR');
     let address = document.getElementById('address');
     let balance = document.getElementById('balance');
     let USDbalance = document.getElementById('USDbalance');
-    
+    let titleContainer = document.getElementById('title');
+    let descrContainer  = document.getElementById('description');
     
     ///getting the variables///
-    console.log(seed_index);
-    //seed_index = 0; //UNTIL WE FIND A WAY TO SEND THIS VALUE FROM LOG IN TO MAIN
-    const seed = await eel.decrypt_seed(seed_index)();
-    console.log(seed);
-    
-    //let coin_purse = await eel.derive_wallets(seed,coin,children)();
-    //console.log(coin_purse);
-    //coin_purse = setCoinPurse(seed)();
-    coin_purse = await eel.get_wallets(seed)();
-    //console.log(coin_purse);
-
     QRloaded = await eel.make_qr(coin_purse[coin][0].address)();
     var QRcode = new Image;
-    
-    //let account = await eel.priv_key_to_account(coin, coin_purse.privkey)();
-    //console.log(account);
     
     let acc_balance = await eel.get_balance(coin, coin_purse[coin][0].privkey)();
     console.log(acc_balance);
        
-    //let price_dict = await eel.get_prices()();
-    //console.log(price_dict);
     let usd_balance = acc_balance*price_dict[coin].USD;
+
+    let title = xmlDoc.getElementsByTagName(coin)[0].children[0].innerHTML;
     
+    let description = xmlDoc.getElementsByTagName(coin)[0].children[1].innerHTML;
+   
+
     ///populating the wallet section///   
+    titleContainer.innerHTML = title;
+    descrContainer.innerHTML = description;
     QRcode.onload = function() 
         {
         
@@ -200,7 +174,7 @@ function extractSeed() {
       seed += word_dict[key] +  " ";
     }
     return seed;
-    }
+}
     
     
 async function setPassword() {
@@ -224,7 +198,29 @@ async function populateWallet(currency) {
     window.currency = currency
     
     await getPrices();
-    getWallets("b",currency,1);
+
+    //reading xml doc
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(xmlDoc);
+                window.xmlDoc = xmlDoc.responseXML;
+            
+           }};
+        xhttp.open("GET", "text.xml", true);
+        xhttp.setRequestHeader("Content-Type", "text/xml");
+        xhttp.send();
+        window.xmlDoc = xhttp;
+        
+        //console.log(xmlDoc.documentElement.childNodes)
+
+    console.log(seed_index);
+    const seed = await eel.decrypt_seed(seed_index)();
+    
+    window.coin_purse = await eel.get_wallets(seed)();
+    console.log(coin_purse);
+
+    getWallet(currency);
     getBalanceValue();
     
 }
@@ -239,13 +235,27 @@ async function sendTx(){
     tx = await eel.send_tx(currency, coin_purse[currency][0].privkey, to, amount);   
 }
 
-
-
 function windowClose() {
     window.open('','_parent','');
     window.close();
 }
 
 function myFunction(x) {
-  console.log("Row index is: " + x.rowIndex);
+  //console.log("Row index is: " + x.rowIndex);
+}
+
+async function loadXML(){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+        // Typical action to be performed when the document is ready:
+        //document.getElementById("demo").innerHTML = xhttp.responseText;
+        console.log("xml ready");
+        console.log(xhttp);
+        }
+    };
+    xhttp.open("GET", "text.xml", true);
+    xhttp.setRequestHeader("Content-Type", "text/xml");
+    xhttp.send();
+    return xhttp.responseXML;
 }
