@@ -10,25 +10,6 @@ async function setSeedIndex(index) {
     console.log("seed_index:" +seed_index);
 }
 
-async function setPassword(pass) {
-    password = pass;
-    console.log("password: ${password}");
-}
-
-async function setCoinPurse(seed) {
-    coin_purse = await eel.get_wallets(seed)();
-    console.log(coin_purse);
-    return coin_purse;
-}
-
-async function setPriceDict() {
-    price_dict = await eel.get_prices()();
-    console.log(price_dict);
-    return price_dict;
-}
-
-
-
 async function getWords() {
 // Create the JAVA containers (variable) and link them to the HTML container.      
 // There needs to be a container with the id= to the getElementById() argument.  (HTML Example for the argument used below <div id="word1_box"></div>)
@@ -69,7 +50,7 @@ async function getWords() {
 }
 
 
-async function getWallets(password, coin, children) {
+async function getWallets(coin) {
     let QR = document.getElementById('QR');
     let address = document.getElementById('address');
     let balance = document.getElementById('balance');
@@ -77,28 +58,12 @@ async function getWallets(password, coin, children) {
     
     
     ///getting the variables///
-    console.log(seed_index);
-    //seed_index = 0; //UNTIL WE FIND A WAY TO SEND THIS VALUE FROM LOG IN TO MAIN
-    const seed = await eel.decrypt_seed(seed_index)();
-    console.log(seed);
-    
-    //let coin_purse = await eel.derive_wallets(seed,coin,children)();
-    //console.log(coin_purse);
-    //coin_purse = setCoinPurse(seed)();
-    coin_purse = await eel.get_wallets(seed)();
-    //console.log(coin_purse);
-
     QRloaded = await eel.make_qr(coin_purse[coin][0].address)();
     var QRcode = new Image;
-    
-    //let account = await eel.priv_key_to_account(coin, coin_purse.privkey)();
-    //console.log(account);
     
     let acc_balance = await eel.get_balance(coin, coin_purse[coin][0].privkey)();
     console.log(acc_balance);
        
-    //let price_dict = await eel.get_prices()();
-    //console.log(price_dict);
     let usd_balance = acc_balance*price_dict[coin].USD;
     
     ///populating the wallet section///   
@@ -224,7 +189,15 @@ async function populateWallet(currency) {
     window.currency = currency
     
     await getPrices();
-    getWallets("b",currency,1);
+
+    console.log(seed_index);
+    const seed = await eel.decrypt_seed(seed_index)();
+    console.log(seed);
+    
+    window.coin_purse = await eel.get_wallets(seed)();
+    console.log(coin_purse);
+
+    getWallets(currency);
     getBalanceValue();
     
 }
