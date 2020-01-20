@@ -4,6 +4,7 @@ var seed_index;
 var coin_purse = {};
 var price_dict = {};
 var currency;
+var xmlDoc;
 
 async function setSeedIndex(index) {
     window.seed_index = index;
@@ -50,12 +51,13 @@ async function getWords() {
 }
 
 
-async function getWallets(coin) {
+async function getWallet(coin) {
     let QR = document.getElementById('QR');
     let address = document.getElementById('address');
     let balance = document.getElementById('balance');
     let USDbalance = document.getElementById('USDbalance');
-    
+    let titleContainer = document.getElementById('title');
+    let descrContainer  = document.getElementById('description');
     
     ///getting the variables///
     QRloaded = await eel.make_qr(coin_purse[coin][0].address)();
@@ -65,8 +67,15 @@ async function getWallets(coin) {
     console.log(acc_balance);
        
     let usd_balance = acc_balance*price_dict[coin].USD;
+
+    let title = xmlDoc.getElementsByTagName(coin)[0].children[0].innerHTML;
     
+    let description = xmlDoc.getElementsByTagName(coin)[0].children[1].innerHTML;
+   
+
     ///populating the wallet section///   
+    titleContainer.innerHTML = title;
+    descrContainer.innerHTML = description;
     QRcode.onload = function() 
         {
         
@@ -165,7 +174,7 @@ function extractSeed() {
       seed += word_dict[key] +  " ";
     }
     return seed;
-    }
+}
     
     
 async function setPassword() {
@@ -190,14 +199,28 @@ async function populateWallet(currency) {
     
     await getPrices();
 
+    //reading xml doc
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(xmlDoc);
+                window.xmlDoc = xmlDoc.responseXML;
+            
+           }};
+        xhttp.open("GET", "text.xml", true);
+        xhttp.setRequestHeader("Content-Type", "text/xml");
+        xhttp.send();
+        window.xmlDoc = xhttp;
+        
+        //console.log(xmlDoc.documentElement.childNodes)
+
     console.log(seed_index);
     const seed = await eel.decrypt_seed(seed_index)();
-    console.log(seed);
     
     window.coin_purse = await eel.get_wallets(seed)();
     console.log(coin_purse);
 
-    getWallets(currency);
+    getWallet(currency);
     getBalanceValue();
     
 }
@@ -212,13 +235,27 @@ async function sendTx(){
     tx = await eel.send_tx(currency, coin_purse[currency][0].privkey, to, amount);   
 }
 
-
-
 function windowClose() {
     window.open('','_parent','');
     window.close();
 }
 
 function myFunction(x) {
-  console.log("Row index is: " + x.rowIndex);
+  //console.log("Row index is: " + x.rowIndex);
+}
+
+async function loadXML(){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+        // Typical action to be performed when the document is ready:
+        //document.getElementById("demo").innerHTML = xhttp.responseText;
+        console.log("xml ready");
+        console.log(xhttp);
+        }
+    };
+    xhttp.open("GET", "text.xml", true);
+    xhttp.setRequestHeader("Content-Type", "text/xml");
+    xhttp.send();
+    return xhttp.responseXML;
 }

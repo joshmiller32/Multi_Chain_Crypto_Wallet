@@ -1,0 +1,46 @@
+<cryptocurrencies>
+    <BTC>
+        <title>Bitcoin</title>
+        <description lang="en"> Bitcoin description</description>
+    </BTC>
+
+    <BTG>
+        <title>Bitcoin Gold</title>
+        <description lang="en"> Bitcoin Gold description</description>
+    </BTG>
+
+    <BCH>
+        <title>Bitcoin Cash</title>
+        <description lang="en"> Bitcoin Cash description</description>
+    </BCH>
+
+    <LTC>
+        <title>Litecoin</title>
+        <description lang="en"> Litecoin description</description>
+    </LTC>
+
+    <DASH>
+        <title>Dash</title>
+        <description lang="en"> Dash description</description>
+    </DASH>
+
+    <DOGE>
+        <title>Doge</title>
+        <description lang="en">Doge description</description>
+    </DOGE>
+
+    <XRP>
+        <title>Ripple</title>
+        <description lang="en"> Ripple description</description>
+    </XRP>
+
+    <XLM>
+        <title>Stellar Lumens</title>
+        <description lang="en">Stellar Lumens description</description>
+    </XLM>
+
+    <ZEC>
+        <title>ZCash</title>
+        <description lang="en">ZCash description</description>
+    </ZEC>
+</cryptocurrencies>

@@ -136,9 +136,10 @@
 			</div>
 			<div class="col3"><br>
 				<!-- Column 3 start -->
-                <h2><center>Bitcoin (BTC)</center></h2>
+                <h2><center><span><div id='title'>Bitcoin (BTC)</div></span></center></h2>
+                <span><div id='description'>
                 <p>Breif descripton about bitcoin here.  Mention its origins, uses and anything else relavant to new users.<p><br>
-                
+                </div></span>
                 <center><img id="QR" src="images/loading.png" alt="Wallet Address" height="180" width="180"><br>
                     
                    
@@ -199,7 +200,7 @@
                         myFunction(this);
                         address.innerHTML = "Loading New Address"
                         qr_img.src = "images/loading.png"
-                        getWallets(row.dataset.coin);
+                        getWallet(row.dataset.coin);
 
                     });
                 });
