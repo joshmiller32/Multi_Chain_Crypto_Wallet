@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings("ignore")
 import pandas as pd
 import requests
 import os
@@ -10,8 +12,7 @@ import plotly.express as px
 from plotly.io import write_html
 from datetime import date, timedelta
 from datetime import datetime
-import warnings
-warnings.filterwarnings("ignore")
+
 
 
 
