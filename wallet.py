@@ -339,4 +339,28 @@ def getCurrencies():
     
     return list_of_currencies
 
+
+def start_atom_swap(coin, privkey, to, amount):
+
+    network=None
+
+    if coin == "BTC": 
+        from clove import Bitcoin
+        network = Bitcoin()
+    elif coin == "BTG": 
+        from clove import Bitcoin_gold
+        network = Bitcoin_gold()
+    elif coin == "LTC": 
+        from clove import Litecoin
+        network = Litecoin()
+    elif coin == "DASH": 
+        from clove import Dash
+        network = Dash()
+
+    else: return "Coin not supported"
+    
+    print(network)
+
+
+
 eel.start('loginWindow.html', size=(1350, 750))
