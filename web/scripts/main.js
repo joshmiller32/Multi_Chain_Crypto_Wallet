@@ -240,3 +240,14 @@ function windowClose() {
 function myFunction(x) {
   //console.log("Row index is: " + x.rowIndex);
 }
+
+//comment
+async function getCurrencies() {
+    
+    let currencies = document.getElementById('currencies');
+    
+    currencies = eel.getCurrencies();
+    
+    console.log(currencies);
+    
+}
