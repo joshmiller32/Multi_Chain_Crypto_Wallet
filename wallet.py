@@ -34,7 +34,6 @@ import pprint as pp
 import requests
 import hmac
 
-#from passlib.apps import custom_app_context as pwd_context
 get_rf_ensemble_plot()
 get_arima_forecast_plot()
 eel.init('web')
@@ -266,12 +265,10 @@ def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC',
 # Password Functions
 
 def hash_pass(pass_w, salt):
-    #return hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest() #Original
     return scrypt.encrypt(pass_w , salt, maxtime=0.2)
 
 @eel.expose
 def set_password(pass_w, seed):
-    #print(f"pass: {pass_w}\nseed: {seed}")
     
     password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
                "password": [hash_pass(pass_w,"super wallet").hex()]} #ecnryption of the password with a salt
@@ -300,10 +297,8 @@ def check_password(pass_w):
     pass_path = Path(f".pwd.csv")
     password = pd.read_csv(pass_path)
     for row in range(password.shape[0]):
-        #print(row)
         ecnrypted_pass =bytes.fromhex(password["password"].iloc[row])   
         decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
-        #print(decrypted)
         if decrypted == pass_w: 
             return row
     print("no password found")
