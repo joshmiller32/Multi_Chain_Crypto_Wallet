@@ -43,19 +43,19 @@ def get_arima_forecast(ticker):
     transformed_df = coin_df.copy()
     transformed_df['close'] = transformed_data
     if ticker == 'BTC':
-        model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1,0,0,0,0,1),1,(1,0,1,1,1)))
+        model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1,0,0,0,0,1),1,(1,0,1,1,1)), freq = 'D')
     elif ticker == 'ETH':
-        model = SARIMAX(transformed_df, order = ((1,0,0,1),2,1))
+        model = SARIMAX(transformed_df, order = ((1,0,0,1),2,1), freq = 'D')
     else:
-        model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1),1,(0,0,0,0,0,0,0,0,0,1)))
+        model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1),1,(0,0,0,0,0,0,0,0,0,1)), freq = 'D')
 
     model_fit = model.fit(disp = False)
-    conf_int = model_fit.get_forecast(5)
+    conf_int = model_fit.get_forecast(5, converged = False)
     confidence_intervals = conf_int.conf_int()
     confidence_intervals = inv_boxcox(confidence_intervals, lmda)
     start = days_previous + 1
     end = days_previous + 6
-    predictions = model_fit.predict(start= start, end = end)
+    predictions = model_fit.predict(start= start, end = end, converged = False)
     predicted_close = inv_boxcox(predictions, lmda)
     final_df = confidence_intervals.copy()
     final_df['Predicted Price'] = predicted_close
