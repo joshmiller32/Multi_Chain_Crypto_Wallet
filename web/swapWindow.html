@@ -3,13 +3,11 @@
     <head>
         <title>Multi-Asset Crypto Wallet v0.1.0</title>
 
-        <link rel="stylesheet" type="text/css" href="css/predictions.css">  
+        <link rel="stylesheet" type="text/css" href="css/main.css">  
         
         <!-- Start of Scripts -->
         <script type="text/javascript" src="/eel.js"></script>
         <script type="text/javascript" src="scripts/main.js"></script>
-        <script type="text/javascript" src="scripts/jquery-3.4.1.js"></script>
-
         <!-- End of Scripts -->  
         
     </head>
@@ -18,10 +16,9 @@
         <div class="colmask threecol">
             <div class="colmid">
                 <div class="colleft">
-                    <div id="mid" class="col1">
+                    <div class="col1">
                         <!-- Column 1 start -->
-                        <div id="graph" style="width=100%"></div>
-                        
+                        <center><h1> This is where the Atomic Swaps will happen....</h1></center>
 
         </div>
 			<div class="col2">
@@ -41,21 +38,9 @@
                 <img src="images/exit.png" height="25px" width="30px">&nbsp;&nbsp;<a href="#" onclick="windowClose()" style="vertical-align: top;">Close Wallet</a>
                 <!-- Column 2 end -->
 			</div>
-			<div class="col3">
-                <!-- Column 3 start -->
-                <h2>Machine Learning Predictions</h2><br><br><span style="color: gold; font-size: 15px;">These Projections Are For Informational Purposes Only</span><br><br><p>YOU ARE RESPONSIBLE FOR ALL THE RISKS AND FINANCIAL RESOURCES YOU USE AND FOR THE CHOSEN TRADING SYSTEM<br><br><hr>
-                <br>
-                <br>
-                <br>
-                <select id ="Coin" name="Cryptocurrency" class = "dropdownBackgroundColor" style= "width: 250px">
-                    <option value = "BTCRFEnsemble">Bitcoin Random Forest Ensemble</option>
-                    <option value = "ETHRFEnsemble">Ether Random Forest Ensemble</option>
-                    <option value = "LTCRFEnsemble">Litecoin Random Forest Ensemble</option>
-                    <option value = "BTCArima">Bitcoin ARIMA Forecast</option>
-                    <option value = "ETHArima">Ether ARIMA Forecast</option>
-                    <option value = "LTCArima">Litecoin ARIMA Forecast</option>
-                    </select>
-                
+			<div class="col3"><br>
+				<!-- Column 3 start -->
+                <h2><center>Explination of what an Atomic Swap is and how its done</center></h2>
                 
                 <!-- Column 3 end -->      
                     </div>
@@ -63,16 +48,4 @@
             </div>
         </div>
     </body>
-    <script>
-        $( "#Coin" )
-          .change(function () {
-            var mlPlot = "";
-            $( "#Coin option:selected" ).each(function() {
-              mlPlot += $( this ).val() + ".html";
-            });
-            $("#graph").load(mlPlot);
-            
-          })
-          .change();
-    </script>
-     
+</html>

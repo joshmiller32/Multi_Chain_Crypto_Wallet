@@ -1,16 +1,19 @@
+import warnings
+warnings.filterwarnings("ignore")
 import pandas as pd
 import requests
 import os
 import numpy as np
 from statsmodels.tsa.statespace.sarimax import SARIMAX
+from skgarden import RandomForestQuantileRegressor
 from scipy.stats import boxcox
 from scipy.special import inv_boxcox
 import plotly.express as px
 from plotly.io import write_html
 from datetime import date, timedelta
 from datetime import datetime
-import warnings
-warnings.filterwarnings("ignore")
+
+
 
 
 
@@ -114,3 +117,35 @@ def get_random_forest_df():
     combined_df = combined_df.drop(columns = ['EUR', 'CNY', 'JPY'])
     combined_df = combined_df.dropna()
     return combined_df
+
+def get_rf_ensemble_model(ticker):
+    combined_df = get_random_forest_df()
+    X = combined_df.drop(columns = ['BTC', 'LTC', 'ETH'])
+    if ticker == 'BTC':    
+        y = combined_df['BTC']
+    elif ticker == 'ETH':
+        y = combined_df['ETH']
+    else:
+        y = combined_df['LTC']
+    X_train = X[:725]
+    y_train = y[:725]
+    X_test = X[725:]
+    y_test = y[725:]
+    regressor = RandomForestQuantileRegressor(random_state = 0, n_estimators = 500)
+    model = regressor.fit(X_train, y_train)
+    predictions = model.predict(X_test)
+    actuals = pd.DataFrame(y_test)
+    actuals_vs_predictions = actuals.copy()
+    actuals_vs_predictions['Predictions'] = predictions
+    actuals_vs_predictions = actuals_vs_predictions.reset_index()
+    return actuals_vs_predictions
+
+def get_rf_ensemble_plot():
+    ticker_list = ['BTC', 'ETH', 'LTC']
+    for ticker in ticker_list:
+        forecast_df = get_rf_ensemble_model(ticker)
+        fig = px.line(forecast_df, x = 'index', y = 'Predictions')
+        fig.update_layout(autosize = True, height = 800, width = 950, title_text = f'{ticker} Random Forest Ensemble', template = 'seaborn')
+        fig.update_xaxes(nticks = 5, title = 'Date')
+        fig.update_yaxes(automargin=True, title = 'Predicted Price')
+        write_html(fig, f'./web/{ticker}RFEnsemble.html')

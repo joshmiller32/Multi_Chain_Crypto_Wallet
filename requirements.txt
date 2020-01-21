@@ -19,3 +19,9 @@ conda install -c conda-forge scrypt
  php composer.phar install
 
 ###################################
+
+pip install scikit-garden
+
+Libraries needed:
+import hmac (if needed: pip install hmac)
+import requests (if needed: pip install requests)

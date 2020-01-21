@@ -5,7 +5,7 @@ from urllib.request import Request, urlopen
 import json
 import hashlib
 import os
-import platform
+
 import scrypt
 import qrcode
 
@@ -28,8 +28,14 @@ from bit.network.meta import Unspent
 from web3.middleware import geth_poa_middleware
 from path import Path
 import pandas as pd
-from ML.ml_functions import get_arima_forecast_plot
+from ML.ml_functions import get_arima_forecast_plot, get_rf_ensemble_plot
 
+import pprint as pp
+import requests
+import hmac
+
+#from passlib.apps import custom_app_context as pwd_context
+get_rf_ensemble_plot()
 get_arima_forecast_plot()
 eel.init('web')
 
@@ -51,15 +57,8 @@ def create_seed():
 
 @eel.expose
 def derive_wallets(mnemonic, coin, nkeys):
-    os = platform.system()
-    if os == 'Windows':
-        prefix = 'php'
-        command = f'{prefix} ./hd-wallet-derive/hd-wallet-derive.php --mnemonic="{mnemonic}" --coin={coin} --numderive={nkeys}  --format=json -g'
-    elif os == 'Darwin':
-        command = f'./hd-wallet-derive/hd-wallet-derive.php --mnemonic="{mnemonic}" --coin={coin} --numderive={nkeys}  --format=json -g'
-    else:
-        return err
-    
+
+    command = f'php ./hd-wallet-derive/hd-wallet-derive.php --mnemonic="{mnemonic}" --coin={coin} --numderive={nkeys}  --format=json -g'
     available_coins = "./hd-wallet-derive.php --help-coins" # --> currently not in use
     new_process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
 
@@ -70,7 +69,6 @@ def derive_wallets(mnemonic, coin, nkeys):
     if err:
         print("\nError:###\n\n")
         return err
-
     return json.loads(output)
 
 coin_purse = {}
@@ -96,16 +94,16 @@ def get_wallets(seed):
                    # from 0 to 19384.
         })"""
     coin_purse = {  #We'll have to add more coins, specially ERC20 tokens
-    "ETH"     : derive_wallets(seed, "ETH", 10), 
-    "BTC-test": derive_wallets(seed, "BTC-test", 10),
-    "BTC"     : derive_wallets(seed, "BTC", 10),
-    "BTG"     : derive_wallets(seed, "BTG", 10),
-    "BCH"     : derive_wallets(seed, "BCH", 10),
-    "LTC"     : derive_wallets(seed, "LTC", 10),
-    "DASH"    : derive_wallets(seed, "DASH", 10),
-    "DOGE"   : derive_wallets(seed, "DOGE", 10),
+    "ETH"     : derive_wallets(seed, "ETH", 2), 
+    "BTC-test": derive_wallets(seed, "BTC-test", 2),
+    "BTC"     : derive_wallets(seed, "BTC", 2),
+    "BTG"     : derive_wallets(seed, "BTG", 2),
+    "BCH"     : derive_wallets(seed, "BCH", 2),
+    "LTC"     : derive_wallets(seed, "LTC", 2),
+    "DASH"    : derive_wallets(seed, "DASH", 2),
+    "DOGE"   : derive_wallets(seed, "DOGE", 2),
     #"XRP"     : derive_wallets(seed, "XRP", 10), #https://bitcoin.stackexchange.com/questions/75385/does-ripple-has-support-for-hd-wallets
-    "ZCASH"   : derive_wallets(seed, "ZEC", 10),
+    "ZCASH"   : derive_wallets(seed, "ZEC", 2),
     #"XML"     : derive_wallets(seed, "XML", 10),
 }
     return coin_purse
@@ -176,7 +174,7 @@ def send_tx(coin, privkey, to, amount):
     be expressed in weis.
     Example: send_tx(coin = "btc-test",account = my_btctest_account, to = coin_purse["btc-test"][1]["address"],amount= 0.01)
     """  
-    print(f"{coin}, {privkey}, {to}, {amount}")
+    #print(f"{coin}, {privkey}, {to}, {amount}")
     tx = create_tx(coin, priv_key_to_account(coin, privkey), to, amount)
     print(tx)
     signed_tx = priv_key_to_account(coin, privkey).sign_transaction(tx) #how to do this tho
@@ -232,8 +230,6 @@ def get_seed():
     return seed_phrase
     
 
-#Production Version (Encrypted)
-
 @eel.expose
 def decrypt_seed(seed_index):
     print(f"seed index: {seed_index}")
@@ -244,21 +240,8 @@ def decrypt_seed(seed_index):
     decrypted = scrypt.decrypt(ecnrypted_seed, password, maxtime=0.4)
     #print(f"decrypted seed: \n{decrypted}")
     return decrypted
-'''  
+  
 
-@eel.expose
-def decrypt_seed(seed_index):
-    
-    #FOR DEVELOPMENT ONLY - NOT SECURE
-    
-    print(f"seed index: {seed_index}")
-    password = "Wallet #1 in 2020" # For right now, the password doesn't count.
-    seed_path = Path(f".pwd.csv")
-    seed_df = pd.read_csv(seed_path)
-    decrypted =seed_df["seed"].iloc[int(seed_index)]  
-    #print(f"decrypted seed: \n{decrypted}")
-    return decrypted
-'''   
     
 #Dashboard Functions
 
@@ -282,16 +265,13 @@ def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC',
 
 # Password Functions
 
-# Production Version (Encrypted)
-
 def hash_pass(pass_w, salt):
     #return hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest() #Original
     return scrypt.encrypt(pass_w , salt, maxtime=0.2)
 
-
 @eel.expose
 def set_password(pass_w, seed):
-    print(f"pass: {pass_w}\nseed: {seed}")
+    #print(f"pass: {pass_w}\nseed: {seed}")
     
     password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
                "password": [hash_pass(pass_w,"super wallet").hex()]} #ecnryption of the password with a salt
@@ -313,38 +293,6 @@ def set_password(pass_w, seed):
         psw_df.to_csv(pass_path)
 
     return True
-'''
-
-@eel.expose
-def set_password(pass_w, seed):
-
-    # FOR DEVELOPMENT ONLY - NOT SECURE
-
-    print(f"pass: {pass_w}\nseed: {seed}")
-    
-    password = {"seed": [seed], #we encrypt the mnemonic seed with the password
-               "password": [pass_w]} #ecnryption of the password with a salt
-    
-    psw_df = pd.DataFrame(password)    
-    pass_path = Path(f".pwd.csv")
-    
-    try:
-        current_df = pd.read_csv(pass_path)
-        print("found file")
-        current_df.drop(columns=["Unnamed: 0"], inplace = True)        
-        updated_df = pd.concat([current_df, psw_df], axis = 0, ignore_index=True, sort=True)
-        print("concatenated succesfully")
-        print(updated_df)
-        updated_df.to_csv(pass_path)
-        
-    except:
-        print("no password db found")
-        psw_df.to_csv(pass_path)
-
-    return True
-'''
-
-# Production Version (Encrypted)
 
 @eel.expose
 def check_password(pass_w):
@@ -352,30 +300,53 @@ def check_password(pass_w):
     pass_path = Path(f".pwd.csv")
     password = pd.read_csv(pass_path)
     for row in range(password.shape[0]):
-        print(row)
+        #print(row)
         ecnrypted_pass =bytes.fromhex(password["password"].iloc[row])   
         decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
-        print(decrypted)
+        #print(decrypted)
         if decrypted == pass_w: 
             return row
     print("no password found")
     return -1
-'''
+
+API_URL = 'https://api.changelly.com'
+API_KEY = 'f1b95f2a2b8b4e83b7d86579ec0464ee'#os.environ['CHANGELLY_KEY']
+API_SECRET = '40b7e760d1758c2c3d4e30227b6eae9a369e757f80c745f5167233eee80940c6'#os.environ['CHANGELLY_SECRET_KEY']
 
 @eel.expose
-def check_password(pass_w):
+def getCurrencies():
+    '''
+    Should be called when the user goes to the exchange screen. No Parameters.
+    
+    Should return a list of possible swaps.
+    
+    120 X 119 pairs, at 14280 possibiliy pairs
+    '''
+    #API CALL
+    message = {
+    'jsonrpc': '2.0',
+    'id': 1,
+    'method': 'getCurrencies', #getCurrenciesFull will return all available and their state
+    'params': []
+    }
 
-    # FOR DEVELOPMENT ONLY - NOT SECURE
+    serialized_data = json.dumps(message)
 
-    pass_path = Path(f".pwd.csv")
-    password = pd.read_csv(pass_path)
-    for row in range(password.shape[0]):
-        print(row)
-        decrypted =password["password"].iloc[row]  
-        print(decrypted)
-        if decrypted == pass_w: 
-            return row
-    print("no password found")
-    return -1
-'''
+    sign = hmac.new(API_SECRET.encode('utf-8'), serialized_data.encode('utf-8'), hashlib.sha512).hexdigest()
+
+    headers = {'api-key': API_KEY, 'sign': sign, 'Content-type': 'application/json'}
+    
+    response_getcurrencies = requests.post(API_URL, headers=headers, data=serialized_data)
+    
+    #Error handling if serve is down or crashes
+    if '<Response [200]>' == str(response_getcurrencies) :
+        pass
+    else:
+        raise ValueError("Serve may have crashed or is down for repairs. Please try again later.")
+    
+    #List of possible currencies
+    list_of_currencies = response_getcurrencies.json()['result']
+    
+    return list_of_currencies
+
 eel.start('loginWindow.html', size=(1350, 750))
