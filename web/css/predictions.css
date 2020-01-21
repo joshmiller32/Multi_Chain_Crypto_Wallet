@@ -232,7 +232,11 @@ img {
 }
 
 #graph {
+
+}
+
+.plotly-graph-div {
     position:center;
-    height:100vh;
-    width:50%;
+    height:90vh;
+    width:50%; 
 }
