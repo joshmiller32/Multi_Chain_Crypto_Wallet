@@ -59,21 +59,14 @@ async function getWallet(coin) {
     let titleContainer = document.getElementById('title');
     let descrContainer  = document.getElementById('description');
     
-    ///getting the variables///
-    QRloaded = await eel.make_qr(coin_purse[coin][0].address)();
+    
+    QRloaded =  eel.make_qr(coin_purse[coin][0].address)();
     var QRcode = new Image;
     
-    let acc_balance = await eel.get_balance(coin, coin_purse[coin][0].privkey)();
-    console.log(acc_balance);
-       
-    let usd_balance = acc_balance*price_dict[coin].USD;
-
     let title = xmlDoc.getElementsByTagName(coin)[0].children[0].innerHTML;
     
     let description = xmlDoc.getElementsByTagName(coin)[0].children[1].innerHTML;
-   
-
-    ///populating the wallet section///   
+    
     titleContainer.innerHTML = title;
     descrContainer.innerHTML = description;
     QRcode.onload = function() 
@@ -83,6 +76,11 @@ async function getWallet(coin) {
         }
     QR.src = "images/QR.png";
     address.innerHTML = coin_purse[coin][0].address;
+
+    let acc_balance = await eel.get_balance(coin, coin_purse[coin][0].privkey)();
+    console.log(acc_balance);
+       
+    let usd_balance = acc_balance*price_dict[coin].USD;
     
     balance.innerHTML = acc_balance;
     USDbalance.innerHTML = usd_balance;
@@ -186,7 +184,7 @@ async function setPassword() {
     console.log(seed);
     let loginCheck = await eel.set_password(pass, seed)();
     window.seed_index = -1;
-    
+
     return window.location.replace('mainWindow.html?index='+seed_index);
 }
 
@@ -195,7 +193,8 @@ async function populateWallet(currency) {
 
     window.currency = currency
     
-    await getPrices();
+    //await getPrices();
+    getPrices();
 
     //reading xml doc
         var xhttp = new XMLHttpRequest();
@@ -240,20 +239,4 @@ function windowClose() {
 
 function myFunction(x) {
   //console.log("Row index is: " + x.rowIndex);
-}
-
-async function loadXML(){
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-        // Typical action to be performed when the document is ready:
-        //document.getElementById("demo").innerHTML = xhttp.responseText;
-        console.log("xml ready");
-        console.log(xhttp);
-        }
-    };
-    xhttp.open("GET", "text.xml", true);
-    xhttp.setRequestHeader("Content-Type", "text/xml");
-    xhttp.send();
-    return xhttp.responseXML;
 }
