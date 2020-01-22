@@ -5,6 +5,7 @@ var coin_purse = {};
 var price_dict = {};
 var currency;
 var xmlDoc;
+var auditedTx;
 
 async function setSeedIndex(index) {
     window.seed_index = index;
@@ -274,16 +275,61 @@ async function auditTx(){
 
     const cryptoFrom = receivingCryptoCon[receivingCryptoCon.selectedIndex].value;
 
-    tx = await eel.audit_tx(cryptoFrom, contractCon.value, partTxAddCon.value)();
-    console.log(tx);
+    window.auditedTx = await eel.audit_tx(cryptoFrom, contractCon.value, partTxAddCon.value, false)();
+    console.log(auditedTx);
     var details = "";
-    for(var key in tx) {
-        details += key +": " + tx[key] + "\n";
+    for(var key in auditedTx) {
+        details += key +": " + auditedTx[key] + "\n";
     }
     contractDisplay.innerHTML = details;
-    return tx;
+    return auditedTx;
+}
+
+async function participate(){
+    const receivingCryptoCon = document.getElementById('partReceiveCrypto');
+    const sendingCryptoCon = document.getElementById('partSendCrypto');
+    const contractCon = document.getElementById('particContractN');
+    const partTxAddCon = document.getElementById('partTxAdd');
+    const partSendToAddCon = document.getElementById('partToAdd');
+    const contractDisplayCon = document.getElementById('partContractInfo');
+
+    const receivingCur = receivingCryptoCon[receivingCryptoCon.selectedIndex].value;
+    const sendingCur = sendingCryptoCon[sendingCryptoCon.selectedIndex].value;
+    const sendTo = partSendToAddCon.value;
+
+    const amountToSend = auditedTx.value * price_dict[receivingCur].USD / price_dict[sendingCur].USD;
+    tx = await eel.participateSwap(sendingCur, 
+            receivingCur, 
+            coin_purse[sendingCur][0].privkey, 
+            sendTo, amountToSend, 
+            contractCon.value, 
+            partTxAddCon.value)
+
+    console.log(auditedTx);
+    var details = "";
+    for(var key in auditedTx) {
+        details += key +": " + auditedTx[key] + "\n";
+    }
+    contractDisplayCon.innerHTML = details;
+    return auditedTx;
 
 }
+
+async function redeem(){
+    const cryptoToCon = document.getElementById('swapReceiveCrypto');
+    const contractNumCon = document.getElementById('incomingContractAdd');
+    const txAddCon = document.getElementById('incomingTxNum');
+
+    const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
+
+    redeem_tx = await eel.redeem_tx(cryptoTo, 
+        "T3uJbS5yKBCBxpptkr6nWoU6DFxkUiDAbKk5Ynoqhqfea5i3ef4e", // CHANGE [0] TO coin_purse[cryptoTo][0].privkey. ONLY FOR DEVELOPING PURPOSES
+        contractNumCon.value, txAddCon.value)();
+
+    console.log(redeem_tx);
+
+}
+
 
 async function startSwap(){
     const cryptoFromCon = document.getElementById('swapSendCrypto');
@@ -324,3 +370,19 @@ async function launchSwapWindow(){
 async function launchMainWindow(){
     return window.location.replace('mainWindow.html?index='+seed_index);
 }
+
+async function loadJSON(file_name) {   
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          console.log(this);
+        var myObj = JSON.parse(this.responseText);
+        //document.getElementById("demo").innerHTML = myObj.name;
+      }
+    };
+    xmlhttp.open("GET", file_name, true);
+    xmlhttp.send();
+    return xmlhttp;
+ }
+

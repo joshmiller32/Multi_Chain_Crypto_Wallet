@@ -145,7 +145,7 @@
                             </div>
                             <div id="auditRedeemTx"><br><br>Other's party transaction info will be displayed here:</div>
                             <br><br>
-                            <div> <button>REDEEM</button></div>
+                            <div> <button onclick="redeem()">REDEEM</button></div>
 
                         </div>
 
@@ -215,7 +215,21 @@
                                             
                                             </div>
                                             <br><br>
-                                            <div> <button>PARTICIPATE</button></div>
+                                            <div>
+                                                <br>
+                                                <div class="column">
+                                                    Send to Address:
+                                                </div>
+                                                <div class="column">
+                                                    <input id="partToAdd" placeholder="Send to this address" />
+                                            
+                                            </div>
+                                                
+                                            </div>
+                                            <br><br>
+                                            <div> <button onclick="participate()">PARTICIPATE</button></div>
+                                            <br><br>
+                                            <div id="partContractInfo"></div>
                         </div>
 
 
