@@ -35,7 +35,7 @@ import requests
 import hmac
 
 #from passlib.apps import custom_app_context as pwd_context
-get_prophet_plot()
+#get_prophet_plot()
 get_rf_ensemble_plot()
 get_arima_forecast_plot()
 eel.init('web')
