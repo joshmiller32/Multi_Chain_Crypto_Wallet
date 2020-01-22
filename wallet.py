@@ -366,7 +366,7 @@ def start_atom_swap(coin, privkey, to, amount):
     print(network)
     
 @eel.expose
-def getCurrencies():
+def get_Currencies():
     '''
     Should be called when the user goes to the exchange screen. No Parameters.
     
@@ -412,7 +412,7 @@ def getMinAmount(currency1,currency2):
     
     Should return the minimum amount that Changelly will take to execute the swap
     """
-    currencies = getCurrencies()
+    currencies = get_Currencies()
 
     if currency1 == currency2:
         raise ValueError("You already have this currency. Duh.")
@@ -468,7 +468,7 @@ def getExchangeAmount(currency1, currency2, amount):
     
     For example, if the user wants to send .001 BTC for ETH this will return 0.051771200000000000 as of 1/19/20 at 4:00 pm Centeral
     '''
-    currencies = getCurrencies()
+    currencies = get_Currencies()
     
     if currency1 == currency2:
         raise ValueError("You already have this currency. Duh.")
@@ -558,7 +558,7 @@ def createTransaction(currency1, currency2, TOaddress, amount, extraId = 'NULL',
     '''
     refund_address = TOaddress
     
-    currencies = getCurrencies()
+    currencies = get_Currencies()
     
     if currency1 == currency2:
         raise ValueError("You already have this currency. Duh.")
