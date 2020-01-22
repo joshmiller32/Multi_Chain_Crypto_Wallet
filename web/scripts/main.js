@@ -11,6 +11,17 @@ async function setSeedIndex(index) {
     console.log("seed_index:" +seed_index);
 }
 
+async function getCryptoPrices() {
+    window.price_dict = await eel.get_prices()();
+}
+
+async function getCoinPurse() {
+    const seed = await eel.decrypt_seed(seed_index)();
+    window.coin_purse = await eel.get_wallets(seed)();
+}
+
+
+
 async function getWords() {
 // Create the JAVA containers (variable) and link them to the HTML container.      
 // There needs to be a container with the id= to the getElementById() argument.  (HTML Example for the argument used below <div id="word1_box"></div>)
@@ -89,6 +100,8 @@ async function getWallet(coin) {
 
 
 async function getPrices() {
+
+    await getCryptoPrices();
     let btc_usd_container = document.getElementById('btc_usd');
     let btg_usd_container = document.getElementById('btg_usd');
     let bch_usd_container = document.getElementById('bch_usd');
@@ -99,7 +112,7 @@ async function getPrices() {
     let zec_usd_container = document.getElementById('zec_usd');
     let xlm_usd_container = document.getElementById('xlm_usd');
     
-    window.price_dict = await eel.get_prices()();
+    //window.price_dict = await eel.get_prices()();
     btc_usd_container.innerHTML = '$' + price_dict.BTC.USD;
     btg_usd_container.innerHTML = '$' + price_dict.BTG.USD;
     bch_usd_container.innerHTML = '$' + price_dict.BCH.USD;
@@ -194,7 +207,7 @@ async function populateWallet(currency) {
     window.currency = currency
     
     //await getPrices();
-    getPrices();
+    await getPrices();
 
     //reading xml doc
         var xhttp = new XMLHttpRequest();
@@ -209,14 +222,11 @@ async function populateWallet(currency) {
         xhttp.send();
         window.xmlDoc = xhttp;
         
-        //console.log(xmlDoc.documentElement.childNodes)
-
-    console.log(seed_index);
-    const seed = await eel.decrypt_seed(seed_index)();
+    //console.log(seed_index);
+    //const seed = await eel.decrypt_seed(seed_index)();
+    //window.coin_purse = await eel.get_wallets(seed)();
+    await getCoinPurse();
     
-    window.coin_purse = await eel.get_wallets(seed)();
-    //console.log(coin_purse);
-
     getWallet(currency);
     getBalanceValue();
     
@@ -241,13 +251,48 @@ function myFunction(x) {
   //console.log("Row index is: " + x.rowIndex);
 }
 
-//comment
-async function getCurrencies() {
-    
-    let currencies = document.getElementById('currencies');
-    
-    currencies = eel.getCurrencies();
-    
-    console.log(currencies);
-    
+
+=======
+async function updateUSDVal(){
+    const cryptoFromCon = document.getElementById('swapSendCrypto');
+    const amountCon = document.getElementById('sendCryptoAmount');
+    const usdValtoSendCon = document.getElementById('USDswapSend');
+
+    const cryptoFrom = cryptoFromCon[cryptoFromCon.selectedIndex].value;
+    const amount = amountCon.value;
+    const price = price_dict[cryptoFrom].USD;
+
+    const USD = (price*amount).toFixed(2);
+
+    usdValtoSendCon.innerHTML = "$"+USD;
 }
+
+async function startSwap(){
+    const cryptoFromCon = document.getElementById('swapSendCrypto');
+    const cryptoToCon = document.getElementById('swapReceiveCrypto');
+    const amountCon = document.getElementById('sendCryptoAmount');
+    const swapToAddCon = document.getElementById('swapToAdd');
+    const usdValtoSendCon = document.getElementById('USDswapSend');
+
+    
+    const cryptoFrom = cryptoFromCon[cryptoFromCon.selectedIndex].value;
+    const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
+    const amount = amountCon.value;
+    const toAdd = swapToAddCon.value;
+    start_atom_swap(coin, privkey, to, amount)
+
+}
+
+async function loadSwapWindow(){
+    getCoinPurse();
+    getCryptoPrices();
+}
+
+async function launchSwapWindow(){
+    return window.location.replace('swapWindow.html?index='+seed_index);
+}
+
+async function launchMainWindow(){
+    return window.location.replace('mainWindow.html?index='+seed_index);
+}
+

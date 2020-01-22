@@ -43,19 +43,19 @@ def get_arima_forecast(ticker):
     transformed_df = coin_df.copy()
     transformed_df['close'] = transformed_data
     if ticker == 'BTC':
-        model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1,0,0,0,0,1),1,(1,0,1,1,1)))
+        model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1,0,0,0,0,1),1,(1,0,1,1,1)), freq = 'D')
     elif ticker == 'ETH':
-        model = SARIMAX(transformed_df, order = ((1,0,0,1),2,1))
+        model = SARIMAX(transformed_df, order = ((1,0,0,1),2,1), freq = 'D')
     else:
-        model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1),1,(0,0,0,0,0,0,0,0,0,1)))
+        model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1),1,(0,0,0,0,0,0,0,0,0,1)), freq = 'D')
 
     model_fit = model.fit(disp = False)
-    conf_int = model_fit.get_forecast(5)
+    conf_int = model_fit.get_forecast(5, converged = False)
     confidence_intervals = conf_int.conf_int()
     confidence_intervals = inv_boxcox(confidence_intervals, lmda)
     start = days_previous + 1
     end = days_previous + 6
-    predictions = model_fit.predict(start= start, end = end)
+    predictions = model_fit.predict(start= start, end = end, converged = False)
     predicted_close = inv_boxcox(predictions, lmda)
     final_df = confidence_intervals.copy()
     final_df['Predicted Price'] = predicted_close
@@ -68,10 +68,10 @@ def get_arima_forecast_plot():
     ticker_list = ['BTC', 'ETH', 'LTC']
     for ticker in ticker_list:
         forecast_df = get_arima_forecast(ticker)
-        fig = px.linefig = px.line(forecast_df, x ='Date', y = 'Predicted Price')
+        fig = px.line(forecast_df, x ='Date', y = 'Predicted Price')
         fig.update_xaxes(nticks = 5)
         fig.update_yaxes(automargin=True)
-        fig.update_layout(title_text = f'{ticker} Arima Model', autosize = True, height = 800, width = 950, template = 'seaborn')
+        fig.update_layout(title_text = f'{ticker} ARIMA Model (Autoregressive Integrated Moving Average)', autosize = True, height = 712, width = 805, template = 'plotly_dark')
         write_html(fig, f'./web/{ticker}Arima.html')
 
 def get_random_forest_df():
@@ -104,7 +104,8 @@ def get_random_forest_df():
     combined_df['JPY'] = combined_df['CNY'].ffill()
     combined_df = combined_df.reset_index()
     delta = timedelta(1)
-    add_row_date = (date.today() + delta).isoformat()
+    last_day = combined_df['index'].iloc[-1]
+    add_row_date = (last_day + delta).isoformat()
     df2 = pd.DataFrame([[add_row_date,0,0,0,0,0,0]], columns= ['index','BTC','LTC','ETH','EUR','CNY','JPY'])
     combined_df = combined_df.append(df2, ignore_index = True)
     combined_df = combined_df.set_index('index')
@@ -145,7 +146,7 @@ def get_rf_ensemble_plot():
     for ticker in ticker_list:
         forecast_df = get_rf_ensemble_model(ticker)
         fig = px.line(forecast_df, x = 'index', y = 'Predictions')
-        fig.update_layout(autosize = True, height = 800, width = 950, title_text = f'{ticker} Random Forest Ensemble', template = 'seaborn')
-        fig.update_xaxes(nticks = 5, title = 'Date')
+        fig.update_xaxes(title = 'Date', nticks = 5)
         fig.update_yaxes(automargin=True, title = 'Predicted Price')
+        fig.update_layout(height = 712, width = 805, title_text = f'{ticker} Random Forest Ensemble', template = 'plotly_dark')
         write_html(fig, f'./web/{ticker}RFEnsemble.html')

@@ -34,12 +34,14 @@ import pprint as pp
 import requests
 import hmac
 
-#from passlib.apps import custom_app_context as pwd_context
-get_rf_ensemble_plot()
-get_arima_forecast_plot()
+
+from threading import Thread
+
+if __name__ == '__main__':
+    Thread(target=get_rf_ensemble_plot).start()
+    Thread(target=get_arima_forecast_plot).start()
+
 eel.init('web')
-
-
 #Wallet Functions
 
 
@@ -110,8 +112,6 @@ def get_wallets(seed):
 
 @eel.expose
 def priv_key_to_account(coin, priv_key):
-    #print(f"coin: {coin} type: {type(coin)}\nprivate key: {priv_key} type: {type(priv_key)}")
-    
     """Use it like this: my_btctest_account = priv_key_to_account("btc-test",coin_purse["btc-test"][0]["privkey"])"""
     if coin == "ETH":        
         return Account.privateKeyToAccount(priv_key)       
@@ -120,9 +120,9 @@ def priv_key_to_account(coin, priv_key):
     elif coin == "BTC":
         print("a btc account is being created")
         acc = PrivateKey(priv_key) 
-        #print(acc)
         return acc 
-    else:                    return "Not a supported coin"
+    else:                    
+        return "Not a supported coin"
 
     
 def create_tx(coin, account, to, amount):
@@ -266,12 +266,10 @@ def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC',
 # Password Functions
 
 def hash_pass(pass_w, salt):
-    #return hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest() #Original
     return scrypt.encrypt(pass_w , salt, maxtime=0.2)
 
 @eel.expose
 def set_password(pass_w, seed):
-    #print(f"pass: {pass_w}\nseed: {seed}")
     
     password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
                "password": [hash_pass(pass_w,"super wallet").hex()]} #ecnryption of the password with a salt
@@ -300,10 +298,8 @@ def check_password(pass_w):
     pass_path = Path(f".pwd.csv")
     password = pd.read_csv(pass_path)
     for row in range(password.shape[0]):
-        #print(row)
         ecnrypted_pass =bytes.fromhex(password["password"].iloc[row])   
         decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
-        #print(decrypted)
         if decrypted == pass_w: 
             return row
     print("no password found")
@@ -348,5 +344,29 @@ def getCurrencies():
     list_of_currencies = response_getcurrencies.json()['result']
     
     return list_of_currencies
+
+
+def start_atom_swap(coin, privkey, to, amount):
+
+    network=None
+
+    if coin == "BTC": 
+        from clove import Bitcoin
+        network = Bitcoin()
+    elif coin == "BTG": 
+        from clove import Bitcoin_gold
+        network = Bitcoin_gold()
+    elif coin == "LTC": 
+        from clove import Litecoin
+        network = Litecoin()
+    elif coin == "DASH": 
+        from clove import Dash
+        network = Dash()
+
+    else: return "Coin not supported"
+    
+    print(network)
+
+
 
 eel.start('loginWindow.html', size=(1350, 750))
