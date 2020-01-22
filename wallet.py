@@ -34,13 +34,14 @@ import pprint as pp
 import requests
 import hmac
 
-#from passlib.apps import custom_app_context as pwd_context
-#get_prophet_plot()
-get_rf_ensemble_plot()
-get_arima_forecast_plot()
+
+from threading import Thread
+
+if __name__ == '__main__':
+    Thread(target=get_rf_ensemble_plot).start()
+    Thread(target=get_arima_forecast_plot).start()
+
 eel.init('web')
-
-
 #Wallet Functions
 
 
@@ -111,8 +112,6 @@ def get_wallets(seed):
 
 @eel.expose
 def priv_key_to_account(coin, priv_key):
-    #print(f"coin: {coin} type: {type(coin)}\nprivate key: {priv_key} type: {type(priv_key)}")
-    
     """Use it like this: my_btctest_account = priv_key_to_account("btc-test",coin_purse["btc-test"][0]["privkey"])"""
     if coin == "ETH":        
         return Account.privateKeyToAccount(priv_key)       
@@ -121,9 +120,9 @@ def priv_key_to_account(coin, priv_key):
     elif coin == "BTC":
         print("a btc account is being created")
         acc = PrivateKey(priv_key) 
-        #print(acc)
         return acc 
-    else:                    return "Not a supported coin"
+    else:                    
+        return "Not a supported coin"
 
     
 def create_tx(coin, account, to, amount):
@@ -267,12 +266,10 @@ def get_prices(ticker_list = ['BTC','BTG','BCH','LTC','DASH','DOGE','XRP','ZEC',
 # Password Functions
 
 def hash_pass(pass_w, salt):
-    #return hashlib.sha256(bytes(pass_w, 'utf-8')).hexdigest() #Original
     return scrypt.encrypt(pass_w , salt, maxtime=0.2)
 
 @eel.expose
 def set_password(pass_w, seed):
-    #print(f"pass: {pass_w}\nseed: {seed}")
     
     password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
                "password": [hash_pass(pass_w,"super wallet").hex()]} #ecnryption of the password with a salt
@@ -308,6 +305,9 @@ def check_password(pass_w):
     print("no password found")
     return -1
 
+API_URL = 'https://api.changelly.com'
+
+@eel.expose
 def getCurrencies():
     '''
     Should be called when the user goes to the exchange screen. No Parameters.
@@ -342,5 +342,410 @@ def getCurrencies():
     list_of_currencies = response_getcurrencies.json()['result']
     
     return list_of_currencies
+
+@eel.expose
+def start_atom_swap(coin, privkey, to, amount):
+
+    network=None
+
+    if coin == "BTC": 
+        from clove import Bitcoin
+        network = Bitcoin()
+    elif coin == "BTG": 
+        from clove import Bitcoin_gold
+        network = Bitcoin_gold()
+    elif coin == "LTC": 
+        from clove import Litecoin
+        network = Litecoin()
+    elif coin == "DASH": 
+        from clove import Dash
+        network = Dash()
+
+    else: return "Coin not supported"
+    
+    print(network)
+    
+@eel.expose
+def get_Currencies():
+    '''
+    Should be called when the user goes to the exchange screen. No Parameters.
+    
+    Should return a list of possible swaps.
+    
+    120 X 119 pairs, at 14280 possibiliy pairs
+    '''
+    #API CALL
+    message = {
+    'jsonrpc': '2.0',
+    'id': 1,
+    'method': 'getCurrencies', #getCurrenciesFull will return all available and their state
+    'params': []
+    }
+
+    serialized_data = json.dumps(message)
+
+    sign = hmac.new(API_SECRET.encode('utf-8'), serialized_data.encode('utf-8'), hashlib.sha512).hexdigest()
+
+    headers = {'api-key': API_KEY, 'sign': sign, 'Content-type': 'application/json'}
+    
+    response_getcurrencies = requests.post(API_URL, headers=headers, data=serialized_data)
+    
+    #Error handling if serve is down or crashes
+    if '<Response [200]>' == str(response_getcurrencies) :
+        pass
+    else:
+        raise ValueError("Serve may have crashed or is down for repairs. Please try again later.")
+    
+    #List of possible currencies
+    list_of_currencies = response_getcurrencies.json()['result']
+    
+    return list_of_currencies
+
+@eel.expose
+def getMinAmount(currency1,currency2):
+    """
+    Currencies must be strings for now
+    
+    Function should take in two arguments, from and to currencies from the above
+    
+    Should check against the getCurrencies function and return invalids
+    
+    Should return the minimum amount that Changelly will take to execute the swap
+    """
+    currencies = get_Currencies()
+
+    if currency1 == currency2:
+        raise ValueError("You already have this currency. Duh.")
+    else:
+        pass
+    
+    if (currency1 in currencies):
+        pass
+    else:
+        raise ValueError("See getCurrencies(). Currency is not accepted by this Wallet's Exchange Engine. Please enter a valid currency from our list.")
+        
+    if (currency2 in currencies):
+        pass
+    else:
+        raise ValueError("See getCurrencies(). Currency is not accepted by this Wallet's Exchange EnginePlease enter a valid currency from our list.")
+
+    message = {
+   "jsonrpc": "2.0",
+   "id": "test", #test?
+   "method": "getMinAmount",
+   "params": {
+      "from": f"{currency1}",
+      "to": f"{currency2}", }}
+
+    serialized_data = json.dumps(message)
+
+    sign = hmac.new(API_SECRET.encode('utf-8'), serialized_data.encode('utf-8'), hashlib.sha512).hexdigest()
+
+    headers = {'api-key': API_KEY, 'sign': sign, 'Content-type': 'application/json'}
+    
+    response_minamount = requests.post(API_URL, headers=headers, data=serialized_data)
+    
+    #Just in case
+    if '<Response [200]>' == str(response_minamount) :
+        pass
+    else:
+        raise ValueError("Serve may have crashed or is down for repairs. Please try again later.")
+    
+    minamount = response_minamount.json()['result']
+    
+    minamount = float(minamount)
+    
+    return minamount
+
+@eel.expose
+def getExchangeAmount(currency1, currency2, amount):
+    '''
+    Should be just like the getMinAmount function. Will additionally take the amount the user wants to send in the from coin.
+    
+    Will take two currencies and return what what the user should expect in the returning coin
+    
+    For example, if the user is sending BTC for ETH, this function will tell the user how much ETH to expect in return.
+    
+    For example, if the user wants to send .001 BTC for ETH this will return 0.051771200000000000 as of 1/19/20 at 4:00 pm Centeral
+    '''
+    currencies = get_Currencies()
+    
+    if currency1 == currency2:
+        raise ValueError("You already have this currency. Duh.")
+    else:
+        pass
+    
+    if (currency1 in currencies):
+        pass
+    else:
+        raise ValueError("See getCurrencies(). Currency is not accepted by this Wallet's Exchange Engine. Please enter a valid currency from our list.")
+        
+    if (currency2 in currencies):
+        pass
+    else:
+        raise ValueError("See getCurrencies(). Currency is not accepted by this Wallet's Exchange EnginePlease enter a valid currency from our list.")
+
+    minamount = getMinAmount(currency1,currency2)
+    
+    if amount >= minamount:
+        pass
+    else:
+        raise ValueError(f"This amount needs to be greater than or equal to {minamount}")
+    
+    message = {
+   "jsonrpc": "2.0",
+   "id": "test",
+   "method": "getExchangeAmount",
+   "params": {
+      "from": f"{currency1}",
+      "to": f"{currency2}",
+      "amount": f"{amount}"},}
+
+    serialized_data = json.dumps(message)
+
+    sign = hmac.new(API_SECRET.encode('utf-8'), serialized_data.encode('utf-8'), hashlib.sha512).hexdigest()
+
+    headers = {'api-key': API_KEY, 'sign': sign, 'Content-type': 'application/json'}
+
+    response_estXamount = requests.post(API_URL, headers=headers, data=serialized_data)
+    
+        #Just in case
+    if '<Response [200]>' == str(response_estXamount) :
+        pass
+    else:
+        raise ValueError("Serve may have crashed or is down for repairs. Please try again later.")
+    
+    est_exch_amount = response_estXamount.json()['result']
+    
+    est_exch_amount = float(est_exch_amount)
+    
+    return est_exch_amount
+
+#Create Transaction Function
+
+@eel.expose
+def createTransaction(currency1, currency2, TOaddress, amount, extraId = 'NULL', refund_address = 'NULL'):
+    '''
+    This function will take:
+    From currency, lower case ticker, string
+    To currency, lower case ticker, string
+    Address for the currency to be sent To, string
+    Extraid for currencies that need this extra address, default null, string  ((XRP, XLM, EOS, IGNIS, BNB, XMR, ARDOR, DCT, XEM))
+    Amount to send From Currency to To currency, function will check against exchange amount
+    
+    This function CAN return (more info at https://old.changelly.com/developers)
+    amountExpectedFrom - amount from createTransaction
+    amountExpectedTo - result from getExchangeAmount at the moment of createTransaction
+    amountTo - Real amount after the exchange that was sent to payoutAddress 
+    apiExtraFee - Your API Extra fee in percents
+    changellyFee - Changelly fee in percents
+    createdAt - Point of time when the transaction was created
+    currencyFrom - Ticker of output currency
+    currencyTo - Ticker of input currency
+    id - Transaction ID. Could be used in getStatus method
+    payinAddress - Address for a user to send coins to
+    payinExtraId - ExtraId for payinAddress in case it is required
+    payoutAddress - Address where the exchange result will be sent to
+    payoutExtraId - ExtraId for payoutAddress in case it is required
+    status - Transaction status
+    
+    This will produce the Changely Wallet that the user will send their FROM coins to. 
+    
+    Changely will send their currency (matching TO currency) to the TOO currency IF funds are sent.
+    
+    Changely does charge a fee in percent (o.5 as of this writting).
+
+    '''
+    refund_address = TOaddress
+    
+    currencies = get_Currencies()
+    
+    if currency1 == currency2:
+        raise ValueError("You already have this currency. Duh.")
+    else:
+        pass
+    
+    if (currency1 in currencies):
+        pass
+    else:
+        raise ValueError("See getCurrencies(). Currency is not accepted by this Wallet's Exchange Engine. Please enter a valid currency from our list.")
+        
+    if (currency2 in currencies):
+        pass
+    else:
+        raise ValueError("See getCurrencies(). Currency is not accepted by this Wallet's Exchange EnginePlease enter a valid currency from our list.")
+
+    minamount = getMinAmount(currency1,currency2)
+    
+    if amount >= minamount:
+        pass
+    else:
+        raise ValueError(f"This amount needs to be greater than or equal to {minamount}")
+
+    message = {
+   "jsonrpc": "2.0",
+   "id": "test",
+   "method": "createTransaction",
+   "params": {
+      "from": f"{currency1}",
+      "to": f"{currency2}",
+      "address": f"{TOaddress}", #valid to address... in this case XLM
+      "extraId": f"{extraId}",
+      "amount": f"{amount}",
+       "refund": f"{refund_address}"}}
+
+    serialized_data = json.dumps(message)
+
+    sign = hmac.new(API_SECRET.encode('utf-8'), serialized_data.encode('utf-8'), hashlib.sha512).hexdigest()
+
+    headers = {'api-key': API_KEY, 'sign': sign, 'Content-type': 'application/json'}
+    
+    response_create_tran = requests.post(API_URL, headers=headers, data=serialized_data)
+    
+    #Just in case
+    if '<Response [200]>' == str(response_create_tran) :
+        pass
+    else:
+        raise ValueError("Serve may have crashed or is down for repairs. Please try again later. Please do not transact any funds until you can verify (by re-examining this page) that the server is up and running.")
+    
+    result = response_create_tran.json()['result']
+    
+    #all the results listed below
+    
+    amountExpectedFrom = float(result['amountExpectedFrom']) #Should match to amount
+    amountExpectedTo = float(result['amountExpectedTo']) #amount user will expect in return
+    amountTo = float(result['amountTo']) #Real amount after the exchange that was sent to payoutAddress
+    apiExtraFee = float(result['apiExtraFee']) #amount our wallet will charge
+    changellyFee = float(result['changellyFee']) 
+    createdAt = result['createdAt'] 
+    currencyFrom = result['currencyFrom'] 
+    currencyTo = result['currencyTo'] 
+    ID = result['id'] 
+    kycRequired = result['kycRequired'] 
+    payinAddress = result['payinAddress'] #address to send funds to for Graphly to complete the exchange.
+    payinExtraId = result['payinExtraId'] 
+    payoutAddress = result['payoutAddress'] #users address Graphly will send to. Same as ToAddress
+    payoutExtraId = result['payoutExtraId'] 
+    status = result['status'] 
+    
+    if kycRequired == False:
+        pass
+    else:
+        raise ValueError('This currency requires an additional property address. Those currencies are (XRP, XLM, EOS, IGNIS, BNB, XMR, ARDOR, DCT, XEM)')
+    
+    if payoutAddress == TOaddress:
+        pass
+    else:
+        raise ValueError("Unknown Error. TOaddress and Changelly poyout address Mismatch. Dangerous, do not send.")
+    
+    if amount == float(amountExpectedFrom):
+        pass
+    else:
+        raise ValueError(f"Unknown Error. Amount ({amount}) the amount expend ({amountExpectedFrom}) mismatch. Dangerous, do not send.")
+    
+    floating_expected = getExchangeAmount(currency1,currency2, amount)
+    
+    floating_fee = (float(changellyFee)/100)*floating_expected
+    
+    floating_fee_wallet = floating_expected * .04
+    
+    fee = floating_fee + floating_fee_wallet
+    
+    floating_return = floating_expected - floating_fee
+    
+    difference = float(amountExpectedTo) - floating_return
+    
+    Status = getStatus(ID)
+    
+    get_transaction = getTransactions(currencyFrom,currencyFrom)
+    
+    return get_transaction, Status, fee, amountExpectedFrom, amountExpectedTo, amountTo, apiExtraFee,changellyFee,createdAt, currencyFrom, currencyTo, ID, kycRequired, payinAddress, payinExtraId,payoutAddress, payoutExtraId, status
+
+@eel.expose
+def getStatus(ID):
+    '''
+    Should take the ID from creatTransaction:
+    
+    Has to be the last instance of createTransaction called. Ideal this function would pipped inside of createTransaction.
+    
+    Takes:
+    ID - last instance actually used by the user.
+    
+    Outputs
+    Status 
+    
+    Possible Status (refere to Changelly's developer page @ https://old.changelly.com/developers) 
+    waiting	Transaction is waiting for an incoming payment.
+    confirming	We have received payin and are waiting for certain amount of confirmations depending of incoming currency.
+    exchanging	Payment was confirmed and is being exchanged.
+    sending	Coins are being sent to the recipient address.
+    finished	Coins were successfully sent to the recipient address.
+    failed	Transaction has failed. In most cases, the amount was less than the minimum. Please contact support and provide a transaction id.
+    refunded	Exchange failed and coins were refunded to user's wallet. The wallet address should be provided by user.
+    overdue	We did not receive any payment since 36 hours from transaction creation.
+    hold	Due to AML/KYC procedure, exchange may be delayed
+    expired	In case payin was not sent within the indicated timeframe
+    '''
+    message = {
+       "jsonrpc": "2.0",
+       "id": "test",
+       "method": "getStatus",
+       "params": {
+          "id": f"{ID}"
+       }
+    }
+
+    serialized_data = json.dumps(message)
+
+    sign = hmac.new(API_SECRET.encode('utf-8'), serialized_data.encode('utf-8'), hashlib.sha512).hexdigest()
+
+    headers = {'api-key': API_KEY, 'sign': sign, 'Content-type': 'application/json'}
+    response_getstatus = requests.post(API_URL, headers=headers, data=serialized_data)
+
+    status = response_getstatus.json()['result']
+    
+    if '<Response [200]>' == str(response_getstatus) :
+        pass
+    else:
+        raise ValueError("Serve may have crashed or is down for repairs. Please try again later. Please do not transact any funds until you can verify (by re-examining this page) that the server is up and running.")
+    
+    return status
+
+@eel.expose
+def getTransactions(payinaddress, currencyfrom, extraID = 'NULL', limit = 10, offset = 10):
+    '''
+    Should Take
+    Payin Address, str, the address Changelly will use to take in the currency. Can be called from createTransactions 
+    CurrencyFrom, str, ticker of the from currency
+    ExtraID, if needed, str, address.
+    limit, int, how many records to recieve
+    offset, int, records cursor
+    '''
+    message = {
+   "jsonrpc": "2.0", #stays the same.
+   "id": "test", #does not seem to change things. Unsure of any other parameters that require this.
+   "method": "getTransactions", #method
+   "params": {
+      "currency": f"{currencyfrom}", #what was transfered out, in this case TRX
+      "address": f"{payinaddress}", #<<payin address to search>>
+      "extraId": f"{extraID}", #for coins that require it
+      "limit": limit, #how many records to recieve
+      "offset" : offset}}
+
+    serialized_data = json.dumps(message)
+
+    sign = hmac.new(API_SECRET.encode('utf-8'), serialized_data.encode('utf-8'), hashlib.sha512).hexdigest()
+
+    headers = {'api-key': API_KEY, 'sign': sign, 'Content-type': 'application/json'}
+    response_gettran = requests.post(API_URL, headers=headers, data=serialized_data)
+    
+    if '<Response [200]>' == str(response_gettran) :
+        pass
+    else:
+        raise ValueError("Serve may have crashed or is down for repairs. Please try again later. Please do not transact any funds until you can verify (by re-examining this page) that the server is up and running.")
+    
+    result = response_gettran.json()['result']
+    
+    return result
 
 eel.start('loginWindow.html', size=(1350, 750))
