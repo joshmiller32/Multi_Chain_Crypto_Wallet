@@ -305,6 +305,11 @@ def check_password(pass_w):
     print("no password found")
     return -1
 
+API_URL = 'https://api.changelly.com'
+API_KEY = 'f1b95f2a2b8b4e83b7d86579ec0464ee'#os.environ['CHANGELLY_KEY']
+API_SECRET = '40b7e760d1758c2c3d4e30227b6eae9a369e757f80c745f5167233eee80940c6'#os.environ['CHANGELLY_SECRET_KEY']
+
+@eel.expose
 def getCurrencies():
     '''
     Should be called when the user goes to the exchange screen. No Parameters.

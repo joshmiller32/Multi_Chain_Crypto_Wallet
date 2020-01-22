@@ -251,6 +251,8 @@ function myFunction(x) {
   //console.log("Row index is: " + x.rowIndex);
 }
 
+
+=======
 async function updateUSDVal(){
     const cryptoFromCon = document.getElementById('swapSendCrypto');
     const amountCon = document.getElementById('sendCryptoAmount');
@@ -293,3 +295,4 @@ async function launchSwapWindow(){
 async function launchMainWindow(){
     return window.location.replace('mainWindow.html?index='+seed_index);
 }
+
