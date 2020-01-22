@@ -38,7 +38,7 @@ get_rf_ensemble_plot()
 get_arima_forecast_plot()
 eel.init('web')
 
-
+load_dotenv()
 #Wallet Functions
 
 
@@ -339,27 +339,66 @@ def getCurrencies():
     
     return list_of_currencies
 
-
+@eel.expose
 def start_atom_swap(coin, privkey, to, amount):
 
     network=None
 
-    if coin == "BTC": 
-        from clove import Bitcoin
-        network = Bitcoin()
-    elif coin == "BTG": 
-        from clove import Bitcoin_gold
+    if coin == "BTG": 
+        from clove.network import Bitcoin_gold
         network = Bitcoin_gold()
     elif coin == "LTC": 
-        from clove import Litecoin
+        from clove.network import Litecoin
         network = Litecoin()
+    elif coin == "BTC": 
+        from clove.network import Bitcoin
+        network = Bitcoin()
     elif coin == "DASH": 
-        from clove import Dash
+        from clove.network import Dash
         network = Dash()
 
     else: return "Coin not supported"
     
     print(network)
+    sendWallet = network.get_wallet(private_key=privkey)
+    print(f"balance of sendWallet: {network.get_balance(sendWallet.address)}")
+    initial_transaction = network.atomic_swap(
+        sender_address=sendWallet.address,
+        recipient_address=to,
+        value=float(amount) 
+        )
+    initial_transaction.add_fee_and_sign(sendWallet)
+    tx_details = initial_transaction.show_details()
+    initial_transaction.publish()
+    with open("startedSwap.json", "w") as write_file:
+        json.dump(tx_details, fp=write_file, indent=4, sort_keys=True, default=str)
+    #json_tx = json.dumps(tx_details, indent=4, sort_keys=True, default=str)
+    #print(json_tx)
+    return tx_details
+
+@eel.expose
+def audit_tx(coin, _contract, _transaction_address):
+
+    network=None
+
+    if coin == "BTG": 
+        from clove.network import Bitcoin_gold
+        network = Bitcoin_gold()
+    elif coin == "LTC": 
+        from clove.network import Litecoin
+        network = Litecoin()
+    elif coin == "BTC": 
+        from clove.network import Bitcoin
+        network = Bitcoin()
+    elif coin == "DASH": 
+        from clove.network import Dash
+        network = Dash()
+
+    else: return "Coin not supported"
+
+    audited_contract = network.audit_contract(contract=_contract,transaction_address= _transaction_address)
+    tx = audited_contract.show_details()
+    return tx
 
 
 

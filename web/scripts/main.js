@@ -265,21 +265,52 @@ async function updateUSDVal(){
     usdValtoSendCon.innerHTML = "$"+USD;
 }
 
+
+async function auditTx(){
+    const receivingCryptoCon = document.getElementById('partReceiveCrypto');
+    const contractCon = document.getElementById('particContractN');
+    const partTxAddCon = document.getElementById('partTxAdd');
+    const contractDisplay = document.getElementById('contractInfo');
+
+    const cryptoFrom = receivingCryptoCon[receivingCryptoCon.selectedIndex].value;
+
+    tx = await eel.audit_tx(cryptoFrom, contractCon.value, partTxAddCon.value)();
+    console.log(tx);
+    var details = "";
+    for(var key in tx) {
+        details += key +": " + tx[key] + "\n";
+    }
+    contractDisplay.innerHTML = details;
+    return tx;
+
+}
+
 async function startSwap(){
     const cryptoFromCon = document.getElementById('swapSendCrypto');
     const cryptoToCon = document.getElementById('swapReceiveCrypto');
     const amountCon = document.getElementById('sendCryptoAmount');
     const swapToAddCon = document.getElementById('swapToAdd');
     const usdValtoSendCon = document.getElementById('USDswapSend');
+    const contractAddCon = document.getElementById('myContractAdd');
+    const starterTxCon = document.getElementById('myTxNum');
+    const cryptoEquiCon = document.getElementById('cryptoEqui');
+    const auditTxCon = document.getElementById('auditRedeemTx');
 
-    
     const cryptoFrom = cryptoFromCon[cryptoFromCon.selectedIndex].value;
     const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
     const amount = amountCon.value;
     const toAdd = swapToAddCon.value;
-    start_atom_swap(coin, privkey, to, amount)
+    const sending = price_dict[cryptoFrom].USD * amount;
+    const receiving = sending / price_dict[cryptoTo].USD;
 
+    cryptoEquiCon.innerHTML = receiving;
+    let tx = await eel.start_atom_swap(cryptoFrom, coin_purse[cryptoFrom][0].privkey, toAdd, amount)();
+    contractAddCon.innerHTML = tx.transaction_address;
+    starterTxCon.innerHTML = tx.contract;
+
+    
 }
+
 
 async function loadSwapWindow(){
     getCoinPurse();
