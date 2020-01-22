@@ -34,11 +34,14 @@ import pprint as pp
 import requests
 import hmac
 
-get_rf_ensemble_plot()
-get_arima_forecast_plot()
+
+from threading import Thread
+
+if __name__ == '__main__':
+    Thread(target=get_rf_ensemble_plot).start()
+    Thread(target=get_arima_forecast_plot).start()
+
 eel.init('web')
-
-
 #Wallet Functions
 
 
@@ -109,8 +112,6 @@ def get_wallets(seed):
 
 @eel.expose
 def priv_key_to_account(coin, priv_key):
-    #print(f"coin: {coin} type: {type(coin)}\nprivate key: {priv_key} type: {type(priv_key)}")
-    
     """Use it like this: my_btctest_account = priv_key_to_account("btc-test",coin_purse["btc-test"][0]["privkey"])"""
     if coin == "ETH":        
         return Account.privateKeyToAccount(priv_key)       
@@ -119,9 +120,9 @@ def priv_key_to_account(coin, priv_key):
     elif coin == "BTC":
         print("a btc account is being created")
         acc = PrivateKey(priv_key) 
-        #print(acc)
         return acc 
-    else:                    return "Not a supported coin"
+    else:                    
+        return "Not a supported coin"
 
     
 def create_tx(coin, account, to, amount):
