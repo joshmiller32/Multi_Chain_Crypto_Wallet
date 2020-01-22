@@ -171,4 +171,4 @@ def get_prophet_plot():
         fig.update_layout(autosize = True, height = 712, width = 805, title_text = f'{ticker} Prophet Model', template = 'plotly_dark')
         fig.update_xaxes(nticks = 5, title = 'Date')
         fig.update_yaxes(automargin=True, title = 'Predicted Price')
-        return fig
+        write_html(fig, f'./web/{ticker}Prophet.html')

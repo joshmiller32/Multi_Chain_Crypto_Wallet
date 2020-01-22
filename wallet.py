@@ -28,13 +28,14 @@ from bit.network.meta import Unspent
 from web3.middleware import geth_poa_middleware
 from path import Path
 import pandas as pd
-from ML.ml_functions import get_arima_forecast_plot, get_rf_ensemble_plot
+from ML.ml_functions import get_arima_forecast_plot, get_rf_ensemble_plot, get_prophet_plot
 
 import pprint as pp
 import requests
 import hmac
 
 #from passlib.apps import custom_app_context as pwd_context
+get_prophet_plot()
 get_rf_ensemble_plot()
 get_arima_forecast_plot()
 eel.init('web')
