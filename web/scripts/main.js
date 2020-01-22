@@ -252,7 +252,7 @@ function myFunction(x) {
 }
 
 
-=======
+
 async function updateUSDVal(){
     const cryptoFromCon = document.getElementById('swapSendCrypto');
     const amountCon = document.getElementById('sendCryptoAmount');
