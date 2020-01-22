@@ -71,7 +71,7 @@ def get_arima_forecast_plot():
         fig = px.line(forecast_df, x ='Date', y = 'Predicted Price')
         fig.update_xaxes(nticks = 5)
         fig.update_yaxes(automargin=True)
-        fig.update_layout(title_text = f'{ticker} Arima Model', autosize = True, height = 800, width = 950, template = 'seaborn')
+        fig.update_layout(title_text = f'{ticker} ARIMA Model (Autoregressive Integrated Moving Average)', autosize = True, height = 712, width = 805, template = 'plotly_dark')
         write_html(fig, f'./web/{ticker}Arima.html')
 
 def get_random_forest_df():
@@ -148,5 +148,5 @@ def get_rf_ensemble_plot():
         fig = px.line(forecast_df, x = 'index', y = 'Predictions')
         fig.update_xaxes(title = 'Date', nticks = 5)
         fig.update_yaxes(automargin=True, title = 'Predicted Price')
-        fig.update_layout(height = 800, width = 950, title_text = f'{ticker} Random Forest Ensemble', template = 'seaborn')
+        fig.update_layout(height = 712, width = 805, title_text = f'{ticker} Random Forest Ensemble', template = 'plotly_dark')
         write_html(fig, f'./web/{ticker}RFEnsemble.html')
