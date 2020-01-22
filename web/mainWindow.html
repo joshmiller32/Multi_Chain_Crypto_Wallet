@@ -180,6 +180,17 @@
         </div>
 
         <script>
+        
+                var vars = {};
+                var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+                    vars[key] = value;
+                });
+                console.log("from mainWindow: index = "+vars["index"])
+                setSeedIndex(vars["index"]);
+                
+            </script>
+
+        <script>
 
             document.addEventListener("DOMContentLoaded", () => {
                 const rows = document.querySelectorAll("tr[data-coin]");
