@@ -312,9 +312,10 @@ img {
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 20px 10px;
+    padding: 10px 10px;
     transition: 0.3s;
     font-size: 22px;
+    width: 400px;
   }
   
   /* Change background color of buttons on hover */
@@ -325,6 +326,8 @@ img {
   /* Create an active/current tablink class */
   .tab button.active {
     background-color: #ccc;
+    border: 2px;
+    
   }
   
   /* Style the tab content */
@@ -359,7 +362,7 @@ img {
 	color:#ffffff;
 	font-family:Arial;
 	font-size:12px;
-	padding:9px 32px;
+	padding:5px 32px;
 	text-decoration:none;
 	text-shadow:0px 1px 0px #283966;
 }
