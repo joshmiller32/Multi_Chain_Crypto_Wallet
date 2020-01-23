@@ -7,6 +7,7 @@
         <script type="text/javascript" src="/eel.js"></script>
         <script type="text/javascript" src="scripts/main.js"></script>
         <script type="text/javascript" src="scripts/jquery-3.4.1.js"></script>
+        <script src="scripts/jquery-csv.js"></script>
         <!-- End of Scripts -->    
     </head>
     
@@ -57,11 +58,7 @@
                         <br>
                         <br>
                         <br>
-                        <p>Yesterday's Prediction: <div id="yesterdays_pred"></div>
-                        <p>Today's Price: <div id="todays_price"></div><br>
-                        <p>Percent Accuracy: <div id="accuracy"></div>
-                        <p>Tomorrows's Prediction: <div id="tomorrows_pred"></div>
-                        <p>5 Day Prediction: <div id="five_day_pred"></div>
+                        <div id = "Wrap">Yesterday's Price</div>
                     <!-- Column 3 end -->      
                     </div>
                 </div>
@@ -72,12 +69,15 @@
         $( "#Coin" )
           .change(function () {
             var mlPlot = "";
+            var mltable = "";
             $( "#Coin option:selected" ).each(function() {
               mlPlot += $( this ).val() + ".html";
+              mltable += $( this ).val() + ".csv";
             });
             $("#graph").load(mlPlot);
             
-          })
+            
+        })   
           .change();
     </script>
-     
+    

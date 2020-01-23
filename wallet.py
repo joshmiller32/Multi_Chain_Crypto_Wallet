@@ -28,7 +28,7 @@ from bit.network.meta import Unspent
 from web3.middleware import geth_poa_middleware
 from path import Path
 import pandas as pd
-from ML.ml_functions import get_arima_forecast_plot, get_rf_ensemble_plot, get_prophet_plot
+from ML.ml_functions import get_arima_forecast_plot, get_rf_ensemble_plot
 
 import pprint as pp
 import requests
@@ -237,7 +237,7 @@ def decrypt_seed(seed_index):
     seed_path = Path(f".pwd.csv")
     seed_df = pd.read_csv(seed_path)
     ecnrypted_seed =bytes.fromhex(seed_df["seed"].iloc[int(seed_index)])   
-    decrypted = scrypt.decrypt(ecnrypted_seed, password, maxtime=0.4)
+    decrypted = scrypt.decrypt(ecnrypted_seed, password, maxtime=0.6)
     #print(f"decrypted seed: \n{decrypted}")
     return decrypted
   
