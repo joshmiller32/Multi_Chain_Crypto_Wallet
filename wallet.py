@@ -443,4 +443,31 @@ def redeem_tx(coin, privkey, _contract, _transaction_address):
     #print(json_tx)
     return tx_details
 
+@eel.expose
+def finish_swap(coin, privkey, _contract, _transaction_address):
+    """
+    coin: is the currency that the initial transaction sent.
+    privkey: the private key of the local account in the receiving currency 
+    _contract: of the started transaction
+    _transaction_address: transaction
+    """
+
+    network = getNetwork(coin)
+
+    wallet = network.get_wallet(private_key=privkey)
+
+    with open('participatedSwap.json') as f:
+        data = json.load(f)
+    
+    contract = audit_tx(coin, _contract, _transaction_address)
+    
+    secret = network.extract_secret_from_redeem_transaction(data["contract_address"])
+    closing_tx = contract.redeem(secret=secret, wallet=wallet)
+    closing_tx.add_fee_and_sign()
+    closing_tx.publish()
+    tx_details = closing_tx.show_details()
+
+    return tx_details
+
+
 eel.start('loginWindow.html', size=(1350, 750))

@@ -330,6 +330,10 @@ async function redeem(){
 
 }
 
+async function finishSwap(){
+    
+}
+
 
 async function startSwap(){
     const cryptoFromCon = document.getElementById('swapSendCrypto');
