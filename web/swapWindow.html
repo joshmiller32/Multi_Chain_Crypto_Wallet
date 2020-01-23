@@ -22,7 +22,7 @@
                         <!-- Tab links -->
                         <div class="tab">
                                 <button class="tablinks" onclick="openSwapTab(event, 'startNew')">Start New Swap</button>
-                                <button class="tablinks" onclick="openSwapTab(event, 'participate')">articipate in a Swap</button>
+                                <button class="tablinks" onclick="openSwapTab(event, 'participate')">Participate in a Swap</button>
                                 
                             </div>
                             
@@ -157,10 +157,20 @@
                                 <h3>Participate in Swap</h3>
                                 <br><br>
                                 <div>
-                                        <div class="column"> 
+                                    
+                                        <div class="swapColumn"> 
                                             Receiving:
                                         </div>
-                                        <div class="column"> 
+                                        <div class="swapColumn">  
+                                                Contract Number:
+                                        </div>
+                                        <div id="tagInTxNum" class="swapColumn">  
+                                                Transaction Address:
+                                            </div>
+                                     </div>
+                                <div>
+
+                                        <div class="swapColumn"> 
                                                 <select id="partReceiveCrypto">
                                                         <option value="BTC">BTC</option>
                                                         <option value="BTG">BTG</option>
@@ -171,91 +181,81 @@
                                                         <option value="ZEC">ZEC</option>
                                                         <option value="XLM">XLM</option>
                                                       </select>
-                                        </div>
-                                    
-                                    </div>
-                                    <br><br>
-                                    <div>
-                                            <div class="column">  
-                                                Contract Number:
                                             </div>
-                                            <div class="column">  
-                                                    <input id="particContractN" placeholder="Incoming contract Address" />
-                                                </div>
-                                        </div>
-                                        <br><br>
-                                        
-                                        <div>
-                                            <div id="tagInTxNum" class="column">  
-                                                Transaction Address:
-                                            </div>
-                                            <div class="column">  
-                                                    <input id="partTxAdd" placeholder="Incoming transaction number" />
-                                                </div>
-                                        </div>
-                                        <br><br>
-                                            <div> <button onclick="auditTx()">AUDIT</button></div>
-                                        <br><br>
-                                        <div id="contractInfo"></div>
-                                        <br><br>
 
-                                        <div>
-                                                <div class="column"> 
-                                                    Sending:
-                                                </div>
-                                                <div class="column"> 
-                                                        <select id="partSendCrypto">
-                                                                <option value="BTC">BTC</option>
-                                                                <option value="BTG">BTG</option>
-                                                                <option value="LTC">LTC</option>
-                                                                <option value="DASH">DASH</option>
-                                                                <option value="DOGE">DOGE</option>
-                                                                <option value="XRP">XRP</option>
-                                                                <option value="ZEC">ZEC</option>
-                                                                <option value="XLM">XLM</option>
-                                                              </select>
-                                                </div>
-                                            
+                                     <div class="swapColumn">  
+                                         <input id="particContractN" placeholder="Incoming contract Address" />
+                                        </div>
+
+                                     <div class="swapColumn">  
+                                                <input id="partTxAdd" placeholder="Incoming transaction number" />
                                             </div>
+                                        
+                                    </div>
+
+                                    
+                                    <br><br>
+                                <div> <br><br>
+                                    <button onclick="auditTx()" class="swapButton">AUDIT</button></div>
+                                        
+                                <div id="contractInfo"> <br><br><br><br></div>
+                                       
+
+                                <div>
+                                        <div class="column"> 
+                                            Sending:
+                                        </div>
+                                        <div class="column">
+                                                Send to Address:
+                                            </div>
+                                                
+                                    </div>
                                             <br><br>
-                                            <div>
-                                                <br>
-                                                <div class="column">
-                                                    Send to Address:
-                                                </div>
-                                                <div class="column">
+                                 <div>
+                                    <div class="column"> 
+                                            <select id="partSendCrypto">
+                                                    <option value="BTC">BTC</option>
+                                                    <option value="BTG">BTG</option>
+                                                    <option value="LTC">LTC</option>
+                                                    <option value="DASH">DASH</option>
+                                                    <option value="DOGE">DOGE</option>
+                                                    <option value="XRP">XRP</option>
+                                                    <option value="ZEC">ZEC</option>
+                                                    <option value="XLM">XLM</option>
+                                                    </select>
+                                        </div>
+
+                                        <div class="column">
                                                     <input id="partToAdd" placeholder="Send to this address" />
                                             
                                             </div>
                                                 
-                                            </div>
+                                    </div>
+                                    <br><br>
+                                <div> <button onclick="participate()" class="swapButton">PARTICIPATE</button></div>
+                                    <br><br>
+                                <div>Send the following info to the person you are exchanging:</div>
                                             <br><br>
-                                            <div> <button onclick="participate()">PARTICIPATE</button></div>
-                                            <br><br>
-
-
-                                            <div>Send the following info to the person you are exchanging:</div>
-                                            <br><br>
-                                            <div>
-                                                <div id="myTagContractAdd" class="column">  
-                                                    Contract Address:
-                                                </div>
-                                                <div id="partContractAdd" class="column">  
-                                                    your contract address will appear here
-                                                    </div>
-                                            </div>
-                                            <br><br>
-                                            <div>
-                                                <div id="myTagTxNum" class="column">  
-                                                    Transaction #:
-                                                </div>
-                                                <div id="partTxNum" class="column">  
-                                                        your transaction number will appear here
-                                                    </div>
-                                            </div>
-                                                            <br><br>
-                                                            <div> <button onclick="finishSwap()">GET MY COINS</button></div>
-                                                          
+                                <div>
+                                    <div id="myTagContractAdd" class="tagContractColumn">  
+                                        Contract #:
+                                    </div>
+                                    <div id="partContractAdd" class="infoContractColumn">  
+                                        your contract address will appear here
+                                        </div>
+                                </div>
+                                <br><br>
+                                <div>
+                                    <div id="myTagTxNum" class="tagContractColumn">  
+                                        Transaction Address:
+                                    </div>
+                                    <div id="partTxNum" class="infoContractColumn">  
+                                            your transaction number will appear here
+                                        </div>
+                                </div>
+                                <br><br>
+                                <div> <button onclick="finishSwap()" class="swapButton">GET MY COINS</button></div>
+                                
                                                         
                             </div>
                            
