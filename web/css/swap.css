@@ -93,17 +93,37 @@ th {
     text-align: center;
 }
 .swapColumn {
-    float: left;
+    float: center;
     width: 33.33%;
     text-align: center;
 }
-
+.startSwapColumn {
+    float: left;
+    width: 20%;
+    text-align: center;
+}
+.startSwapColumnReduced {
+    float: left;
+    width: 15%;
+    text-align: center;
+}
+.tagContractColumn {
+    float: left;
+    width: 20%;
+    text-align: center;
+}
+.infoContractColumn {
+    float: right;
+    width: 80%;
+    text-align: left;
+}
 /* Clear floats after the columns */
 .row:after {
     content: "";
     display: table;
     clear: both;
 }
+
 
 /* Start Buttons */
 

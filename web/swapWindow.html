@@ -26,138 +26,133 @@
                                 
                             </div>
                             
-                            <!-- Tab content -->
+                            <!-- First Tab content -->
                             <div id="startNew" class="tabcontent">
                                 <h3>Start New Swap</h3>
 
                                 <br><br>
-
+                                <!-- Top section to start swap -->
                                 <div>
-                                    <div class="swapColumn">
+                                    <div class="startSwapColumn">
                                         Send:
                                     </div>
-                                    <div class="swapColumn">
+                                    <div class="startSwapColumn">
                                         Amount:
                                     </div>
-                                    <div class="swapColumn">
+                                    <div class="startSwapColumn">
                                         USD equivalent:
                                     </div>
-                                </div>
-    
-                                <div>
-                                    <div class="swapColumn">
-                                            <select id="swapSendCrypto">
-                                                    <option value="BTC">BTC</option>
-                                                    <option value="BTG">BTG</option>
-                                                    <option value="LTC">LTC</option>
-                                                    <option value="DASH">DASH</option>
-                                                    <option value="DOGE">DOGE</option>
-                                                    <option value="XRP">XRP</option>
-                                                    <option value="ZEC">ZEC</option>
-                                                    <option value="XLM">XLM</option>
-                                                  </select>
-                                        </div>
-                                    
-                                    <div class="swapColumn">
-                                        <input id="sendCryptoAmount" placeholder="Amount" onkeyup="updateUSDVal()"/>
+                                    <div class="startSwapColumn">
+                                        To Address:
                                     </div>
-                                    <div id="USDswapSend" class="swapColumn">
-                                            $USD amount
-                                    </div>
-                                    <br>
-                                </div>
-                                <br><br>
-                                <div>
-                                    <br>
-                                    <div class="column">
-                                        Send to Address:
-                                    </div>
-                                    <div class="column">
-                                            <input id="swapToAdd" placeholder="Send to this address" />
-                                    
-                                    </div>
-                                        
-                                    </div>
-    
-                                <br>
-                                <div>_______________________________________</div>
-                                <br>
-                                <div>
-                                    <div class="swapColumn"> 
+                                    <div class="startSwapColumn">
                                         Receive:
                                     </div>
-                                    <div class="swapColumn"> 
-                                            <select id="swapReceiveCrypto">
-                                                    <option value="BTC">BTC</option>
-                                                    <option value="BTG">BTG</option>
-                                                    <option value="LTC">LTC</option>
-                                                    <option value="DASH">DASH</option>
-                                                    <option value="DOGE">DOGE</option>
-                                                    <option value="XRP">XRP</option>
-                                                    <option value="ZEC">ZEC</option>
-                                                    <option value="XLM">XLM</option>
-                                                  </select>
+                                </div>
+    
+                            <div>
+                                <div class="startSwapColumn">
+                                        <select id="swapSendCrypto">
+                                                <option value="BTC">BTC</option>
+                                                <option value="BTG">BTG</option>
+                                                <option value="LTC">LTC</option>
+                                                <option value="DASH">DASH</option>
+                                                <option value="DOGE">DOGE</option>
+                                                <option value="XRP">XRP</option>
+                                                <option value="ZEC">ZEC</option>
+                                                <option value="XLM">XLM</option>
+                                                </select>
                                     </div>
-                                    <div id="cryptoEqui" class="swapColumn"> 
-                                            Crypto equivalent:
+                                
+                                <div class="startSwapColumn">
+                                    <input id="sendCryptoAmount" placeholder="Amount" onkeyup="updateUSDVal()"/>
+                                </div>
+                                <div id="USDswapSend" class="startSwapColumn">
+                                        $USD amount
+                                    </div>
+                                <div class="startSwapColumn">
+                                        <input id="swapToAdd" placeholder="Send to this address" />
+                                
+                                </div>
+                                <div class="startSwapColumn"> 
+                                        <select id="swapReceiveCrypto">
+                                                <option value="BTC">BTC</option>
+                                                <option value="BTG">BTG</option>
+                                                <option value="LTC">LTC</option>
+                                                <option value="DASH">DASH</option>
+                                                <option value="DOGE">DOGE</option>
+                                                <option value="XRP">XRP</option>
+                                                <option value="ZEC">ZEC</option>
+                                                <option value="XLM">XLM</option>
+                                                </select>
                                     </div>
                                 </div>
-                                <br>
-                                <div>_______________________________________</div>
-                                <br>
+                                <!-- End of Top section  -->
+                            <br><br>
+                                <!--    
                                 <div>
-                            
-                                    <button onclick="startSwap()">SEND & START SWAP</button>
-                                    <br><br>
-                                </div>
-                                <div>Send the following info to the person you are exchanging:</div>
+                                        
+                                        <div id="cryptoEqui" class="swapColumn"> 
+                                                Crypto equivalent:
+                                        </div>
+                                    </div>
+                                    
+                                <div>-->
+                            <div>
+                                <button onclick="startSwap()">SEND & START SWAP</button>
+                                <br><br>
+                            </div>
+
+                            <!-- Displaying contract info  -->
+                            <div>Send the following info to the person you are exchanging:</div>
                                 <br><br>
                                 <div>
-                                    <div id="myTagContractAdd" class="column">  
+                                    <div id="myTagContractAdd" class="tagContractColumn">  
                                         Contract Address:
                                     </div>
-                                    <div id="myContractAdd" class="column">  
+                                    <div id="myContractAdd" class="infoContractColumn">  
                                         your contract address will appear here
                                         </div>
                                 </div>
                                 <br><br>
                                 <div>
-                                    <div id="myTagTxNum" class="column">  
+                                    <div id="myTagTxNum" class="tagContractColumn">  
                                         Transaction #:
                                     </div>
-                                    <div id="myTxNum" class="column">  
+                                    <div id="myTxNum" class="infoContractColumn">  
                                             your transaction number will appear here
                                         </div>
                                 </div>
                                 <br><br>
-                                <div><br>Audit the other's party transaction:</div>
+
+                            <!-- Introducing other's party info  -->
+                            <div><br>Audit the other's party transaction:</div>
                                 <br><br>
                                 <div>
-                                    <div id="tagInContractAdd" class="column">  
+                                    <div id="tagInContractAdd" class="startSwapColumn">  
                                         Contract Number:
                                     </div>
-                                    <div id="inContractAdd" class="column">  
+                                    <div id="inContractAdd" class="startSwapColumn">  
                                             <input id="incomingContractAdd" placeholder="Incoming contract Address" />
                                         </div>
-                                </div>
-                                <br><br>
-                                
-                                <div>
-                                    <div id="tagInTxNum" class="column">  
+                                        <div class="startSwapColumn">
+                                            <!-- Separator column  --> 
+                                        </div>
+                                    <div id="tagInTxNum" class="startSwapColumn">  
                                         Transaction Address:
                                     </div>
-                                    <div id="inTxNum" class="column">  
+                                    <div id="inTxNum" class="startSwapColumn">  
                                             <input id="incomingTxNum" placeholder="Incoming transaction number" />
                                         </div>
                                 </div>
                                 <div id="auditRedeemTx"><br><br>Other's party transaction info will be displayed here:</div>
                                 <br><br>
-                                <div> <button onclick="redeem()">REDEEM</button></div>
-    
-                                
+                                <div> <button onclick="redeem()">REDEEM</button></div>  
                             </div>
-                            
-                            <div id="participate" class="tabcontent">
+
+
+                        <!-- SECOND TAB -- PARTICIPATE TAB --  --> 
+                        <div id="participate" class="tabcontent">
                                 <h3>Participate in Swap</h3>
                                 <br><br>
                                 <div>
@@ -260,7 +255,7 @@
                                                             <br><br>
                                                             <div> <button onclick="finishSwap()">GET MY COINS</button></div>
                                                           
-
+                                                        
                             </div>
                            
 
