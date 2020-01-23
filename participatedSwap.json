@@ -1,0 +1,20 @@
+{
+    "contract": "63a6145950b49dde4c174775cbd02713c662b4b587e4bc8876a91464aed1d98e9ec748d8d854d84c77974b302780df67041f832a5eb17576a9145395f3a33f1174afc8bb84c26048069ab908f5196888ac",
+    "contract_address": "M8Dnr49SLErtCpX9RJQ4cD33RtCTodVuR2",
+    "contract_transaction": "01000000015b13e526b83d7cccd89e8ee5b8bbe0fdca9d9893f075fb2def931dfd97ebc0be010000006b483045022100bc1e6698b08062169db826ba850e927998daabedae21d7a8d4cf9cd850376bc5022036a027631346ae706cede90a1b85287577f47e15a1653b94b2050a8aafd2e1c901210327225134576a4ba6fff149b0fb767608eb95ae8d6f8697fe181d6fffe0ea5d5c0000000002ef541b000000000017a91403860d23a7fb4b8e7f2607d7dadb83730b8d90ed87476e0000000000001976a9145395f3a33f1174afc8bb84c26048069ab908f51988ac00000000",
+    "fee": 2.39e-06,
+    "fee_per_kb": 1.069e-05,
+    "fee_per_kb_text": "0.00001069 LTC / 1 kB",
+    "fee_text": "0.00000239 LTC",
+    "locktime": "2020-01-24 05:39:43.869221",
+    "recipient_address": "LUQKG5oLczdfFkt3KuVSkNXt4fJfiH8PVa",
+    "refund_address": "LSquyxmhscvATapUxqqY5k7JRr2qm7RD7h",
+    "secret": "",
+    "secret_hash": "5950b49dde4c174775cbd02713c662b4b587e4bc",
+    "size": 224,
+    "size_text": "224 bytes",
+    "transaction_address": "cec45a160faf61a809c6802ad11f4a511a59f893f4be37b6b04ef9eb08899ffc",
+    "transaction_link": "https://chainz.cryptoid.info/ltc/tx.dws?cec45a160faf61a809c6802ad11f4a511a59f893f4be37b6b04ef9eb08899ffc.htm",
+    "value": 0.017912154203105476,
+    "value_text": "0.01791215 LTC"
+}
