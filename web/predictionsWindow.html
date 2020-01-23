@@ -7,7 +7,6 @@
         <script type="text/javascript" src="/eel.js"></script>
         <script type="text/javascript" src="scripts/main.js"></script>
         <script type="text/javascript" src="scripts/jquery-3.4.1.js"></script>
-        <script src="scripts/jquery-csv.js"></script>
         <!-- End of Scripts -->    
     </head>
     
@@ -58,7 +57,10 @@
                         <br>
                         <br>
                         <br>
-                        <div id = "Wrap">Yesterday's Price</div>
+                        <p>Today's Current Price: <div id="todays_price"></div>
+                        <p>Tomorrows's Prediction: <div id="tomorrows_prediction"></div>
+                        <p>Upper Limit of 95% Confidence Interval: <div id="upper_limit"></div>
+                        <p>Lower Limit of 95% Confidence Interval: <div id="lower_limit"></div>
                     <!-- Column 3 end -->      
                     </div>
                 </div>
@@ -72,12 +74,12 @@
             var mltable = "";
             $( "#Coin option:selected" ).each(function() {
               mlPlot += $( this ).val() + ".html";
-              mltable += $( this ).val() + ".csv";
+              mltable += $( this ).val() + ".json"; 
             });
             $("#graph").load(mlPlot);
+            get_ml_price_dict(mltable);
             
-            
-        })   
+          })
           .change();
     </script>
     

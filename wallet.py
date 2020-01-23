@@ -894,4 +894,14 @@ def getTransactions(payinaddress, currencyfrom, extraID = 'NULL', limit = 10, of
     
     return result
 
+
+@eel.expose
+def get_price_dict(mltable):
+    with open(f'./web/{mltable}') as json_file:
+        price_dict = json.load(json_file)
+    return price_dict
+
+
+
+
 eel.start('loginWindow.html', size=(1350, 750))

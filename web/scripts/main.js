@@ -196,7 +196,6 @@ async function setPassword() {
     let seed = extractSeed();
     console.log(pass);
     console.log(seed);
-    let loginCheck = await eel.set_password(pass, seed)();
     window.seed_index = -1;
 
     return window.location.replace('mainWindow.html?index='+seed_index);
@@ -248,7 +247,7 @@ function windowClose() {
     window.close();
 }
 
-function myFunction(x) {
+function myFunction() {
   //console.log("Row index is: " + x.rowIndex);
 }
 
@@ -289,7 +288,6 @@ async function auditTx(){
     const receivingCryptoCon = document.getElementById('partReceiveCrypto');
     const contractCon = document.getElementById('particContractN');
     const partTxAddCon = document.getElementById('partTxAdd');
-    const contractDisplay = document.getElementById('contractInfo');
 
     const cryptoFrom = receivingCryptoCon[receivingCryptoCon.selectedIndex].value;
 
@@ -369,11 +367,9 @@ async function startSwap(){
     const cryptoToCon = document.getElementById('swapReceiveCrypto');
     const amountCon = document.getElementById('sendCryptoAmount');
     const swapToAddCon = document.getElementById('swapToAdd');
-    const usdValtoSendCon = document.getElementById('USDswapSend');
     const contractAddCon = document.getElementById('myContractAdd');
     const starterTxCon = document.getElementById('myTxNum');
     const cryptoEquiCon = document.getElementById('cryptoEqui');
-    const auditTxCon = document.getElementById('auditRedeemTx');
 
     const cryptoFrom = cryptoFromCon[cryptoFromCon.selectedIndex].value;
     const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
@@ -410,7 +406,6 @@ async function loadJSON(file_name) {
     xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
           console.log(this);
-        var myObj = JSON.parse(this.responseText);
         //document.getElementById("demo").innerHTML = myObj.name;
       }
     };
@@ -438,4 +433,14 @@ async function loadJSON(file_name) {
     // Show the current tab, and add an "active" class to the button that opened the tab
     document.getElementById(option).style.display = "block";
     evt.currentTarget.className += " active";
-  }
+}
+    
+async function get_ml_price_dict(mltable) {
+    window.mltable = mltable;
+    let results = await eel.get_price_dict(mltable)();
+    console.log(results);
+    todays_price.innerHTML = "$" + results.todays_price;
+    tomorrows_prediction.innerHTML = "$" + results.tommorows_prediction;
+    upper_limit.innerHTML = "$" + results.upper_limit;
+    lower_limit.innerHTML = "$" + results.lower_limit;
+}
