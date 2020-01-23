@@ -35,6 +35,7 @@ import requests
 import hmac
 
 
+
 from threading import Thread
 
 if __name__ == '__main__':
@@ -42,6 +43,9 @@ if __name__ == '__main__':
     Thread(target=get_arima_forecast_plot).start()
 
 eel.init('web')
+
+load_dotenv()
+
 #Wallet Functions
 
 
@@ -343,28 +347,28 @@ def getCurrencies():
     
     return list_of_currencies
 
-@eel.expose
-def start_atom_swap(coin, privkey, to, amount):
+
+def getNetwork(coin):
 
     network=None
 
-    if coin == "BTC": 
-        from clove import Bitcoin
-        network = Bitcoin()
-    elif coin == "BTG": 
-        from clove import Bitcoin_gold
+    if coin == "BTG": 
+        from clove.network import Bitcoin_gold
         network = Bitcoin_gold()
     elif coin == "LTC": 
-        from clove import Litecoin
+        from clove.network import Litecoin
         network = Litecoin()
+    elif coin == "BTC": 
+        from clove.network import Bitcoin
+        network = Bitcoin()
     elif coin == "DASH": 
-        from clove import Dash
+        from clove.network import Dash
         network = Dash()
-
     else: return "Coin not supported"
-    
-    print(network)
-    
+
+    return network
+
+
 @eel.expose
 def get_Currencies():
     '''
@@ -660,6 +664,119 @@ def createTransaction(currency1, currency2, TOaddress, amount, extraId = 'NULL',
     get_transaction = getTransactions(currencyFrom,currencyFrom)
     
     return get_transaction, Status, fee, amountExpectedFrom, amountExpectedTo, amountTo, apiExtraFee,changellyFee,createdAt, currencyFrom, currencyTo, ID, kycRequired, payinAddress, payinExtraId,payoutAddress, payoutExtraId, status
+
+
+
+@eel.expose
+def start_atom_swap(coin, privkey, to, amount):
+
+    network = getNetwork(coin)
+    
+    print(network)
+    sendWallet = network.get_wallet(private_key=privkey)
+    print(f"balance of sendWallet: {network.get_balance(sendWallet.address)}")
+    initial_transaction = network.atomic_swap(
+        sender_address=sendWallet.address,
+        recipient_address=to,
+        value=float(amount) 
+        )
+    initial_transaction.add_fee_and_sign(sendWallet)
+    tx_details = initial_transaction.show_details()
+    initial_transaction.publish()
+    with open("startedSwap.json", "w") as write_file:
+        json.dump(tx_details, fp=write_file, indent=4, sort_keys=True, default=str)
+    #json_tx = json.dumps(tx_details, indent=4, sort_keys=True, default=str)
+    #print(json_tx)
+    return tx_details
+
+
+@eel.expose
+def audit_tx(coin, _contract, _transaction_address, local=True):
+
+    network = getNetwork(coin)
+
+    audited_contract = network.audit_contract(contract=_contract,transaction_address= _transaction_address)
+    tx = audited_contract.show_details()
+    if local: return audited_contract
+    else: return tx
+
+@eel.expose
+def participateSwap(sendingCur, receivingCur, privkey, to, amount, _contract, _transaction_address):
+
+    #contractNetwork = getNetwork(receivingCur)
+    partNetwork = getNetwork(sendingCur)
+
+    contract = audit_tx(receivingCur, _contract, _transaction_address)
+
+    wallet = partNetwork.get_wallet(private_key=privkey)
+    print(f"balance of sendWallet: {partNetwork.get_balance(wallet.address)}")
+    participate_transaction = contract.participate(
+        symbol=sendingCur,
+        sender_address=wallet.address,
+        recipient_address=to,
+        value=float(amount),)
+    participate_transaction.add_fee_and_sign(wallet)
+    tx_details = participate_transaction.show_details()
+    
+    with open("participatedSwap.json", "w") as write_file:
+        json.dump(tx_details, fp=write_file, indent=4, sort_keys=True, default=str)
+    json_tx = json.dumps(tx_details, indent=4, sort_keys=True, default=str)
+    print(json_tx)
+
+    participate_transaction.publish()
+
+    return tx_details
+
+@eel.expose
+def redeem_tx(coin, privkey, _contract, _transaction_address):
+
+    network = getNetwork(coin)
+    
+    print(network)
+    wallet = network.get_wallet(private_key=privkey)
+    print(f"balance of sendWallet: {network.get_balance(wallet.address)}")
+    contract = audit_tx(coin, _contract, _transaction_address)
+
+    with open('startedSwap.json') as f:
+        data = json.load(f)
+
+    redemption = contract.redeem(secret=data["secret"], wallet=wallet)
+
+    redemption.add_fee_and_sign()
+    redemption.publish()
+    tx_details = redemption.show_details()
+    with open("redeemedSwap.json", "w") as write_file:
+        json.dump(tx_details, fp=write_file, indent=4, sort_keys=True, default=str)
+    #json_tx = json.dumps(tx_details, indent=4, sort_keys=True, default=str)
+    #print(json_tx)
+    return tx_details
+
+@eel.expose
+def finish_swap(coin, privkey, _contract, _transaction_address):
+    """
+    coin: is the currency that the initial transaction sent.
+    privkey: the private key of the local account in the receiving currency 
+    _contract: of the started transaction
+    _transaction_address: transaction
+    """
+
+    network = getNetwork(coin)
+
+    wallet = network.get_wallet(private_key=privkey)
+
+    with open('participatedSwap.json') as f:
+        data = json.load(f)
+    
+    contract = audit_tx(coin, _contract, _transaction_address)
+    
+    secret = network.extract_secret_from_redeem_transaction(data["contract_address"])
+    closing_tx = contract.redeem(secret=secret, wallet=wallet)
+    closing_tx.add_fee_and_sign()
+    closing_tx.publish()
+    tx_details = closing_tx.show_details()
+
+    return tx_details
+
 
 @eel.expose
 def getStatus(ID):
