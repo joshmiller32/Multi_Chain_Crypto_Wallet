@@ -97,13 +97,33 @@ th {
     width: 33.33%;
     text-align: center;
 }
-
+.startSwapColumn {
+    float: left;
+    width: 20%;
+    text-align: center;
+}
+.startSwapColumnReduced {
+    float: left;
+    width: 15%;
+    text-align: center;
+}
+.tagContractColumn {
+    float: left;
+    width: 20%;
+    text-align: center;
+}
+.infoContractColumn {
+    float: right;
+    width: 80%;
+    text-align: left;
+}
 /* Clear floats after the columns */
 .row:after {
     content: "";
     display: table;
     clear: both;
 }
+
 
 /* Start Buttons */
 
@@ -292,9 +312,10 @@ img {
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 20px 10px;
+    padding: 10px 10px;
     transition: 0.3s;
     font-size: 22px;
+    width: 400px;
   }
   
   /* Change background color of buttons on hover */
@@ -305,6 +326,8 @@ img {
   /* Create an active/current tablink class */
   .tab button.active {
     background-color: #ccc;
+    border: 2px;
+    
   }
   
   /* Style the tab content */
@@ -314,3 +337,42 @@ img {
     /*border: 1px solid #ccc;*/
     border-top: none;
   }
+  .swapButton
+{
+  width: 220px;
+  text-align: center;
+  margin:0 auto;
+  align-items: center;
+  /*display: flex; */
+  justify-content: center; 
+
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%); /* this will calculate what 50% of the element width is and will move it across the X-axis. The negative value ensures it moves to the left. */
+
+
+
+    box-shadow: 0px 0px 0px 2px #9fb4f2;
+	background:linear-gradient(to bottom, #7892c2 5%, #476e9e 100%);
+	background-color:#7892c2;
+	border-radius:10px;
+	border:1px solid #4e6096;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:12px;
+	padding:5px 32px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #283966;
+}
+.myButton:hover {
+	background:linear-gradient(to bottom, #476e9e 5%, #7892c2 100%);
+	background-color:#476e9e;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+}
