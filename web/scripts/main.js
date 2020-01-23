@@ -325,7 +325,7 @@ async function redeem(){
     const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
 
     redeem_tx = await eel.redeem_tx(cryptoTo, 
-        "T3uJbS5yKBCBxpptkr6nWoU6DFxkUiDAbKk5Ynoqhqfea5i3ef4e", // CHANGE [0] TO coin_purse[cryptoTo][0].privkey. ONLY FOR DEVELOPING PURPOSES
+        coin_purse[cryptoTo][0].privkey, // CHANGE [0] TO coin_purse[cryptoTo][0].privkey. ONLY FOR DEVELOPING PURPOSES
         contractNumCon.value, txAddCon.value)();
 
     console.log(redeem_tx);
@@ -333,7 +333,14 @@ async function redeem(){
 }
 
 async function finishSwap(){
-    
+    const receivingCryptoCon = document.getElementById('partReceiveCrypto');
+    const contractCon = document.getElementById('particContractN');
+    const partTxAddCon = document.getElementById('partTxAdd');
+
+    const receivingCur = receivingCryptoCon[receivingCryptoCon.selectedIndex].value;
+
+    tx = await eel.finish_swap(receivingCur, coin_purse[receivingCur][0].privkey,
+        contractCon.value, partTxAddCon.value)
 }
 
 
