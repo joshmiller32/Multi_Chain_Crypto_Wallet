@@ -722,8 +722,10 @@ def participateSwap(sendingCur, receivingCur, privkey, to, amount, _contract, _t
 
     #contractNetwork = getNetwork(receivingCur)
     partNetwork = getNetwork(sendingCur)
-
-    contract = audit_tx(receivingCur, _contract, _transaction_address)
+    try:
+        contract = audit_tx(receivingCur, _contract, _transaction_address)
+    except:
+        return "Contract with Tx address {_transaction_address} not found. Please retry later."
 
     wallet = partNetwork.get_wallet(private_key=privkey)
     print(f"balance of sendWallet: {partNetwork.get_balance(wallet.address)}")
@@ -752,7 +754,10 @@ def redeem_tx(coin, privkey, _contract, _transaction_address):
     print(network)
     wallet = network.get_wallet(private_key=privkey)
     print(f"balance of sendWallet: {network.get_balance(wallet.address)}")
-    contract = audit_tx(coin, _contract, _transaction_address)
+    try:
+        contract = audit_tx(coin, _contract, _transaction_address)
+    except:
+        return f"Contract with Tx address {_transaction_address} not found. Please retry later."
 
     with open('startedSwap.json') as f:
         data = json.load(f)
@@ -770,24 +775,30 @@ def redeem_tx(coin, privkey, _contract, _transaction_address):
     return tx_details
 
 @eel.expose
-def finish_swap(coin, privkey, _contract, _transaction_address):
+def finish_swap(sendingCur, receivingCur, privkey, _contract, _transaction_address):
     """
     coin: is the currency that the initial transaction sent.
     privkey: the private key of the local account in the receiving currency 
     _contract: of the started transaction
     _transaction_address: transaction
     """
+    #print(f"privkey :{privkey}")
+    wallet_network = getNetwork(receivingCur)
+    contract_network = getNetwork(sendingCur)
 
-    network = getNetwork(coin)
-
-    wallet = network.get_wallet(private_key=privkey)
+    wallet = wallet_network.get_wallet(private_key=privkey)
 
     with open('participatedSwap.json') as f:
         data = json.load(f)
     
-    contract = audit_tx(coin, _contract, _transaction_address)
+    contract = audit_tx(receivingCur, _contract, _transaction_address)
     
-    secret = network.extract_secret_from_redeem_transaction(data["contract_address"])
+    try:
+        secret = contract_network.extract_secret_from_redeem_transaction(data["contract_address"])
+        print(secret)
+    except:
+        return f"Transaction with address {data['contract_address']} not found. Please retry later."
+
     closing_tx = contract.redeem(secret=secret, wallet=wallet)
     closing_tx.add_fee_and_sign()
     closing_tx.publish()

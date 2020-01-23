@@ -279,11 +279,15 @@ async function auditTx(){
 
     window.auditedTx = await eel.audit_tx(cryptoFrom, contractCon.value, partTxAddCon.value, false)();
     console.log(auditedTx);
+
+    //maybe delegate this to anohther function that receives the appropiate container.
     var details = "";
     for(var key in auditedTx) {
         details += key +": " + auditedTx[key] + "\n";
     }
     contractDisplay.innerHTML = details;
+    ////
+
     return auditedTx;
 }
 
@@ -307,13 +311,13 @@ async function participate(){
             contractCon.value, 
             partTxAddCon.value)
 
-    console.log(auditedTx);
+    console.log(tx);
     var details = "";
-    for(var key in auditedTx) {
-        details += key +": " + auditedTx[key] + "\n";
+    for(var key in tx) {
+        details += key +": " + tx[key] + "\n";
     }
     contractDisplayCon.innerHTML = details;
-    return auditedTx;
+    return tx;
 
 }
 
@@ -334,12 +338,14 @@ async function redeem(){
 
 async function finishSwap(){
     const receivingCryptoCon = document.getElementById('partReceiveCrypto');
+    const sendingCryptoCon = document.getElementById('partSendCrypto');
     const contractCon = document.getElementById('particContractN');
     const partTxAddCon = document.getElementById('partTxAdd');
 
     const receivingCur = receivingCryptoCon[receivingCryptoCon.selectedIndex].value;
+    const sendingCur = sendingCryptoCon[sendingCryptoCon.selectedIndex].value;
 
-    tx = await eel.finish_swap(receivingCur, coin_purse[receivingCur][0].privkey,
+    tx = await eel.finish_swap(sendingCur, receivingCur, coin_purse[receivingCur][0].privkey,
         contractCon.value, partTxAddCon.value)
     console.log(tx)
 }
