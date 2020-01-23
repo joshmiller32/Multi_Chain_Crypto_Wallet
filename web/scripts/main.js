@@ -348,10 +348,6 @@ async function startSwap(){
     const cryptoEquiCon = document.getElementById('cryptoEqui');
     const auditTxCon = document.getElementById('auditRedeemTx');
 
-<<<<<<< HEAD
-
-=======
->>>>>>> oscar
     const cryptoFrom = cryptoFromCon[cryptoFromCon.selectedIndex].value;
     const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
     const amount = amountCon.value;
@@ -380,8 +376,6 @@ async function launchSwapWindow(){
 async function launchMainWindow(){
     return window.location.replace('mainWindow.html?index='+seed_index);
 }
-<<<<<<< HEAD
-=======
 
 async function loadJSON(file_name) {   
 
@@ -397,5 +391,3 @@ async function loadJSON(file_name) {
     xmlhttp.send();
     return xmlhttp;
  }
-
->>>>>>> oscar
