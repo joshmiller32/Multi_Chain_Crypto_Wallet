@@ -235,13 +235,18 @@ def get_seed():
     
 
 @eel.expose
-def decrypt_seed(seed_index):
+def decrypt_seed(seed_index, ecnrypted=True): #set ecnrypted=False ONLY for developing purposes
     print(f"seed index: {seed_index}")
     password = "Wallet #1 in 2020" # For right now, the password doesn't count.
     seed_path = Path(f".pwd.csv")
     seed_df = pd.read_csv(seed_path)
-    ecnrypted_seed =bytes.fromhex(seed_df["seed"].iloc[int(seed_index)])   
-    decrypted = scrypt.decrypt(ecnrypted_seed, password, maxtime=0.4)
+
+    if ecnrypted: 
+        ecnrypted_seed =bytes.fromhex(seed_df["seed"].iloc[int(seed_index)]) 
+        decrypted = scrypt.decrypt(ecnrypted_seed, password, maxtime=0.4)
+
+    else: decrypted =  seed_df["seed"].iloc[int(seed_index)]
+
     #print(f"decrypted seed: \n{decrypted}")
     return decrypted
   
@@ -273,11 +278,15 @@ def hash_pass(pass_w, salt):
     return scrypt.encrypt(pass_w , salt, maxtime=0.2)
 
 @eel.expose
-def set_password(pass_w, seed):
+def set_password(pass_w, seed, ecnrypted=True): #set ecnrypted=False ONLY for developing purposes
     
-    password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
+    if ecnrypted:  
+        password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
                "password": [hash_pass(pass_w,"super wallet").hex()]} #ecnryption of the password with a salt
-    
+    else:
+        password = {"seed": [seed],
+               "password": [pass_w]} 
+
     psw_df = pd.DataFrame(password)    
     pass_path = Path(f".pwd.csv")
     
@@ -297,17 +306,25 @@ def set_password(pass_w, seed):
     return True
 
 @eel.expose
-def check_password(pass_w):
+def check_password(pass_w, ecnrypted=True): #set ecnrypted=False ONLY for developing purposes
    
     pass_path = Path(f".pwd.csv")
     password = pd.read_csv(pass_path)
-    for row in range(password.shape[0]):
-        ecnrypted_pass =bytes.fromhex(password["password"].iloc[row])   
-        decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
-        if decrypted == pass_w: 
-            return row
-    print("no password found")
-    return -1
+    if ecnrypted:
+        for row in range(password.shape[0]):
+            ecnrypted_pass =bytes.fromhex(password["password"].iloc[row])   
+            decrypted = scrypt.decrypt(ecnrypted_pass,'super wallet',maxtime=0.4)
+            if decrypted == pass_w: 
+                return row
+        print("no password found")
+        return -1
+    else:
+        for row in range(password.shape[0]):
+            decrypted =password["password"].iloc[row]  
+            if decrypted == pass_w: 
+                return row
+        print("no password found")
+        return -1
 
 API_URL = 'https://api.changelly.com'
 
