@@ -268,7 +268,23 @@ async function updateUSDVal(){
     usdValtoSendCon.innerHTML = "$"+USD;
 }
 
+async function displayDetails(tx){
 
+    const contractDisplay = document.getElementById('contractInfo');
+
+    //maybe delegate this to anohther function that receives the appropiate container.
+    var details = "transaction_link: "+tx["transaction_link"]+"\n\n";
+    details += "MAKE SURE this is your address: \n"+tx["recipient_address"]+"\n\n";
+    details += "You will receive: \n"+tx["value_text"]+"\n\n";
+    const cur = tx["value_text"].split(" ");
+    details += "Which at this moment equals:\n\n $"+parseFloat(tx["value"])*price_dict[cur[1]].USD +" US dollars.\n";
+    //for(var key in tx) {
+     //   details += key +": " + tx[key] + "\n";
+    //}
+
+    contractDisplay.innerHTML = details;
+    ////
+}
 async function auditTx(){
     const receivingCryptoCon = document.getElementById('partReceiveCrypto');
     const contractCon = document.getElementById('particContractN');
@@ -279,14 +295,7 @@ async function auditTx(){
 
     window.auditedTx = await eel.audit_tx(cryptoFrom, contractCon.value, partTxAddCon.value, false)();
     console.log(auditedTx);
-
-    //maybe delegate this to anohther function that receives the appropiate container.
-    var details = "";
-    for(var key in auditedTx) {
-        details += key +": " + auditedTx[key] + "\n";
-    }
-    contractDisplay.innerHTML = details;
-    ////
+    displayDetails(auditedTx);
 
     return auditedTx;
 }
@@ -297,7 +306,9 @@ async function participate(){
     const contractCon = document.getElementById('particContractN');
     const partTxAddCon = document.getElementById('partTxAdd');
     const partSendToAddCon = document.getElementById('partToAdd');
-    const contractDisplayCon = document.getElementById('partContractInfo');
+    //const contractDisplayCon = document.getElementById('partContractInfo');
+    const contractAddCon = document.getElementById('partContractAdd');
+    const starterTxCon = document.getElementById('partTxNum');
 
     const receivingCur = receivingCryptoCon[receivingCryptoCon.selectedIndex].value;
     const sendingCur = sendingCryptoCon[sendingCryptoCon.selectedIndex].value;
@@ -312,11 +323,13 @@ async function participate(){
             partTxAddCon.value)
 
     console.log(tx);
-    var details = "";
-    for(var key in tx) {
-        details += key +": " + tx[key] + "\n";
-    }
-    contractDisplayCon.innerHTML = details;
+    //var details = "";
+    //for(var key in tx) {
+    //    details += key +": " + tx[key] + "\n";
+   // }
+    //contractDisplayCon.innerHTML = details;
+    contractAddCon.innerHTML = tx.contract;
+    starterTxCon.innerHTML = tx.transaction_address;
     return tx;
 
 }
