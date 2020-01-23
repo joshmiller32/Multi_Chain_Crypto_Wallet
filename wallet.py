@@ -353,8 +353,8 @@ def getNetwork(coin):
     network=None
 
     if coin == "BTG": 
-        from clove.network import Bitcoin_gold
-        network = Bitcoin_gold()
+        from clove.network import BitcoinGold
+        network = BitcoinGold()
     elif coin == "LTC": 
         from clove.network import Litecoin
         network = Litecoin()
@@ -669,7 +669,7 @@ def createTransaction(currency1, currency2, TOaddress, amount, extraId = 'NULL',
 
 @eel.expose
 def start_atom_swap(coin, privkey, to, amount):
-
+    print(f"{coin},{privkey},{to},{amount}")
     network = getNetwork(coin)
     
     print(network)
@@ -741,6 +741,7 @@ def redeem_tx(coin, privkey, _contract, _transaction_address):
         data = json.load(f)
 
     redemption = contract.redeem(secret=data["secret"], wallet=wallet)
+    print(data["secret"])
 
     redemption.add_fee_and_sign()
     redemption.publish()

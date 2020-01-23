@@ -341,6 +341,7 @@ async function finishSwap(){
 
     tx = await eel.finish_swap(receivingCur, coin_purse[receivingCur][0].privkey,
         contractCon.value, partTxAddCon.value)
+    console.log(tx)
 }
 
 
@@ -364,8 +365,8 @@ async function startSwap(){
 
     cryptoEquiCon.innerHTML = receiving;
     let tx = await eel.start_atom_swap(cryptoFrom, coin_purse[cryptoFrom][0].privkey, toAdd, amount)();
-    contractAddCon.innerHTML = tx.transaction_address;
-    starterTxCon.innerHTML = tx.contract;
+    contractAddCon.innerHTML = tx.contract;
+    starterTxCon.innerHTML = tx.transaction_address;
 
     
 }
