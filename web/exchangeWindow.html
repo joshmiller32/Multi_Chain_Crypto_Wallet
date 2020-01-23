@@ -20,34 +20,66 @@
                         <!-- Column 1 start -->
 <body class="body">
   <div class="content-container w-container">
-    <div class="w-form">
-      <form id="email-form-2" name="email-form-2" data-name="Email Form 2"><label for="from-currency" class="field-label">FROM Currency</label><input type="text" class="field w-input" maxlength="256" name="from-currency" data-name="from currency" placeholder="EX: btc" id="from-currency" required=""><label for="send-amount" class="field-label">HOW MUCH would you like to exchange?</label><input type="text" class="field w-input" maxlength="256" name="send-amount" data-name="send amount" placeholder="EX: 1.5" id="send-amount" required=""><label for="to-currency" class="field-label">To currency</label><input type="text" class="field w-input" maxlength="256" name="to-currency" data-name="to currency" placeholder="EX: eth" id="to-currency" required="">
-        <div class="centered"><input type="submit" value="Submit" data-wait="Please wait..." class="button-small form w-button"></div>
+    <center>
+      <div class="w-form">
+      <form id="email-form-2" name="email-form-2" data-name="Email Form 2">
+          <label for="from-currency" class="field-label">FROM Currency</label>
+          <input type="text" class="field w-input" maxlength="256" name="from-currency" data-name="from currency" placeholder="EX: btc" id="from-currency" required="">
+          <label for="send-amount" class="field-label">HOW MUCH would you like to exchange?</label>
+          <input type="text" class="field w-input" maxlength="256" name="send-amount" data-name="send amount" placeholder="EX: 1.5" id="send-amount" required="">
+          <label for="to-address" class="field-label">To currency</label>
+          <input type="text" class="field w-input" maxlength="256" name="to-currency" data-name="to-currency" placeholder="EX: eth" id="to-currency" required="">
+          <label for="to-currency" class="field-label">What is your wallet address for this currency?</label>
+          <input type="text" class="field w-input" maxlength="256" name="wallet-address" data-name="wallet-address" placeholder="EX: GCWI7KLOO7ZLEOTOPS73735MMMCHIZ24ZQ742C2CD53OGL6QEUDISIJ4" id="wallet-address" required="">
+        <div class="centered">
+            
+            <input type="submit" value="Submit" data-wait="Please wait..." class="button-small form w-button" onclick="$('#output').toggle(); createTransaction(document.getElementById('from-currency').value,document.getElementById('to-currency').value,document.getElementById('wallet-address').value,document.getElementById('sendAmount').value)">
+          
+            <button type="submit" class="btn btn-success form-control" onclick="changellyAddress">Run script</button>
+          </div>
       </form>
       <div class="success w-form-done">
         <div class="size4-text">Transaction Waiting - Please send the specified amount to this address:</div>
         <div class="changelly-address">
-          <div>Changelly Address</div>
+          <div id="changellyAddress">Changelly Address</div> <!--- Graphly Function Output Here --->
         </div>
       </div>
       <div class="error w-form-fail">
-        <div>Oops! Something went wrong while submitting the form.</div>
+        <div></div>
       </div>
     </div>
   </div>
+</center>
   <div class="section">
     <div class="w-layout-grid headline-grid">
       <div id="w-node-5680af4d03bb-861627ac" class="headline-wrap-centered">
-        <div class="size3-text size3-bottom-clear">A Few Cryptocurrencies to Exchange</div>
+        <div class="size3-text size3-bottom-clear">Popular Cryptocurrencies to Exchange (Over 14,000 Exchange Pairs Possible! :D)</div>
       </div>
     </div>
   </div>
+    <center>
   <div class="w-container">
     <div class="wrapper m80-50">
-      <div class="w-layout-grid grid-2"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="data-coin-image"></div>
+      <div class="w-layout-grid grid-2">
+          <img src="https://cryptoicons.org/api/icon/btc/40" alt="" class="data-coin-image">
+          <img src="https://cryptoicons.org/api/icon/ltc/40" alt="" class="data-coin-image">
+          <img src="https://cryptoicons.org/api/icon/dash/40" alt="" class="data-coin-image">
+          <img src="https://cryptoicons.org/api/icon/doge/40" alt="" class="data-coin-image">
+          <img src="https://cryptoicons.org/api/icon/eth/40" alt="" class="data-coin-image">
+          <img src="https://cryptoicons.org/api/icon/zec/40" alt="" class="data-coin-image">
+        <img src="https://cryptoicons.org/api/icon/bch/40" alt="" class="data-coin-image">
+          <img src="https://cryptoicons.org/api/icon/xlm/40" alt="" class="data-coin-image">
+          <img src="https://cryptoicons.org/api/icon/waves/40" alt="" class="data-coin-image">
+          <img src="https://cryptoicons.org/api/icon/neo/40" alt="" class="data-coin-image">
+          <img src="https://cryptoicons.org/api/icon/trx/40" alt="" class="data-coin-image">
+          <img src="https://cryptoicons.org/api/icon/ethos/40" alt="" class="data-coin-image">
+          <img src="https://cryptoicons.org/api/icon/xrp/40" alt="" class="data-coin-image">
+        <img src="https://cryptoicons.org/api/icon/btg/40" alt="" class="data-coin-image">
+        </div>
       <div class="w-layout-grid grid-2"></div>
     </div>
   </div>
+    </center>
   <div class="section"></div>
   <div class="wrapper m100">
     <div class="home2-deco-part"></div>
@@ -96,12 +128,12 @@
         <div id="w-node-f664f4c28bca-f4c28b99">
           <div class="footer2-disclaimer-wrap">
             <p class="paragraph-small">Caution</p>
-          </div><a href="https://webflow.com/" target="_blank" class="footer2-bottom-link">Powered by Changelly</a></div>
+          </div><a href="https://changelly.com" target="_blank" class="footer2-bottom-link">Powered by Changelly</a></div>
       </div>
     </div>
   </div>
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.4.1.min.220afd743d.js" type="text/javascript" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-  <script src="js/webflow.js" type="text/javascript"></script>
+  <script></script>
   <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->
 </body>
 </html>
@@ -126,7 +158,7 @@
 			</div>
 			<div class="col3"><br>
 				<!-- Column 3 start -->
-                <h2><span style="color: green; font-size: 20px;">Changelly Powered Atomic Swap</h2><br><br><span style="color: gold; font-size: 15px;">Combined Fee 4.5% Charged for this Exchange. Occures in less than 10 minutes. </span><br><br><p> Our wallet leverages Changelly - "Changelly is a non-custodial instant cryptocurrency exchange, which means that no users’ funds are placing in the service. Changelly acts as an intermediary between crypto exchanges and users, offering access to 150+ cryptocurrencies. The company mission is making the exchange process effortless for everyone who wants to invest in cryptocurrency. Operating since 2015, the platform and its mobile app attract over a million visitors monthly who enjoy high limits, fast transactions, and 24/7 live support." <br><br><hr>
+                <h2><span style="color: green; font-size: 30px;">Changelly Powered Atomic Swap</h2><br><img src="../images/changelly.png" alt="" class="data-coin-image" height="400px" width="400px" style="width:400px;height:500px;"><span style="color: gold; font-size: 15px;">Combined Fee 4.5% Charged for this Exchange. Occures in less than 10 minutes. </span><br><br><p> Our wallet leverages Changelly - "Changelly is a non-custodial instant cryptocurrency exchange, which means that no users’ funds are placing in the service. Changelly acts as an intermediary between crypto exchanges and users, offering access to 150+ cryptocurrencies. The company mission is making the exchange process effortless for everyone who wants to invest in cryptocurrency. Operating since 2015, the platform and its mobile app attract over a million visitors monthly who enjoy high limits, fast transactions, and 24/7 live support." <br><br><hr>
                     <br>
                     <u><span style="color: gold; font-size: 13px;">To learn more go to: <a href="https://changelly.com">changelly.com</a></u></p></center>
                 
@@ -135,5 +167,9 @@
                 </div>
             </div>
         </div>
+            <script>
+
+                
+            </script>
     </body>
 </html>
