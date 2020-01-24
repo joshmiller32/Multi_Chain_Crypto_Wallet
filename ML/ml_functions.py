@@ -70,7 +70,7 @@ def get_arima_forecast_plot():
         fig = px.line(forecast_df, x ='Date', y = 'Predicted Price')
         fig.update_xaxes(nticks = 5)
         fig.update_yaxes(automargin=True)
-        fig.update_layout(title_text = f'{ticker} ARIMA Model (Autoregressive Integrated Moving Average)', autosize = True, height = 712, width = 805, template = 'plotly_dark')
+        fig.update_layout(title_text = f'{ticker} ARIMA Model (Autoregressive Integrated Moving Average)', autosize = True, height = 801, width = 930, template = 'plotly_dark')
         write_html(fig, f'./web/{ticker}Arima.html')
         table_df = forecast_df.copy()   
         todays_price = coin_df['close'][-1]
@@ -157,9 +157,9 @@ def get_rf_ensemble_plot():
     for ticker in ticker_list:
         forecast_df = get_rf_ensemble_model(ticker)
         fig = px.line(forecast_df, x = 'index', y = 'Predictions')
-        fig.update_xaxes(title = 'Date', nticks = 5)
+        fig.update_xaxes(nticks = 5, title = 'Date')
         fig.update_yaxes(automargin=True, title = 'Predicted Price')
-        fig.update_layout(height = 712, width = 805, title_text = f'{ticker} Random Forest Ensemble', template = 'plotly_dark')
+        fig.update_layout(autosize = True, height = 801, width = 930, title_text = f'{ticker} Random Forest Ensemble', template = 'plotly_dark')
         write_html(fig, f'./web/{ticker}RFEnsemble.html')
         todays_price = forecast_df[f'{ticker}'][4]
         tommorows_prediction = forecast_df['Predictions'][5]
