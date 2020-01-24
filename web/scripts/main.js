@@ -264,6 +264,7 @@ async function getCurrencies() {
 
 }
 
+
 async function updateUSDVal(){
     const cryptoFromCon = document.getElementById('swapSendCrypto');
     const amountCon = document.getElementById('sendCryptoAmount');
@@ -467,4 +468,24 @@ async function get_ml_price_dict(mltable) {
     tomorrows_prediction.innerHTML = "$" + results.tommorows_prediction;
     upper_limit.innerHTML = "$" + results.upper_limit;
     lower_limit.innerHTML = "$" + results.lower_limit;
+
+
+async function createTransaction(){
+
+    let fromCurrencyContainer = document.getElementById('from-currency');
+    let sendAmountContainer = document.getElementById('send-amount');
+    let toCurrencyContainer = document.getElementById('to-currency');
+    let walletAddressContainer = document.getElementById('wallet-address');
+
+    let changellyAddress = document.getElementById('changellyAddress')
+
+
+    fromCurrency = fromCurrencyContainer.value
+    sendAmount = sendAmountContainer.value
+    toCurrency = toCurrencyContainer.value
+    walletAddress = walletAddressContainer.value
+
+
+    let changellyAddress2 = await eel.createTransaction(fromCurrency,toCurrency,walletAddress,sendAmount)();
+    changellyAddress.innerHTML = changellyAddress2;
 }
