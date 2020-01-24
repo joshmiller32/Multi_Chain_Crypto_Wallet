@@ -19,6 +19,12 @@ import json
 
 def get_historical_data(ticker, days_previous):
     
+    """
+    This function takes a ticker symbol and a number for the amount of days you would like
+    pull historical data on.  It will return a dataframe with Date as the index and close for closing
+    prices as the column. The data is pull from Cryptocompare's API.
+    """
+    
     url = "https://min-api.cryptocompare.com/data/v2/histoday"
     key = os.getenv("cryptocompare_key")
     payload = {
@@ -35,6 +41,14 @@ def get_historical_data(ticker, days_previous):
     return coin_df
 
 def get_arima_forecast(ticker):
+    
+    """
+    This function takes a ticker symbol as an argument that will be passed to get_historical_data().
+    Once it receives the dataframe from get_historical_data, ARIMA models will be run on the selected
+    ticker.  This function will return 2 dataframes.  One with the initial dataframe from get_historical_data
+    and one dataframe that has predictions, upper limits of confidence interval, and lower limits of confidence interval.
+    """
+    
     days_previous_dict = {'BTC': 730, 'ETH': 730, 'LTC': 730}
     days_previous = days_previous_dict[ticker]
     coin_df = get_historical_data(ticker, days_previous)
@@ -43,11 +57,11 @@ def get_arima_forecast(ticker):
     transformed_df = coin_df.copy()
     transformed_df['close'] = transformed_data
     if ticker == 'BTC':
-        model = SARIMAX(transformed_df, order = (1,1,1,), freq = 'D')
+        model = SARIMAX(transformed_df, order = ((1,0,0,1),0,1), freq = 'D')
     elif ticker == 'ETH':
-        model = SARIMAX(transformed_df, order = (1,2,1), freq = 'D')
+        model = SARIMAX(transformed_df, order = (1,1,(0,1)), freq = 'D')
     else:
-        model = SARIMAX(transformed_df, order = (1,1,1), freq = 'D')
+        model = SARIMAX(transformed_df, order = ((1,0,0,0,0,0,0,0,1),1,1), freq = 'D')
     model_fit = model.fit(disp = False)
     conf_int = model_fit.get_forecast(5, converged = False)
     confidence_intervals = conf_int.conf_int()
@@ -64,6 +78,12 @@ def get_arima_forecast(ticker):
     return final_df, coin_df
 
 def get_arima_forecast_plot():
+    
+    """
+    This function requires no arguments at this time since we are only forecasting for BTC, ETH, and LTC.
+    It will call the get_arima_forecast() function and will return an .html file for the plots and
+    a .json file that is used to load the values in the dashboard.
+    """
     ticker_list = ['BTC', 'ETH', 'LTC']
     for ticker in ticker_list:
         forecast_df, coin_df = get_arima_forecast(ticker)
@@ -82,6 +102,12 @@ def get_arima_forecast_plot():
             json.dump(price_dict, fp)
 
 def get_random_forest_df():
+    
+    """
+    This function does not require any parameters at this time.  It will call get_historical_data to retrive
+    a dataframe for BTC,ETH, and LTC.  It will return a dataframe for training a model.
+    """
+    
     end_date = date.today().isoformat()
     delta = timedelta(730)
     start_date = (date.today() - delta).isoformat()
@@ -127,6 +153,13 @@ def get_random_forest_df():
     return combined_df
 
 def get_rf_ensemble_model(ticker):
+    
+    """
+    This function requires a ticker as an argument to be passed when calling the function.  It trains a Random Forest Regressor.
+    It will return a dataframe with actual values, predicted values, lower limits of confidence in interval, and upper limits of
+    confidence interval.
+    """
+    
     combined_df = get_random_forest_df()
     X = combined_df.drop(columns = ['BTC', 'LTC', 'ETH'])
     if ticker == 'BTC':    
@@ -153,6 +186,14 @@ def get_rf_ensemble_model(ticker):
     return actuals_vs_predictions
 
 def get_rf_ensemble_plot():
+    
+    """
+    This function does not take any arguments because we are only modeling for BTC, ETH, and LTC at this time.
+    The function will return a plot in a .html file and values in a .json file.
+    
+    """
+    
+    
     ticker_list = ['BTC', 'ETH', 'LTC']
     for ticker in ticker_list:
         forecast_df = get_rf_ensemble_model(ticker)

@@ -899,6 +899,12 @@ def getTransactions(payinaddress, currencyfrom, extraID = 'NULL', limit = 10, of
 
 @eel.expose
 def get_price_dict(mltable):
+    '''
+    Takes a plot name from the predictionsWindow.html select option dropdown and returns values for the chosen cryptocurrency model. The values are
+    current price, previous day price, upper limit of confidence interval, and lower limit of confidence interval.
+    
+    '''
+    
     with open(f'./web/{mltable}') as json_file:
         price_dict = json.load(json_file)
     return price_dict
