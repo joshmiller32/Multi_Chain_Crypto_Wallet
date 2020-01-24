@@ -194,10 +194,10 @@ async function setPassword() {
     let input = document.getElementById('newpassword');
     let pass = input.value;
     let seed = extractSeed();
+    let loginCheck = await eel.set_password(pass, seed)();
     console.log(pass);
     console.log(seed);
     window.seed_index = -1;
-
     return window.location.replace('mainWindow.html?index='+seed_index);
 }
 
@@ -205,15 +205,6 @@ async function setPassword() {
 async function populateWallet(currency) {
 
     window.currency = currency
-
-    //Current Wallet Balance from Blockchain Explorers
-
-    let btc_balance_response = await fetch(`https://blockchain.info/q/addressbalance/${coin_purse['BTC'][0].address}`);
-    let btc_balance = await btc_balance_response.text();
-    let btc_balance_container = document.getElementById('btc_balance');
-
-    btc_balance_container.innerHTML = btc_balance / 100000000
-
 
     //await getPrices();
     await getPrices();
@@ -237,8 +228,20 @@ async function populateWallet(currency) {
     await getCoinPurse();
 
     getWallet(currency);
-    getBalanceValue();
+    
 
+    
+    //Current Wallet Balance from Blockchain Explorers
+    let btc_balance_response = await fetch(`https://blockchain.info/q/addressbalance/${coin_purse['BTC'][0].address}`);
+    let btc_balance = await btc_balance_response.text();
+    let btc_balance_container = document.getElementById('btc_balance');
+    let btc_balance_container2 = document.getElementById('btc_balance2');
+    
+
+    btc_balance_container.innerHTML = btc_balance / 100000000
+    btc_balance_container2.innerHTML = btc_balance / 100000000
+    
+    getBalanceValue();
 }
 
 async function sendTx(){

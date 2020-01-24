@@ -12,7 +12,6 @@ import plotly.express as px
 from plotly.io import write_html
 from datetime import date, timedelta
 from datetime import datetime
-from fbprophet import Prophet
 import json
 
 
