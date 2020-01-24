@@ -43,12 +43,11 @@ def get_arima_forecast(ticker):
     transformed_df = coin_df.copy()
     transformed_df['close'] = transformed_data
     if ticker == 'BTC':
-        model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1,0,0,0,0,1),1,(1,0,1,1,1)), freq = 'D')
+        model = SARIMAX(transformed_df, order = (1,1,1,), freq = 'D')
     elif ticker == 'ETH':
-        model = SARIMAX(transformed_df, order = ((1,0,0,1),2,1), freq = 'D')
+        model = SARIMAX(transformed_df, order = (1,2,1), freq = 'D')
     else:
-        model = SARIMAX(transformed_df, order = ((0,0,0,0,0,0,0,0,1),1,(0,0,0,0,0,0,0,0,0,1)), freq = 'D')
-
+        model = SARIMAX(transformed_df, order = (1,1,1), freq = 'D')
     model_fit = model.fit(disp = False)
     conf_int = model_fit.get_forecast(5, converged = False)
     confidence_intervals = conf_int.conf_int()
