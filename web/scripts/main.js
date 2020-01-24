@@ -1,4 +1,4 @@
-var word_dict = {}; //We'll have to ask Cam about how to avoid this security vulnerability
+var word_dict = {};
 let password;
 var seed_index;
 var coin_purse = {};
@@ -194,10 +194,10 @@ async function setPassword() {
     let input = document.getElementById('newpassword');
     let pass = input.value;
     let seed = extractSeed();
+    let loginCheck = await eel.set_password(pass, seed)();
     console.log(pass);
     console.log(seed);
     window.seed_index = -1;
-
     return window.location.replace('mainWindow.html?index='+seed_index);
 }
 
@@ -228,8 +228,20 @@ async function populateWallet(currency) {
     await getCoinPurse();
 
     getWallet(currency);
-    getBalanceValue();
+    
 
+    
+    //Current Wallet Balance from Blockchain Explorers
+    let btc_balance_response = await fetch(`https://blockchain.info/q/addressbalance/${coin_purse['BTC'][0].address}`);
+    let btc_balance = await btc_balance_response.text();
+    let btc_balance_container = document.getElementById('btc_balance');
+    let btc_balance_container2 = document.getElementById('btc_balance2');
+    
+
+    btc_balance_container.innerHTML = btc_balance / 100000000
+    btc_balance_container2.innerHTML = btc_balance / 100000000
+    
+    getBalanceValue();
 }
 
 async function sendTx(){
@@ -413,6 +425,7 @@ async function launchMainWindow(){
     return window.location.replace('mainWindow.html?index='+seed_index);
 }
 
+
 async function predictionsWindow(){
     return window.location.replace('predictionsWindow.html?index='+seed_index);
 }
@@ -488,4 +501,5 @@ async function createTransaction(){
 
     let changellyAddress2 = await eel.createTransaction(fromCurrency,toCurrency,walletAddress,sendAmount)();
     changellyAddress.innerHTML = changellyAddress2;
+
 }
