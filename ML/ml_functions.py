@@ -12,7 +12,7 @@ import plotly.express as px
 from plotly.io import write_html
 from datetime import date, timedelta
 from datetime import datetime
-
+import json
 
 
 
@@ -62,17 +62,25 @@ def get_arima_forecast(ticker):
     final_df = final_df.round(2)
     final_df = final_df.reset_index()
     final_df = final_df.rename(columns = {'index': 'Date'})
-    return final_df
+    return final_df, coin_df
 
 def get_arima_forecast_plot():
     ticker_list = ['BTC', 'ETH', 'LTC']
     for ticker in ticker_list:
-        forecast_df = get_arima_forecast(ticker)
+        forecast_df, coin_df = get_arima_forecast(ticker)
         fig = px.line(forecast_df, x ='Date', y = 'Predicted Price')
         fig.update_xaxes(nticks = 5)
         fig.update_yaxes(automargin=True)
         fig.update_layout(title_text = f'{ticker} ARIMA Model (Autoregressive Integrated Moving Average)', autosize = True, height = 712, width = 805, template = 'plotly_dark')
         write_html(fig, f'./web/{ticker}Arima.html')
+        table_df = forecast_df.copy()   
+        todays_price = coin_df['close'][-1]
+        tommorows_prediction = table_df['Predicted Price'][0]
+        upper_limit = table_df['upper close'][0]
+        lower_limit = table_df['lower close'][0]
+        price_dict = {'todays_price': todays_price, 'tommorows_prediction': tommorows_prediction, 'upper_limit': upper_limit, 'lower_limit': lower_limit}
+        with open(f'./web/{ticker}Arima.json', 'w') as fp:
+            json.dump(price_dict, fp)
 
 def get_random_forest_df():
     end_date = date.today().isoformat()
@@ -135,9 +143,13 @@ def get_rf_ensemble_model(ticker):
     regressor = RandomForestQuantileRegressor(random_state = 0, n_estimators = 500)
     model = regressor.fit(X_train, y_train)
     predictions = model.predict(X_test)
+    uppers = model.predict(X_test, quantile = 98.5)
+    lowers = model.predict(X_test, quantile = 2.5)
     actuals = pd.DataFrame(y_test)
     actuals_vs_predictions = actuals.copy()
-    actuals_vs_predictions['Predictions'] = predictions
+    actuals_vs_predictions['lower close'] = lowers.round(2)
+    actuals_vs_predictions['upper close'] = uppers.round(2)
+    actuals_vs_predictions['Predictions'] = predictions.round(2)
     actuals_vs_predictions = actuals_vs_predictions.reset_index()
     return actuals_vs_predictions
 
@@ -150,3 +162,10 @@ def get_rf_ensemble_plot():
         fig.update_yaxes(automargin=True, title = 'Predicted Price')
         fig.update_layout(height = 712, width = 805, title_text = f'{ticker} Random Forest Ensemble', template = 'plotly_dark')
         write_html(fig, f'./web/{ticker}RFEnsemble.html')
+        todays_price = forecast_df[f'{ticker}'][4]
+        tommorows_prediction = forecast_df['Predictions'][5]
+        upper_limit= forecast_df['upper close'][5]
+        lower_limit = forecast_df['lower close'][5]
+        price_dict = {'todays_price': todays_price, 'tommorows_prediction': tommorows_prediction, 'upper_limit': upper_limit, 'lower_limit': lower_limit}
+        with open(f'./web/{ticker}RFEnsemble.json', 'w') as fp:
+            json.dump(price_dict, fp)
