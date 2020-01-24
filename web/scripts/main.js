@@ -396,12 +396,24 @@ async function loadSwapWindow(){
     getCryptoPrices();
 }
 
-async function launchSwapWindow(){
+async function swapWindow(){
     return window.location.replace('swapWindow.html?index='+seed_index);
 }
 
 async function launchMainWindow(){
     return window.location.replace('mainWindow.html?index='+seed_index);
+}
+
+async function predictionsWindow(){
+    return window.location.replace('predictionsWindow.html?index='+seed_index);
+}
+
+async function stakingWindow(){
+    return window.location.replace('stakingWindow.html?index='+seed_index);
+}
+
+async function exchangeWindow(){
+    return window.location.replace('exchangeWindow.html?index='+seed_index);
 }
 
 async function loadJSON(file_name) {   
