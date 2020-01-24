@@ -253,6 +253,17 @@ function myFunction() {
 
 
 
+//comment
+async function getCurrencies() {
+
+    let currencies = document.getElementById('currencies');
+
+    currencies = eel.getCurrencies();
+
+    console.log(currencies);
+
+}
+
 async function updateUSDVal(){
     const cryptoFromCon = document.getElementById('swapSendCrypto');
     const amountCon = document.getElementById('sendCryptoAmount');
@@ -313,11 +324,11 @@ async function participate(){
     const sendTo = partSendToAddCon.value;
 
     const amountToSend = auditedTx.value * price_dict[receivingCur].USD / price_dict[sendingCur].USD;
-    tx = await eel.participateSwap(sendingCur, 
-            receivingCur, 
-            coin_purse[sendingCur][0].privkey, 
-            sendTo, amountToSend, 
-            contractCon.value, 
+    tx = await eel.participateSwap(sendingCur,
+            receivingCur,
+            coin_purse[sendingCur][0].privkey,
+            sendTo, amountToSend,
+            contractCon.value,
             partTxAddCon.value)
 
     console.log(tx);
@@ -339,7 +350,7 @@ async function redeem(){
 
     const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
 
-    redeem_tx = await eel.redeem_tx(cryptoTo, 
+    redeem_tx = await eel.redeem_tx(cryptoTo,
         coin_purse[cryptoTo][0].privkey, // CHANGE [0] TO coin_purse[cryptoTo][0].privkey. ONLY FOR DEVELOPING PURPOSES
         contractNumCon.value, txAddCon.value)();
 
@@ -371,6 +382,7 @@ async function startSwap(){
     const starterTxCon = document.getElementById('myTxNum');
     const cryptoEquiCon = document.getElementById('cryptoEqui');
 
+
     const cryptoFrom = cryptoFromCon[cryptoFromCon.selectedIndex].value;
     const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
     const amount = amountCon.value;
@@ -383,7 +395,7 @@ async function startSwap(){
     contractAddCon.innerHTML = tx.contract;
     starterTxCon.innerHTML = tx.transaction_address;
 
-    
+
 }
 
 
@@ -412,7 +424,7 @@ async function exchangeWindow(){
     return window.location.replace('exchangeWindow.html?index='+seed_index);
 }
 
-async function loadJSON(file_name) {   
+async function loadJSON(file_name) {
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -429,24 +441,24 @@ async function loadJSON(file_name) {
  function openSwapTab(evt, option) {
     // Declare all variables
     var i, tabcontent, tablinks;
-  
+
     // Get all elements with class="tabcontent" and hide them
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
       tabcontent[i].style.display = "none";
     }
-  
+
     // Get all elements with class="tablinks" and remove the class "active"
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
       tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-  
+
     // Show the current tab, and add an "active" class to the button that opened the tab
     document.getElementById(option).style.display = "block";
     evt.currentTarget.className += " active";
 }
-    
+
 async function get_ml_price_dict(mltable) {
     window.mltable = mltable;
     let results = await eel.get_price_dict(mltable)();
