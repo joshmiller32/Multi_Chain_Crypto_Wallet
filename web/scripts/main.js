@@ -481,7 +481,7 @@ async function get_ml_price_dict(mltable) {
     tomorrows_prediction.innerHTML = "$" + results.tommorows_prediction;
     upper_limit.innerHTML = "$" + results.upper_limit;
     lower_limit.innerHTML = "$" + results.lower_limit;
-
+}
 
 async function createTransaction(){
 
