@@ -1,4 +1,4 @@
-var word_dict = {}; //We'll have to ask Cam about how to avoid this security vulnerability
+var word_dict = {}; 
 let password;
 var seed_index;
 var coin_purse = {};
@@ -23,7 +23,7 @@ async function getCoinPurse() {
 
 
 async function getWords() {
-// Create the JAVA containers (variable) and link them to the HTML container.      
+// Create the JAVA containers (variable) and link them to the HTML container.
 // There needs to be a container with the id= to the getElementById() argument.  (HTML Example for the argument used below <div id="word1_box"></div>)
     let word1_container = document.getElementById('word1_box');
     let word2_container = document.getElementById('word2_box');
@@ -36,16 +36,16 @@ async function getWords() {
     let word9_container = document.getElementById('word9_box');
     let word10_container = document.getElementById('word10_box');
     let word11_container = document.getElementById('word11_box');
-    let word12_container = document.getElementById('word12_box');  
-    
-        
-// Call into Python and set the JAVA container equal to the Python variable 
+    let word12_container = document.getElementById('word12_box');
+
+
+// Call into Python and set the JAVA container equal to the Python variable
 // Note the double ()() the first is for arguments intered into the function and the second is for callback function.
 
 // In this case the function returns an object (Python Dict) which we can then access the "key/value" pairs
-    
+
     word_dict = await eel.create_seed()();
-    
+
     word1_container.innerHTML = word_dict.word1;
     word2_container.innerHTML = word_dict.word2;
     word3_container.innerHTML = word_dict.word3;
@@ -69,20 +69,19 @@ async function getWallet(coin) {
     let USDbalance = document.getElementById('USDbalance');
     let titleContainer = document.getElementById('title');
     let descrContainer  = document.getElementById('description');
-    
-    
+
     QRloaded =  eel.make_qr(coin_purse[coin][0].address)();
     var QRcode = new Image;
-    
+
     let title = xmlDoc.getElementsByTagName(coin)[0].children[0].innerHTML;
-    
+
     let description = xmlDoc.getElementsByTagName(coin)[0].children[1].innerHTML;
-    
+
     titleContainer.innerHTML = title;
     descrContainer.innerHTML = description;
-    QRcode.onload = function() 
+    QRcode.onload = function()
         {
-        
+
         QR.src = this.src;
         }
     QR.src = "images/QR.png";
@@ -90,12 +89,12 @@ async function getWallet(coin) {
 
     let acc_balance = await eel.get_balance(coin, coin_purse[coin][0].privkey)();
     console.log(acc_balance);
-       
+
     let usd_balance = acc_balance*price_dict[coin].USD;
-    
+
     balance.innerHTML = acc_balance;
     USDbalance.innerHTML = usd_balance;
-      
+
 }
 
 
@@ -111,7 +110,7 @@ async function getPrices() {
     let xrp_usd_container = document.getElementById('xrp_usd');
     let zec_usd_container = document.getElementById('zec_usd');
     let xlm_usd_container = document.getElementById('xlm_usd');
-    
+
     //window.price_dict = await eel.get_prices()();
     btc_usd_container.innerHTML = '$' + price_dict.BTC.USD;
     btg_usd_container.innerHTML = '$' + price_dict.BTG.USD;
@@ -134,7 +133,7 @@ async function getBalanceValue() {
     let xrp_usd_value = document.getElementById('xrp_usd_value');
     let zec_usd_value = document.getElementById('zec_usd_value');
     let xlm_usd_value = document.getElementById('xlm_usd_value');
-    
+
     let btc_balance = document.getElementById('btc_balance');
     let btg_balance = document.getElementById('btg_balance');
     let bch_balance = document.getElementById('bch_balance');
@@ -144,7 +143,7 @@ async function getBalanceValue() {
     let xrp_balance = document.getElementById('xrp_balance');
     let zec_balance = document.getElementById('zec_balance');
     let xlm_balance = document.getElementById('xlm_balance');
-    
+
     //price_dict = await eel.get_prices()();
     //console.log(price_dict);
     btc_usd_value.innerHTML = '$' + (Math.round((btc_balance.innerHTML * price_dict.BTC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
@@ -179,15 +178,15 @@ async function checkPassword() {
 }
 
 function extractSeed() {
-    
+
     var seed = "";
     for(var key in word_dict) {
       seed += word_dict[key] +  " ";
     }
     return seed;
 }
-    
-    
+
+
 async function setPassword() {
 
     let input = document.getElementById('newpassword');
@@ -205,7 +204,16 @@ async function setPassword() {
 async function populateWallet(currency) {
 
     window.currency = currency
-    
+
+    //Current Wallet Balance from Blockchain Explorers
+
+    let btc_balance_response = await fetch(`https://blockchain.info/q/addressbalance/${coin_purse['BTC'][0].address}`);
+    let btc_balance = await btc_balance_response.text();
+    let btc_balance_container = document.getElementById('btc_balance');
+
+    btc_balance_container.innerHTML = btc_balance / 100000000
+
+
     //await getPrices();
     await getPrices();
 
@@ -215,21 +223,21 @@ async function populateWallet(currency) {
             if (this.readyState == 4 && this.status == 200) {
                 console.log(xmlDoc);
                 window.xmlDoc = xmlDoc.responseXML;
-            
+
            }};
         xhttp.open("GET", "text.xml", true);
         xhttp.setRequestHeader("Content-Type", "text/xml");
         xhttp.send();
         window.xmlDoc = xhttp;
-        
+
     //console.log(seed_index);
     //const seed = await eel.decrypt_seed(seed_index)();
     //window.coin_purse = await eel.get_wallets(seed)();
     await getCoinPurse();
-    
+
     getWallet(currency);
     getBalanceValue();
-    
+
 }
 
 async function sendTx(){
@@ -239,7 +247,7 @@ async function sendTx(){
     let to = SendToInput.value;
     let amount = amountInput.value;
 
-    tx = await eel.send_tx(currency, coin_purse[currency][0].privkey, to, amount);   
+    tx = await eel.send_tx(currency, coin_purse[currency][0].privkey, to, amount);
 }
 
 function windowClose() {
@@ -272,7 +280,7 @@ async function startSwap(){
     const swapToAddCon = document.getElementById('swapToAdd');
     const usdValtoSendCon = document.getElementById('USDswapSend');
 
-    
+
     const cryptoFrom = cryptoFromCon[cryptoFromCon.selectedIndex].value;
     const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
     const amount = amountCon.value;
