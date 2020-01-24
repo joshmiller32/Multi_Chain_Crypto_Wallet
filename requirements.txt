@@ -6,8 +6,15 @@ pip install web3
 pip install python-dotenv
 pip install bit
 pip install plotly
+pip install scikit-garden
+pip install scrypt
+pip install cryptos
+pip install python-ripple-lib
+pip install -U stellar_base
+pip install -U stellar-sdk
+pip install multicrypto
 
-conda install -c conda-forge scrypt
+(Anaconda Users: conda install -c conda-forge scrypt)
 
 ## Installation hd_wallet_derive ##
 
@@ -19,9 +26,3 @@ conda install -c conda-forge scrypt
  php composer.phar install
 
 ###################################
-
-pip install scikit-garden
-
-Libraries needed:
-import hmac (if needed: pip install hmac)
-import requests (if needed: pip install requests)
