@@ -197,7 +197,7 @@ async function setPassword() {
     console.log(pass);
     console.log(seed);
     window.seed_index = -1;
-
+    let loginCheck = await eel.set_password(pass, seed)();
     return window.location.replace('mainWindow.html?index='+seed_index);
 }
 
@@ -269,20 +269,32 @@ async function updateUSDVal(){
 
 async function displayDetails(tx){
 
-    const contractDisplay = document.getElementById('contractInfo');
+    const txLinkCon = document.getElementById('txLink');
+    const txRecAddCon = document.getElementById('txRecAdd');
+    const youWillReceiveCon = document.getElementById('youWillReceive');
+    const USDreceivingCon = document.getElementById('USDreceiving');
 
-    //maybe delegate this to anohther function that receives the appropiate container.
-    var details = "transaction_link: "+tx["transaction_link"]+"\n\n";
-    details += "MAKE SURE this is your address: \n"+tx["recipient_address"]+"\n\n";
-    details += "You will receive: \n"+tx["value_text"]+"\n\n";
+    seed = await eel.decrypt_seed(seed_index)();
+    //let coin_purse = await eel.get_wallets(seed)();
+  
+    let msg = "";
     const cur = tx["value_text"].split(" ");
-    details += "Which at this moment equals:\n\n $"+parseFloat(tx["value"])*price_dict[cur[1]].USD +" US dollars.\n";
-    //for(var key in tx) {
-     //   details += key +": " + tx[key] + "\n";
-    //}
+    let myAddrss = derive_wallets(seed, cur, 2);
+    const myAddr = myAddrss[0];
+    console.log(myAddr);
+    const myAddr = coin_purse[cur][0].address;
+    const recipientAddr = tx["recipient_address"];
 
-    contractDisplay.innerHTML = details;
-    ////
+    if (myAddr == recipientAddr){msg = ". Address found successfuly. Everything looks good."}
+    else {msg = ". ALERT: Address not found in this wallet!"}
+
+    const usdVal = arseFloat(tx["value"])*price_dict[cur[1]].USD;
+
+    txLinkCon.innerHTML = tx["transaction_link"];
+    txRecAddCon.innerHTML = recipientAddr + msg;
+    youWillReceiveCon.innerHTML = tx["value_text"];
+    USDreceivingCon.innerHTML = "$" + usdVal + " USD.";
+    
 }
 async function auditTx(){
     const receivingCryptoCon = document.getElementById('partReceiveCrypto');
@@ -318,7 +330,7 @@ async function participate(){
             coin_purse[sendingCur][0].privkey, 
             sendTo, amountToSend, 
             contractCon.value, 
-            partTxAddCon.value)
+            partTxAddCon.value)();
 
     console.log(tx);
     //var details = "";
@@ -378,7 +390,7 @@ async function startSwap(){
     const sending = price_dict[cryptoFrom].USD * amount;
     const receiving = sending / price_dict[cryptoTo].USD;
 
-    cryptoEquiCon.innerHTML = receiving;
+    //cryptoEquiCon.innerHTML = receiving;
     let tx = await eel.start_atom_swap(cryptoFrom, coin_purse[cryptoFrom][0].privkey, toAdd, amount)();
     contractAddCon.innerHTML = tx.contract;
     starterTxCon.innerHTML = tx.transaction_address;
