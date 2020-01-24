@@ -1,10 +1,11 @@
-var word_dict = {}; 
+var word_dict = {};
 let password;
 var seed_index;
 var coin_purse = {};
 var price_dict = {};
 var currency;
 var xmlDoc;
+var auditedTx;
 
 async function setSeedIndex(index) {
     window.seed_index = index;
@@ -69,6 +70,7 @@ async function getWallet(coin) {
     let USDbalance = document.getElementById('USDbalance');
     let titleContainer = document.getElementById('title');
     let descrContainer  = document.getElementById('description');
+
 
     QRloaded =  eel.make_qr(coin_purse[coin][0].address)();
     var QRcode = new Image;
@@ -194,7 +196,6 @@ async function setPassword() {
     let seed = extractSeed();
     console.log(pass);
     console.log(seed);
-    let loginCheck = await eel.set_password(pass, seed)();
     window.seed_index = -1;
 
     return window.location.replace('mainWindow.html?index='+seed_index);
@@ -255,9 +256,11 @@ function windowClose() {
     window.close();
 }
 
-function myFunction(x) {
+function myFunction() {
   //console.log("Row index is: " + x.rowIndex);
 }
+
+
 
 async function updateUSDVal(){
     const cryptoFromCon = document.getElementById('swapSendCrypto');
@@ -273,21 +276,125 @@ async function updateUSDVal(){
     usdValtoSendCon.innerHTML = "$"+USD;
 }
 
+async function displayDetails(tx){
+
+    const contractDisplay = document.getElementById('contractInfo');
+
+    //maybe delegate this to anohther function that receives the appropiate container.
+    var details = "transaction_link: "+tx["transaction_link"]+"\n\n";
+    details += "MAKE SURE this is your address: \n"+tx["recipient_address"]+"\n\n";
+    details += "You will receive: \n"+tx["value_text"]+"\n\n";
+    const cur = tx["value_text"].split(" ");
+    details += "Which at this moment equals:\n\n $"+parseFloat(tx["value"])*price_dict[cur[1]].USD +" US dollars.\n";
+    //for(var key in tx) {
+     //   details += key +": " + tx[key] + "\n";
+    //}
+
+    contractDisplay.innerHTML = details;
+    ////
+}
+async function auditTx(){
+    const receivingCryptoCon = document.getElementById('partReceiveCrypto');
+    const contractCon = document.getElementById('particContractN');
+    const partTxAddCon = document.getElementById('partTxAdd');
+
+    const cryptoFrom = receivingCryptoCon[receivingCryptoCon.selectedIndex].value;
+
+    window.auditedTx = await eel.audit_tx(cryptoFrom, contractCon.value, partTxAddCon.value, false)();
+    console.log(auditedTx);
+    displayDetails(auditedTx);
+
+    return auditedTx;
+}
+
+async function participate(){
+    const receivingCryptoCon = document.getElementById('partReceiveCrypto');
+    const sendingCryptoCon = document.getElementById('partSendCrypto');
+    const contractCon = document.getElementById('particContractN');
+    const partTxAddCon = document.getElementById('partTxAdd');
+    const partSendToAddCon = document.getElementById('partToAdd');
+    //const contractDisplayCon = document.getElementById('partContractInfo');
+    const contractAddCon = document.getElementById('partContractAdd');
+    const starterTxCon = document.getElementById('partTxNum');
+
+    const receivingCur = receivingCryptoCon[receivingCryptoCon.selectedIndex].value;
+    const sendingCur = sendingCryptoCon[sendingCryptoCon.selectedIndex].value;
+    const sendTo = partSendToAddCon.value;
+
+    const amountToSend = auditedTx.value * price_dict[receivingCur].USD / price_dict[sendingCur].USD;
+    tx = await eel.participateSwap(sendingCur,
+            receivingCur,
+            coin_purse[sendingCur][0].privkey,
+            sendTo, amountToSend,
+            contractCon.value,
+            partTxAddCon.value)
+
+    console.log(tx);
+    //var details = "";
+    //for(var key in tx) {
+    //    details += key +": " + tx[key] + "\n";
+   // }
+    //contractDisplayCon.innerHTML = details;
+    contractAddCon.innerHTML = tx.contract;
+    starterTxCon.innerHTML = tx.transaction_address;
+    return tx;
+
+}
+
+async function redeem(){
+    const cryptoToCon = document.getElementById('swapReceiveCrypto');
+    const contractNumCon = document.getElementById('incomingContractAdd');
+    const txAddCon = document.getElementById('incomingTxNum');
+
+    const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
+
+    redeem_tx = await eel.redeem_tx(cryptoTo,
+        coin_purse[cryptoTo][0].privkey, // CHANGE [0] TO coin_purse[cryptoTo][0].privkey. ONLY FOR DEVELOPING PURPOSES
+        contractNumCon.value, txAddCon.value)();
+
+    console.log(redeem_tx);
+
+}
+
+async function finishSwap(){
+    const receivingCryptoCon = document.getElementById('partReceiveCrypto');
+    const sendingCryptoCon = document.getElementById('partSendCrypto');
+    const contractCon = document.getElementById('particContractN');
+    const partTxAddCon = document.getElementById('partTxAdd');
+
+    const receivingCur = receivingCryptoCon[receivingCryptoCon.selectedIndex].value;
+    const sendingCur = sendingCryptoCon[sendingCryptoCon.selectedIndex].value;
+
+    tx = await eel.finish_swap(sendingCur, receivingCur, coin_purse[receivingCur][0].privkey,
+        contractCon.value, partTxAddCon.value)
+    console.log(tx)
+}
+
+
 async function startSwap(){
     const cryptoFromCon = document.getElementById('swapSendCrypto');
     const cryptoToCon = document.getElementById('swapReceiveCrypto');
     const amountCon = document.getElementById('sendCryptoAmount');
     const swapToAddCon = document.getElementById('swapToAdd');
-    const usdValtoSendCon = document.getElementById('USDswapSend');
-
+    const contractAddCon = document.getElementById('myContractAdd');
+    const starterTxCon = document.getElementById('myTxNum');
+    const cryptoEquiCon = document.getElementById('cryptoEqui');
 
     const cryptoFrom = cryptoFromCon[cryptoFromCon.selectedIndex].value;
     const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
     const amount = amountCon.value;
     const toAdd = swapToAddCon.value;
-    start_atom_swap(coin, privkey, to, amount)
+    const sending = price_dict[cryptoFrom].USD * amount;
+    const receiving = sending / price_dict[cryptoTo].USD;
+
+    cryptoEquiCon.innerHTML = receiving;
+    let tx = await eel.start_atom_swap(cryptoFrom, coin_purse[cryptoFrom][0].privkey, toAdd, amount)();
+    contractAddCon.innerHTML = tx.contract;
+    starterTxCon.innerHTML = tx.transaction_address;
+
 
 }
+
 
 async function loadSwapWindow(){
     getCoinPurse();
@@ -300,4 +407,49 @@ async function launchSwapWindow(){
 
 async function launchMainWindow(){
     return window.location.replace('mainWindow.html?index='+seed_index);
+}
+
+async function loadJSON(file_name) {
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          console.log(this);
+        //document.getElementById("demo").innerHTML = myObj.name;
+      }
+    };
+    xmlhttp.open("GET", file_name, true);
+    xmlhttp.send();
+    return xmlhttp;
+ }
+
+ function openSwapTab(evt, option) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(option).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+async function get_ml_price_dict(mltable) {
+    window.mltable = mltable;
+    let results = await eel.get_price_dict(mltable)();
+    console.log(results);
+    todays_price.innerHTML = "$" + results.todays_price;
+    tomorrows_prediction.innerHTML = "$" + results.tommorows_prediction;
+    upper_limit.innerHTML = "$" + results.upper_limit;
+    lower_limit.innerHTML = "$" + results.lower_limit;
 }
