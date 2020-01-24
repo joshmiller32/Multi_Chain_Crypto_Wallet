@@ -228,19 +228,19 @@ async function populateWallet(currency) {
     await getCoinPurse();
 
     getWallet(currency);
-    
 
-    
+
+
     //Current Wallet Balance from Blockchain Explorers
     let btc_balance_response = await fetch(`https://blockchain.info/q/addressbalance/${coin_purse['BTC'][0].address}`);
     let btc_balance = await btc_balance_response.text();
     let btc_balance_container = document.getElementById('btc_balance');
     let btc_balance_container2 = document.getElementById('btc_balance2');
-    
+
 
     btc_balance_container.innerHTML = btc_balance / 100000000
     btc_balance_container2.innerHTML = btc_balance / 100000000
-    
+
     getBalanceValue();
 }
 
@@ -263,6 +263,18 @@ function myFunction() {
   //console.log("Row index is: " + x.rowIndex);
 }
 
+
+
+//comment
+async function getCurrencies() {
+
+    let currencies = document.getElementById('currencies');
+
+    currencies = eel.getCurrencies();
+
+    console.log(currencies);
+
+}
 
 
 async function updateUSDVal(){
@@ -383,6 +395,7 @@ async function startSwap(){
     const starterTxCon = document.getElementById('myTxNum');
     const cryptoEquiCon = document.getElementById('cryptoEqui');
 
+
     const cryptoFrom = cryptoFromCon[cryptoFromCon.selectedIndex].value;
     const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
     const amount = amountCon.value;
@@ -404,12 +417,25 @@ async function loadSwapWindow(){
     getCryptoPrices();
 }
 
-async function launchSwapWindow(){
+async function swapWindow(){
     return window.location.replace('swapWindow.html?index='+seed_index);
 }
 
 async function launchMainWindow(){
     return window.location.replace('mainWindow.html?index='+seed_index);
+}
+
+
+async function predictionsWindow(){
+    return window.location.replace('predictionsWindow.html?index='+seed_index);
+}
+
+async function stakingWindow(){
+    return window.location.replace('stakingWindow.html?index='+seed_index);
+}
+
+async function exchangeWindow(){
+    return window.location.replace('exchangeWindow.html?index='+seed_index);
 }
 
 async function loadJSON(file_name) {
@@ -455,4 +481,26 @@ async function get_ml_price_dict(mltable) {
     tomorrows_prediction.innerHTML = "$" + results.tommorows_prediction;
     upper_limit.innerHTML = "$" + results.upper_limit;
     lower_limit.innerHTML = "$" + results.lower_limit;
+
+
+
+async function createTransaction(){
+
+    let fromCurrencyContainer = document.getElementById('from-currency');
+    let sendAmountContainer = document.getElementById('send-amount');
+    let toCurrencyContainer = document.getElementById('to-currency');
+    let walletAddressContainer = document.getElementById('wallet-address');
+
+    let changellyAddress = document.getElementById('changellyAddress')
+
+
+    fromCurrency = fromCurrencyContainer.value
+    sendAmount = sendAmountContainer.value
+    toCurrency = toCurrencyContainer.value
+    walletAddress = walletAddressContainer.value
+
+
+    let changellyAddress2 = await eel.createTransaction(fromCurrency,toCurrency,walletAddress,sendAmount)();
+    changellyAddress.innerHTML = changellyAddress2;
+
 }

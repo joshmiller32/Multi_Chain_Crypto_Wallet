@@ -2,7 +2,7 @@
     <BTC>
         <title>Bitcoin</title>
         <description lang="en"> Bitcoin is a digital currency created in January 2009. 
-        It follows the ideas set out in a whitepaper by the mysterious and pseudonymous 
+        created by the mysterious
         developer Satoshi Nakamoto, whose true identity has yet to be verified. Bitcoin 
         offers the promise of lower transaction fees than traditional payment mechanisms 
         and is decentralized, unlike government-issued currencies.</description>
@@ -21,8 +21,7 @@
         <title>Bitcoin Cash</title>
         <description lang="en"> Bitcoin cash is a cryptocurrency created in August 2017, from 
         a fork of Bitcoin. Bitcoin Cash increases the size of blocks, allowing more 
-        transactions to be processed. The cryptocurrency underwent another fork in November 
-        2018 and split into BCH and BSV. It is referred to as Bitcoin Cash because it uses the 
+        transactions to be processed. is referred to as Bitcoin Cash because it uses the 
         original Bitcoin Cash client. 
         </description>
     </BCH>
@@ -31,8 +30,7 @@
         <title>Litecoin</title>
         <description lang="en">Launched in the year 2011, Litecoin is an alternative 
         cryptocurrency based on the model of Bitcoin. Litecoin was created by an MIT graduate 
-        and former Google engineer named Charlie Lee. Litecoin is based on an open source global 
-        payment network that is not controlled by any central authority. Litecoin differs from 
+        and former Google engineer named Charlie Lee.Litecoin differs from 
         Bitcoins in aspects like faster block generation rate and use of scrypt as a proof of 
         work scheme. </description>
     </LTC>

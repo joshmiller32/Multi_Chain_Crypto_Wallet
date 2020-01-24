@@ -2,7 +2,7 @@ body {
     margin:0;
 	padding:0;
 	border:0;
-    background-color: #333333;      
+    background-color: #333333;
     size: 100%;
     width:100%;
     font-size:90%;
@@ -15,14 +15,14 @@ h1 {
 }
 
 h2 {
-    
+
     color: #FFFFFF;
     margin:.8em 0 .2em 0;
 	padding:0;
 }
 
 h3 {
-    
+
     color: #FFFF00;
     margin:.8em 0 .2em 0;
 	padding:0;
@@ -126,7 +126,7 @@ button#wordsButton {
     text-transform: uppercase;
     text-decoration:none;
     bottom: 20px;
-    right: 20px; 
+    right: 20px;
 }
 
 button#backButton {
@@ -140,7 +140,7 @@ button#backButton {
     text-transform: uppercase;
     text-decoration:none;
     bottom: 20px;
-    left: 20px; 
+    left: 20px;
 }
 
 /* Start Images */
@@ -178,7 +178,7 @@ img {
 	float:left;
 	position:relative;
     height: 100vh;
-	/* no left and right padding on columns, we just make them narrower instead 
+	/* no left and right padding on columns, we just make them narrower instead
 					only padding top and bottom is included here, make it whatever value you need */
 	overflow:hidden;
 }
@@ -228,6 +228,3 @@ img {
     background-color: gold;
 
 }
-
-
-
