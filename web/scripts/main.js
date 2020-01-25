@@ -199,7 +199,7 @@ async function setPassword() {
     console.log(seed);
     window.seed_index = -1;
 
-    let loginCheck = await eel.set_password(pass, seed)();
+    //let loginCheck = await eel.set_password(pass, seed)();
 
     return window.location.replace('mainWindow.html?index='+seed_index);
 }
@@ -309,7 +309,7 @@ async function displayDetails(tx){
     let myAddrss = derive_wallets(seed, cur, 2);
     const myAddr = myAddrss[0];
     console.log(myAddr);
-    const myAddr = coin_purse[cur][0].address;
+    //const myAddr = coin_purse[cur][0].address;
     const recipientAddr = tx["recipient_address"];
 
     if (myAddr == recipientAddr){msg = ". Address found successfuly. Everything looks good."}
