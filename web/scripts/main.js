@@ -228,19 +228,19 @@ async function populateWallet(currency) {
     await getCoinPurse();
 
     getWallet(currency);
-    
 
-    
+
+
     //Current Wallet Balance from Blockchain Explorers
     let btc_balance_response = await fetch(`https://blockchain.info/q/addressbalance/${coin_purse['BTC'][0].address}`);
     let btc_balance = await btc_balance_response.text();
     let btc_balance_container = document.getElementById('btc_balance');
     let btc_balance_container2 = document.getElementById('btc_balance2');
-    
+
 
     btc_balance_container.innerHTML = btc_balance / 100000000
     btc_balance_container2.innerHTML = btc_balance / 100000000
-    
+
     getBalanceValue();
 }
 
@@ -482,6 +482,7 @@ async function get_ml_price_dict(mltable) {
     upper_limit.innerHTML = "$" + results.upper_limit;
     lower_limit.innerHTML = "$" + results.lower_limit;
 }
+
 
 async function createTransaction(){
 
