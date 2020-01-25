@@ -235,15 +235,60 @@ async function populateWallet(currency) {
 
 
     //Current Wallet Balance from Blockchain Explorers
+    //Get BTC Balance
     let btc_balance_response = await fetch(`https://blockchain.info/q/addressbalance/${coin_purse['BTC'][0].address}`);
     let btc_balance = await btc_balance_response.text();
     let btc_balance_container = document.getElementById('btc_balance');
     let btc_balance_container2 = document.getElementById('btc_balance2');
+    btc_balance_container.innerHTML = btc_balance / 100000000;
+    btc_balance_container2.innerHTML = btc_balance / 100000000;
+    
+    //Get BCH Balance
+    var bch_cashaddr = coin_purse['BCH'][0].address;
+    let bch_cashaddr_balance_request = await fetch(`https://api.blockchair.com/bitcoin-cash/dashboards/address/${bch_cashaddr}`);
+    let bch_cashaddr_balance_response = await bch_cashaddr_balance_request.json();
+    let bch_legacy_addr = await bch_cashaddr_balance_response["data"][bch_cashaddr]["address"]["formats"]["legacy"];
+    let bch_balance_request = await fetch(`https://api.blockchair.com/bitcoin-cash/dashboards/address/${bch_legacy_addr}`);
+    let bch_balance_response = await bch_balance_request.json();
+    let bch_balance = bch_balance_response["data"][bch_legacy_addr]["address"]["balance"];
+    let bch_balance_container = document.getElementById('bch_balance');
+    bch_balance_container.innerHTML = bch_balance / 100000000;
+    
+    //Get LTC Balance
+    let ltc_balance_request = await fetch(`https://api.blockcypher.com/v1/ltc/main/addrs/${coin_purse['LTC'][0].address}/balance`);
+    let ltc_balance_response = await ltc_balance_request.json();
+    let ltc_balance = await ltc_balance_response['balance'];
+    let ltc_balance_container = document.getElementById('ltc_balance');
+    ltc_balance_container.innerHTML = ltc_balance / 100000000;
+    
+    //Get DASH Balance
+    let dash_balance_request = await fetch(`https://api.blockcypher.com/v1/dash/main/addrs/${coin_purse['DASH'][0].address}/balance`);
+    let dash_balance_response = await dash_balance_request.json();
+    let dash_balance = await dash_balance_response['balance'];
+    let dash_balance_container = document.getElementById('dash_balance');
+    dash_balance_container.innerHTML = dash_balance / 100000000;
 
-
-    btc_balance_container.innerHTML = btc_balance / 100000000
-    btc_balance_container2.innerHTML = btc_balance / 100000000
-
+    //Get DOGE Balance
+    let doge_balance_request = await fetch(`https://dogechain.info/api/v1/address/balance/${coin_purse['DOGE'][0].address}`);
+    let doge_balance_response = await doge_balance_request.json();
+    let doge_balance = await doge_balance_response['balance'];
+    let doge_balance_container = document.getElementById('doge_balance');
+    doge_balance_container.innerHTML = doge_balance;
+    
+    //Get XRP Balance - Commented out until we create an XRP address 
+    //let xrp_balance_request = await fetch(`http://data.ripple.com/v2/accounts/${coin_purse['XRP'][0].address}/balances/`);
+    //let xrp_balance_response = await xrp_balance_request.json();
+    //let xrp_balance = await xrp_balance_response['balances'][0]['value'];
+    //let xrp_balance_container = document.getElementById('xrp_balance');
+    //xrp_balance_container.innerHTML = xrp_balance;
+    
+    //Get ZCash Balance
+    let zec_balance_request = await fetch(`https://api.zcha.in/v2/mainnet/accounts/${coin_purse['ZCASH'][0].address}`);
+    let zec_balance_response = await zec_balance_request.json();
+    let zec_balance = await zec_balance_response['balance'];
+    let zec_balance_container = document.getElementById('zec_balance');
+    zec_balance_container.innerHTML = zec_balance;    
+    
     getBalanceValue();
 }
 

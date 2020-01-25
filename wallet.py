@@ -5,17 +5,13 @@ from urllib.request import Request, urlopen
 import json
 import hashlib
 import os
-
 import scrypt
 import qrcode
-
 from constants import *
 from web3 import Web3
-import os 
 from dotenv import load_dotenv
 from eth_account import Account 
 import subprocess
-import json
 from bit import Key, PrivateKey, PrivateKeyTestnet
 from bit.crypto import ECPrivateKey
 from bit.curve import Point
@@ -29,13 +25,9 @@ from web3.middleware import geth_poa_middleware
 from path import Path
 import pandas as pd
 from ML.ml_functions import get_arima_forecast_plot, get_rf_ensemble_plot
-
 import pprint as pp
 import requests
 import hmac
-
-
-
 from threading import Thread
 
 if __name__ == '__main__':

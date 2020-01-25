@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"todays_price": 158.92, "tommorows_prediction": 159.2, "upper_limit": 173.03, "lower_limit": 147.07}
+=======
+{"todays_price": 159.05, "tommorows_prediction": 159.31, "upper_limit": 173.17, "lower_limit": 147.18}
+>>>>>>> 0a7a362f188d47269d251e7c0891c0ed4cd42ff7
