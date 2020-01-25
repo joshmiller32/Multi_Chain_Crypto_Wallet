@@ -1,4 +1,4 @@
-var word_dict = {}; //We'll have to ask Cam about how to avoid this security vulnerability
+var word_dict = {};
 let password;
 var seed_index;
 var coin_purse = {};
@@ -194,10 +194,10 @@ async function setPassword() {
     let input = document.getElementById('newpassword');
     let pass = input.value;
     let seed = extractSeed();
+    let loginCheck = await eel.set_password(pass, seed)();
     console.log(pass);
     console.log(seed);
     window.seed_index = -1;
-
     return window.location.replace('mainWindow.html?index='+seed_index);
 }
 
@@ -228,8 +228,20 @@ async function populateWallet(currency) {
     await getCoinPurse();
 
     getWallet(currency);
-    getBalanceValue();
+    
 
+    
+    //Current Wallet Balance from Blockchain Explorers
+    let btc_balance_response = await fetch(`https://blockchain.info/q/addressbalance/${coin_purse['BTC'][0].address}`);
+    let btc_balance = await btc_balance_response.text();
+    let btc_balance_container = document.getElementById('btc_balance');
+    let btc_balance_container2 = document.getElementById('btc_balance2');
+    
+
+    btc_balance_container.innerHTML = btc_balance / 100000000
+    btc_balance_container2.innerHTML = btc_balance / 100000000
+    
+    getBalanceValue();
 }
 
 async function sendTx(){
@@ -251,6 +263,18 @@ function myFunction() {
   //console.log("Row index is: " + x.rowIndex);
 }
 
+
+
+//comment
+async function getCurrencies() {
+
+    let currencies = document.getElementById('currencies');
+
+    currencies = eel.getCurrencies();
+
+    console.log(currencies);
+
+}
 
 
 async function updateUSDVal(){
@@ -313,11 +337,11 @@ async function participate(){
     const sendTo = partSendToAddCon.value;
 
     const amountToSend = auditedTx.value * price_dict[receivingCur].USD / price_dict[sendingCur].USD;
-    tx = await eel.participateSwap(sendingCur, 
-            receivingCur, 
-            coin_purse[sendingCur][0].privkey, 
-            sendTo, amountToSend, 
-            contractCon.value, 
+    tx = await eel.participateSwap(sendingCur,
+            receivingCur,
+            coin_purse[sendingCur][0].privkey,
+            sendTo, amountToSend,
+            contractCon.value,
             partTxAddCon.value)
 
     console.log(tx);
@@ -339,7 +363,7 @@ async function redeem(){
 
     const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
 
-    redeem_tx = await eel.redeem_tx(cryptoTo, 
+    redeem_tx = await eel.redeem_tx(cryptoTo,
         coin_purse[cryptoTo][0].privkey, // CHANGE [0] TO coin_purse[cryptoTo][0].privkey. ONLY FOR DEVELOPING PURPOSES
         contractNumCon.value, txAddCon.value)();
 
@@ -371,6 +395,7 @@ async function startSwap(){
     const starterTxCon = document.getElementById('myTxNum');
     const cryptoEquiCon = document.getElementById('cryptoEqui');
 
+
     const cryptoFrom = cryptoFromCon[cryptoFromCon.selectedIndex].value;
     const cryptoTo = cryptoToCon[cryptoToCon.selectedIndex].value;
     const amount = amountCon.value;
@@ -383,7 +408,7 @@ async function startSwap(){
     contractAddCon.innerHTML = tx.contract;
     starterTxCon.innerHTML = tx.transaction_address;
 
-    
+
 }
 
 
@@ -400,6 +425,7 @@ async function launchMainWindow(){
     return window.location.replace('mainWindow.html?index='+seed_index);
 }
 
+
 async function predictionsWindow(){
     return window.location.replace('predictionsWindow.html?index='+seed_index);
 }
@@ -412,7 +438,7 @@ async function exchangeWindow(){
     return window.location.replace('exchangeWindow.html?index='+seed_index);
 }
 
-async function loadJSON(file_name) {   
+async function loadJSON(file_name) {
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -429,24 +455,24 @@ async function loadJSON(file_name) {
  function openSwapTab(evt, option) {
     // Declare all variables
     var i, tabcontent, tablinks;
-  
+
     // Get all elements with class="tabcontent" and hide them
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
       tabcontent[i].style.display = "none";
     }
-  
+
     // Get all elements with class="tablinks" and remove the class "active"
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
       tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-  
+
     // Show the current tab, and add an "active" class to the button that opened the tab
     document.getElementById(option).style.display = "block";
     evt.currentTarget.className += " active";
 }
-    
+
 async function get_ml_price_dict(mltable) {
     window.mltable = mltable;
     let results = await eel.get_price_dict(mltable)();
@@ -455,4 +481,25 @@ async function get_ml_price_dict(mltable) {
     tomorrows_prediction.innerHTML = "$" + results.tommorows_prediction;
     upper_limit.innerHTML = "$" + results.upper_limit;
     lower_limit.innerHTML = "$" + results.lower_limit;
+}
+
+async function createTransaction(){
+
+    let fromCurrencyContainer = document.getElementById('from-currency');
+    let sendAmountContainer = document.getElementById('send-amount');
+    let toCurrencyContainer = document.getElementById('to-currency');
+    let walletAddressContainer = document.getElementById('wallet-address');
+
+    let changellyAddress = document.getElementById('changellyAddress')
+
+
+    fromCurrency = fromCurrencyContainer.value
+    sendAmount = sendAmountContainer.value
+    toCurrency = toCurrencyContainer.value
+    walletAddress = walletAddressContainer.value
+
+
+    let changellyAddress2 = await eel.createTransaction(fromCurrency,toCurrency,walletAddress,sendAmount)();
+    changellyAddress.innerHTML = changellyAddress2;
+
 }

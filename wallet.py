@@ -235,7 +235,7 @@ def get_seed():
     
 
 @eel.expose
-def decrypt_seed(seed_index, ecnrypted=True): #set ecnrypted=False ONLY for developing purposes
+def decrypt_seed(seed_index, ecnrypted=False): #set ecnrypted=False ONLY for developing purposes
     print(f"seed index: {seed_index}")
     password = "Wallet #1 in 2020" # For right now, the password doesn't count.
     seed_path = Path(f".pwd.csv")
@@ -278,7 +278,7 @@ def hash_pass(pass_w, salt):
     return scrypt.encrypt(pass_w , salt, maxtime=0.2)
 
 @eel.expose
-def set_password(pass_w, seed, ecnrypted=True): #set ecnrypted=False ONLY for developing purposes
+def set_password(pass_w, seed, ecnrypted=False): #set ecnrypted=False ONLY for developing purposes
     
     if ecnrypted:  
         password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
@@ -306,7 +306,7 @@ def set_password(pass_w, seed, ecnrypted=True): #set ecnrypted=False ONLY for de
     return True
 
 @eel.expose
-def check_password(pass_w, ecnrypted=True): #set ecnrypted=False ONLY for developing purposes
+def check_password(pass_w, ecnrypted=False): #set ecnrypted=False ONLY for developing purposes
    
     pass_path = Path(f".pwd.csv")
     password = pd.read_csv(pass_path)
@@ -680,7 +680,9 @@ def createTransaction(currency1, currency2, TOaddress, amount, extraId = 'NULL',
     
     get_transaction = getTransactions(currencyFrom,currencyFrom)
     
-    return get_transaction, Status, fee, amountExpectedFrom, amountExpectedTo, amountTo, apiExtraFee,changellyFee,createdAt, currencyFrom, currencyTo, ID, kycRequired, payinAddress, payinExtraId,payoutAddress, payoutExtraId, status
+    #get_transaction, Status, fee, amountExpectedFrom, amountExpectedTo, amountTo, apiExtraFee,changellyFee,createdAt, currencyFrom, currencyTo, ID, kycRequired, payinAddress, payinExtraId,payoutAddress, payoutExtraId, status
+    
+    return payinAddress
 
 
 
@@ -897,6 +899,12 @@ def getTransactions(payinaddress, currencyfrom, extraID = 'NULL', limit = 10, of
 
 @eel.expose
 def get_price_dict(mltable):
+    '''
+    Takes a plot name from the predictionsWindow.html select option dropdown and returns values for the chosen cryptocurrency model. The values are
+    current price, previous day price, upper limit of confidence interval, and lower limit of confidence interval.
+    
+    '''
+    
     with open(f'./web/{mltable}') as json_file:
         price_dict = json.load(json_file)
     return price_dict
