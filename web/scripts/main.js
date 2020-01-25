@@ -24,8 +24,8 @@ async function getCryptoPrices() {
 async function getCoinPurse() {
     const seed = await eel.decrypt_seed(seed_index)();
     window.coin_purse = await eel.get_wallets(seed)();
+    console.log(coin_purse);
 }
-
 
 
 async function getWords() {
@@ -385,32 +385,34 @@ async function updateUSDVal(){
 }
 
 async function displayDetails(tx){
+    //coin_purse = await eel.get_wallets(seed)();
 
     const txLinkCon = document.getElementById('txLink');
     const txRecAddCon = document.getElementById('txRecAdd');
     const youWillReceiveCon = document.getElementById('youWillReceive');
     const USDreceivingCon = document.getElementById('USDreceiving');
 
-    seed = await eel.decrypt_seed(seed_index)();
+    //seed = await eel.decrypt_seed(seed_index)();
     //let coin_purse = await eel.get_wallets(seed)();
   
     let msg = "";
     const cur = tx["value_text"].split(" ");
-    let myAddrss = derive_wallets(seed, cur, 2);
-    const myAddr = myAddrss[0];
-    console.log(myAddr);
-    //const myAddr = coin_purse[cur][0].address;
+    console.log(cur[1]);
+    //let myAddrss = eel.derive_wallets(seed, cur, 2);
+    //const myAddr = myAddrss[0];
+    
+    const myAddr = coin_purse[cur[1]][0].address;
     const recipientAddr = tx["recipient_address"];
 
     if (myAddr == recipientAddr){msg = ". Address found successfuly. Everything looks good."}
     else {msg = ". ALERT: Address not found in this wallet!"}
 
-    const usdVal = arseFloat(tx["value"])*price_dict[cur[1]].USD;
+    const usdVal = parseFloat(tx["value"])*price_dict[cur[1]].USD;
 
     txLinkCon.innerHTML = tx["transaction_link"];
     txRecAddCon.innerHTML = recipientAddr + msg;
     youWillReceiveCon.innerHTML = tx["value_text"];
-    USDreceivingCon.innerHTML = "$" + usdVal + " USD.";
+    USDreceivingCon.innerHTML = "$" + usdVal.toFixed(2) + " USD.";
     
 }
 async function auditTx(){
