@@ -6,6 +6,11 @@ var price_dict = {};
 var currency;
 var xmlDoc;
 var auditedTx;
+var BTCBalance;
+var BCHBalance;
+var LTCBalance;
+var DASHBalance;
+var DOGEBalance;
 
 async function setSeedIndex(index) {
     window.seed_index = index;
@@ -89,7 +94,17 @@ async function getWallet(coin) {
     QR.src = "images/QR.png";
     address.innerHTML = coin_purse[coin][0].address;
 
-    let acc_balance = await eel.get_balance(coin, coin_purse[coin][0].privkey)();
+    //let acc_balance = await eel.get_balance(coin, coin_purse[coin][0].privkey)();//old version
+    //donn't know why this doesn't work:
+    //const acc_balance = getBalanceJS(coin)();
+    //I'll try a much worse solution:
+    const coin_list = ["BCH","BTC","LTC","DASH","DOGE","ZEC"];
+    coin_list.forEach(getBalanceJS);
+    if (coin == "BTC"){ acc_balance = BTCBalance} 
+    else if (coin == "BCH"){ acc_balance = BCHBalance} 
+    else if (coin == "LTC"){ acc_balance = LTCBalance} 
+    else if (coin == "DASH"){ acc_balance = DASHBalance} 
+    else if (coin == "DOGE"){ acc_balance = DOGEBalance} 
     console.log(acc_balance);
 
     let usd_balance = acc_balance*price_dict[coin].USD;
@@ -148,12 +163,12 @@ async function getBalanceValue() {
 
     //price_dict = await eel.get_prices()();
     //console.log(price_dict);
-    btc_usd_value.innerHTML = '$' + (Math.round((btc_balance.innerHTML * price_dict.BTC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    btc_usd_value.innerHTML = '$' + (Math.round((BTCBalance * price_dict.BTC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
     btg_usd_value.innerHTML = '$' + (Math.round((btg_balance.innerHTML * price_dict.BTG.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
-    bch_usd_value.innerHTML = '$' + (Math.round((bch_balance.innerHTML * price_dict.BCH.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
-    ltc_usd_value.innerHTML = '$' + (Math.round((ltc_balance.innerHTML * price_dict.LTC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
-    dash_usd_value.innerHTML = '$' + (Math.round((dash_balance.innerHTML * price_dict.DASH.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
-    doge_usd_value.innerHTML = '$' + (Math.round((doge_balance.innerHTML * price_dict.DOGE.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    bch_usd_value.innerHTML = '$' + (Math.round((BCHBalance * price_dict.BCH.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    ltc_usd_value.innerHTML = '$' + (Math.round((LTCBalance * price_dict.LTC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    dash_usd_value.innerHTML = '$' + (Math.round((DASHBalance * price_dict.DASH.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
+    doge_usd_value.innerHTML = '$' + (Math.round((DOGEBalance * price_dict.DOGE.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
     xrp_usd_value.innerHTML = '$' + (Math.round((xrp_balance.innerHTML * price_dict.XRP.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
     zec_usd_value.innerHTML = '$' + (Math.round((zec_balance.innerHTML * price_dict.ZEC.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
     xlm_usd_value.innerHTML = '$' + (Math.round((xlm_balance.innerHTML * price_dict.XLM.USD)*Math.pow(10,2))/Math.pow(10,2)).toFixed(2);
@@ -207,43 +222,52 @@ async function setPassword() {
 
 async function populateWallet(currency) {
 
+    //reading xml doc
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(xmlDoc);
+            window.xmlDoc = xmlDoc.responseXML;
+
+       }};
+    xhttp.open("GET", "text.xml", true);
+    xhttp.setRequestHeader("Content-Type", "text/xml");
+    xhttp.send();
+    window.xmlDoc = xhttp;
+
+//console.log(seed_index);
+//const seed = await eel.decrypt_seed(seed_index)();
+//window.coin_purse = await eel.get_wallets(seed)();
+
     window.currency = currency
 
-    //await getPrices();
-    await getPrices();
-
-    //reading xml doc
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                console.log(xmlDoc);
-                window.xmlDoc = xmlDoc.responseXML;
-
-           }};
-        xhttp.open("GET", "text.xml", true);
-        xhttp.setRequestHeader("Content-Type", "text/xml");
-        xhttp.send();
-        window.xmlDoc = xhttp;
-
-    //console.log(seed_index);
-    //const seed = await eel.decrypt_seed(seed_index)();
-    //window.coin_purse = await eel.get_wallets(seed)();
     await getCoinPurse();
+    
+    const coin_list = ["BCH","BTC","LTC","DASH","DOGE","ZEC"];
+    coin_list.forEach(getBalanceJS);
 
+    await getPrices();
+    
+    getBalanceValue();
     getWallet(currency);
+}
 
-
-
+async function getBalanceJS(currency){
     //Current Wallet Balance from Blockchain Explorers
     //Get BTC Balance
+    if (currency == "BTC"){
     let btc_balance_response = await fetch(`https://blockchain.info/q/addressbalance/${coin_purse['BTC'][0].address}`);
     let btc_balance = await btc_balance_response.text();
     let btc_balance_container = document.getElementById('btc_balance');
-    let btc_balance_container2 = document.getElementById('btc_balance2');
-    btc_balance_container.innerHTML = btc_balance / 100000000;
-    btc_balance_container2.innerHTML = btc_balance / 100000000;
+    //let btc_balance_container2 = document.getElementById('btc_balance2');
+    window.BTCBalance = btc_balance / 100000000;
+    btc_balance_container.innerHTML = BTCBalance;
+    //btc_balance_container2.innerHTML = btc_balance / 100000000;
+    return BTCBalance;
+}
     
     //Get BCH Balance
+    else if (currency == "BCH"){
     var bch_cashaddr = coin_purse['BCH'][0].address;
     let bch_cashaddr_balance_request = await fetch(`https://api.blockchair.com/bitcoin-cash/dashboards/address/${bch_cashaddr}`);
     let bch_cashaddr_balance_response = await bch_cashaddr_balance_request.json();
@@ -252,28 +276,43 @@ async function populateWallet(currency) {
     let bch_balance_response = await bch_balance_request.json();
     let bch_balance = bch_balance_response["data"][bch_legacy_addr]["address"]["balance"];
     let bch_balance_container = document.getElementById('bch_balance');
-    bch_balance_container.innerHTML = bch_balance / 100000000;
-    
+    window.BCHBalance = bch_balance / 100000000;
+    bch_balance_container.innerHTML = BCHBalance;
+    return BCHBalance;
+    }
+
     //Get LTC Balance
+    else if (currency == "LTC"){
     let ltc_balance_request = await fetch(`https://api.blockcypher.com/v1/ltc/main/addrs/${coin_purse['LTC'][0].address}/balance`);
     let ltc_balance_response = await ltc_balance_request.json();
     let ltc_balance = await ltc_balance_response['balance'];
     let ltc_balance_container = document.getElementById('ltc_balance');
-    ltc_balance_container.innerHTML = ltc_balance / 100000000;
-    
+    window.LTCBalance = ltc_balance / 100000000;
+    ltc_balance_container.innerHTML = LTCBalance;
+    return LTCBalance;
+    }
+
     //Get DASH Balance
+    else if (currency == "DASH"){
     let dash_balance_request = await fetch(`https://api.blockcypher.com/v1/dash/main/addrs/${coin_purse['DASH'][0].address}/balance`);
     let dash_balance_response = await dash_balance_request.json();
     let dash_balance = await dash_balance_response['balance'];
     let dash_balance_container = document.getElementById('dash_balance');
-    dash_balance_container.innerHTML = dash_balance / 100000000;
+    window.DASHBalance = dash_balance / 100000000;
+    dash_balance_container.innerHTML = DASHBalance;
+    return DASHBalance;
+    }
 
     //Get DOGE Balance
+    else if (currency == "DOGE"){
     let doge_balance_request = await fetch(`https://dogechain.info/api/v1/address/balance/${coin_purse['DOGE'][0].address}`);
     let doge_balance_response = await doge_balance_request.json();
     let doge_balance = await doge_balance_response['balance'];
     let doge_balance_container = document.getElementById('doge_balance');
+    window.DOGEBalance = doge_balance;
     doge_balance_container.innerHTML = doge_balance;
+    return DOGEBalance;
+    }
     
     //Get XRP Balance - Commented out until we create an XRP address 
     //let xrp_balance_request = await fetch(`http://data.ripple.com/v2/accounts/${coin_purse['XRP'][0].address}/balances/`);
@@ -283,13 +322,19 @@ async function populateWallet(currency) {
     //xrp_balance_container.innerHTML = xrp_balance;
     
     //Get ZCash Balance
+    else if (currency == "ZEC"){
     let zec_balance_request = await fetch(`https://api.zcha.in/v2/mainnet/accounts/${coin_purse['ZCASH'][0].address}`);
     let zec_balance_response = await zec_balance_request.json();
     let zec_balance = await zec_balance_response['balance'];
     let zec_balance_container = document.getElementById('zec_balance');
-    zec_balance_container.innerHTML = zec_balance;    
+    zec_balance_container.innerHTML = zec_balance; 
+    return zec_balance;
+    }   
+    else{
+        //Not sure here
+        return 0;
+    }
     
-    getBalanceValue();
 }
 
 async function sendTx(){
