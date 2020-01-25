@@ -144,4 +144,8 @@ web/images/QR.png
 *RFEnsemble.html
 on_going_swap.csv
 onGoingSwaps.json
+web/BTCArima.json
+web/BTCRFEnsemble.json
+web/LTCArima.json
+web/LTCRFEnsemble.json
 
