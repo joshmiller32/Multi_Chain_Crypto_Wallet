@@ -28,7 +28,7 @@
                             
                             <!-- First Tab content -->
                             <div id="startNew" class="tabcontent">
-                                <h3>Start New Swap</h3>
+                                <h1><center><img src="images/swap.png" height="40px" width="40px"style="vertical-align: bottom;">&nbsp;&nbsp;&nbsp;Start New Swap&nbsp;&nbsp;&nbsp;<img src="images/swap.png" height="40px" width="40px" style="vertical-align: bottom;"></center></h1>
 
                                 <br><br>
                                 <!-- Top section to start swap -->
@@ -105,7 +105,7 @@
                             </div>
 
                             <!-- Displaying contract info  -->
-                            <div>Send the following info to the person you are exchanging:</div>
+                                <div><h2><center>Send the following info to the person you are exchanging with</center></h2></div>
                                 <br><br>
                                 <div>
                                     <div id="myTagContractAdd" class="tagContractColumn">  
@@ -124,10 +124,10 @@
                                             your transaction number will appear here
                                         </div>
                                 </div>
-                                <br><br>
+                                <br><br><hr>
 
                             <!-- Introducing other's party info  -->
-                            <div><br>Audit the other's party transaction:</div>
+                                <div><br><h2>Audit the other's party transaction:</h2></div>
                                 <br><br>
                                 <div>
                                     <div id="tagInContractAdd" class="startSwapColumn">  
@@ -146,7 +146,7 @@
                                             <input id="incomingTxNum" placeholder="Incoming transaction number" />
                                         </div>
                                 </div>
-                                <div id="auditRedeemTx"><br><br>Other's party transaction info will be displayed here:</div>
+                                <div id="auditRedeemTx" ><br><br>Other's party transaction info will be displayed here:</div>
                                 <br><br>
                                 <div> <button onclick="redeem()" class="swapButton">REDEEM</button></div>  
                             </div>
@@ -154,7 +154,7 @@
 
                         <!-- SECOND TAB -- PARTICIPATE TAB --  --> 
                         <div id="participate" class="tabcontent">
-                                <h3>Participate in Swap</h3>
+                                <h1><center><img src="images/swap.png" height="40px" width="40px"style="vertical-align: bottom;">&nbsp;&nbsp;&nbsp;Participate In A Swap&nbsp;&nbsp;&nbsp;<img src="images/swap.png" height="40px" width="40px" style="vertical-align: bottom;"></center></h1>
                                 <br><br>
                                 <div>
                                     
@@ -238,9 +238,7 @@
 
                                     </div><br>
                                 </div>
-                                       
-
-                                <div>
+                                <div><br>
                                         <div class="column"> 
                                             Sending:
                                         </div>
@@ -266,15 +264,15 @@
                                         </div>
 
                                         <div class="column">
-                                                    <input id="partToAdd" placeholder="Send to this address" />
+                                                    <input id="partToAdd" placeholder="Send to this address" /><br>
                                             
                                             </div>
                                                 
                                     </div>
                                     <br><br>
-                                <div> <button onclick="participate()" class="swapButton">PARTICIPATE</button></div>
-                                    <br><br>
-                                <div>Send the following info to the person you are exchanging:</div>
+                                <div> <button onclick="participate()" class="swapButton">PARTICIPATE</button></div><br>
+                            <hr>
+                                <div><h2><center>Send the following info to the person you are exchanging</center></h2></div>
                                             <br><br>
                                 <div>
                                     <div id="myTagContractAdd" class="tagContractColumn">  
@@ -321,7 +319,14 @@
 			</div>
 			<div class="col3"><br>
 				<!-- Column 3 start -->
-                <h2><center>Explination of what an Atomic Swap is and how its done</center></h2>
+                <h2><center>The Atomic Swap</center></h2>
+                <p> An atomic swap is a smart contract technology that enables the exchange of one cryptocurrency for another without using centralized intermediaries, such as exchanges.<br><br>
+
+Atomic swaps can take place directly between blockchains of different cryptocurrencies, or they can be conducted off-chain, away from the main blockchain. They first came into prominence in September 2017, when an atomic swap between Decred and Litecoin was conducted. <br><br>
+
+Since then, other startups and decentralized exchanges have allowed users the same facility. For example, Lightning Labs, a startup that uses bitcoin’s lightning network for transactions, has conducted off-chain swaps using the technology.<br><br>
+
+Cryptocurrencies and decentralized exchanges, such as 0x and Altcoin.io, have also incorporated the technology.   <br><br><a href="https://www.investopedia.com/terms/a/atomic-swaps.asp/">To learn more click here...</a>
                 
                 <!-- Column 3 end -->      
                     </div>
