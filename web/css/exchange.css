@@ -12,7 +12,12 @@
   grid-column-gap: 16px;
 }
 
-
+p {
+    color: #FFFFFF;
+    margin:.4em 0 .8em 0;
+	padding:0;
+    font-size:14px;
+}
 
 /* body {
   -webkit-box-align: center;
