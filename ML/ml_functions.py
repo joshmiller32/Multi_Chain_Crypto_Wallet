@@ -168,10 +168,11 @@ def get_rf_ensemble_model(ticker):
         y = combined_df['ETH']
     else:
         y = combined_df['LTC']
-    X_train = X[:724]
-    y_train = y[:724]
-    X_test = X[724:]
-    y_test = y[724:]
+    test_start_point = len(X) - 5
+    X_train = X[:test_start_point]
+    y_train = y[:test_start_point]
+    X_test = X[test_start_point:]
+    y_test = y[test_start_point:]
     regressor = RandomForestQuantileRegressor(random_state = 0, n_estimators = 500)
     model = regressor.fit(X_train, y_train)
     predictions = model.predict(X_test)
