@@ -168,10 +168,11 @@ def get_rf_ensemble_model(ticker):
         y = combined_df['ETH']
     else:
         y = combined_df['LTC']
-    X_train = X[:725]
-    y_train = y[:725]
-    X_test = X[725:]
-    y_test = y[725:]
+    test_start_point = len(X) - 5
+    X_train = X[:test_start_point]
+    y_train = y[:test_start_point]
+    X_test = X[test_start_point:]
+    y_test = y[test_start_point:]
     regressor = RandomForestQuantileRegressor(random_state = 0, n_estimators = 500)
     model = regressor.fit(X_train, y_train)
     predictions = model.predict(X_test)
@@ -202,10 +203,10 @@ def get_rf_ensemble_plot():
         fig.update_yaxes(automargin=True, title = 'Predicted Price')
         fig.update_layout(autosize = True, height = 900, width = 930, title_text = f'{ticker} Random Forest Ensemble', template = 'plotly_dark')
         write_html(fig, f'./web/{ticker}RFEnsemble.html')
-        todays_price = forecast_df[f'{ticker}'][4]
-        tommorows_prediction = forecast_df['Predictions'][5]
-        upper_limit= forecast_df['upper close'][5]
-        lower_limit = forecast_df['lower close'][5]
+        todays_price = forecast_df[f'{ticker}'][3]
+        tommorows_prediction = forecast_df['Predictions'][4]
+        upper_limit= forecast_df['upper close'][4]
+        lower_limit = forecast_df['lower close'][4]
         price_dict = {'todays_price': todays_price, 'tommorows_prediction': tommorows_prediction, 'upper_limit': upper_limit, 'lower_limit': lower_limit}
         with open(f'./web/{ticker}RFEnsemble.json', 'w') as fp:
             json.dump(price_dict, fp)

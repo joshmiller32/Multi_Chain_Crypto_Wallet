@@ -148,4 +148,6 @@ web/BTCArima.json
 web/BTCRFEnsemble.json
 web/LTCArima.json
 web/LTCRFEnsemble.json
+web/ETHRFEnsemble.json
+web/ETHArima.json
 
