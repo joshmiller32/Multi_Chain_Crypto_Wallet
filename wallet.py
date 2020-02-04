@@ -227,7 +227,7 @@ def get_seed():
     
 
 @eel.expose
-def decrypt_seed(seed_index, ecnrypted=False): #set ecnrypted=False ONLY for developing purposes
+def decrypt_seed(seed_index, ecnrypted=True): #set ecnrypted=False ONLY for developing purposes
     print(f"seed index: {seed_index}")
     password = "Wallet #1 in 2020" # For right now, the password doesn't count.
     seed_path = Path(f".pwd.csv")
@@ -270,7 +270,7 @@ def hash_pass(pass_w, salt):
     return scrypt.encrypt(pass_w , salt, maxtime=0.2)
 
 @eel.expose
-def set_password(pass_w, seed, ecnrypted=False): #set ecnrypted=False ONLY for developing purposes
+def set_password(pass_w, seed, ecnrypted=True): #set ecnrypted=False ONLY for developing purposes
     
     if ecnrypted:  
         password = {"seed": [hash_pass(seed ,"Wallet #1 in 2020").hex()], #we encrypt the mnemonic seed with the password
@@ -298,7 +298,7 @@ def set_password(pass_w, seed, ecnrypted=False): #set ecnrypted=False ONLY for d
     return True
 
 @eel.expose
-def check_password(pass_w, ecnrypted=False): #set ecnrypted=False ONLY for developing purposes
+def check_password(pass_w, ecnrypted=True): #set ecnrypted=False ONLY for developing purposes
    
     pass_path = Path(f".pwd.csv")
     password = pd.read_csv(pass_path)
